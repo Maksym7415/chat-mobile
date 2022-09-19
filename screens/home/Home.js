@@ -15,10 +15,9 @@ const Home = () => {
   console.log('hello');
   return (
     <SafeAreaView>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <ScrollView>
         <View>
-          <Text style={{height: 100, backgroundColor: 'red'}}>Home </Text>
+          <Text style={{height: 100, backgroundColor: 'red'}}>Home !!!!</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
