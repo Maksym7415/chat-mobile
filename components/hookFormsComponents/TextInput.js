@@ -11,6 +11,7 @@ const propTypes = {
   value: PropTypes.string,
   placeholder: PropTypes.string,
 };
+
 const TextInputField = ({
   onChangeText,
   error,
@@ -25,6 +26,7 @@ const TextInputField = ({
     autoCorrect: false,
   },
 }) => {
+  // console.log(settingAuto, 'settingAuto');
   return (
     <View style={{...stylesRoot.container, ...styles.container}}>
       {label && <Text style={styles.label}>{label}</Text>}

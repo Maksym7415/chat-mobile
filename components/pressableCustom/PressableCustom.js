@@ -43,7 +43,9 @@ const PressableCustom = ({
   return (
     <Pressable
       {...on}
-      style={({pressed}) => (styles ? styles(pressed) : styleRoot(pressed))}>
+      style={({pressed}) =>
+        styles ? styles(stylesRoot, pressed) : styleRoot(pressed)
+      }>
       {({pressed}) =>
         renderChildren(
           {

@@ -1,33 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import {Text, View} from 'react-native';
-import {useForm, Controller} from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import {useDispatch, useSelector} from 'react-redux';
 import * as config from './config';
-import classes from './styles';
 import {PathsName} from '../../navigation/navigationConfig';
 import languages from '../../config/translations';
-import PressableCustom from '../../components/pressableCustom';
-import {verificationThunk} from '../../redux/authorization/thunks';
-import {authTokenAction} from '../../redux/authorization';
-import TextInputCustom from '../../components/hookFormsComponents/TextInput';
+import {authTokenAction} from '../../redux/auth';
+import AuthForm from '../../components/authForm';
 
 const Verification = ({navigation, route}) => {
   // HOOKS
   const dispatch = useDispatch();
 
   // SELECTORS
-  const lang = useSelector(({appSlice}) => appSlice.lang);
-  const response = useSelector(
-    ({authorizationSlice}) => authorizationSlice.verification,
-  );
+  const lang = useSelector(({settingSlice}) => settingSlice.lang);
+  const response = useSelector(({authSlice}) => authSlice.verification);
   const isRedirectToSignIn = useSelector(
-    ({authorizationSlice}) => authorizationSlice.login.success?.status,
+    ({authSlice}) => authSlice.login.success?.status,
   );
 
   // this provided to prevent redirect in case we signing up, making automatically login and redirecting user straight to verification page
   const isSignUp = useSelector(
-    ({authorizationSlice}) => authorizationSlice.signUp.success?.email,
+    ({authSlice}) => authSlice.signUp.success?.email,
   );
 
   // STATES
@@ -84,49 +78,18 @@ const Verification = ({navigation, route}) => {
   });
 
   return (
-    <View style={classes.wrapperForm}>
-      <Text style={classes.title}>
-        {languages[lang].authorization.verificate}
-      </Text>
-      {config.verificationFields.map((el, key) => (
-        <Controller
-          key={key}
-          control={control}
-          rules={el.validate}
-          render={({field: {onChange, onBlur, value}}) => (
-            <TextInputCustom
-              style={el.style}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              errors={errors}
-              error={errors[el.fieldName]}
-              keyboardType={el.keyboardType}
-              secureTextEntry={false}
-              placeholder={el.placeholder}
-              styles={el.styles}
-            />
-          )}
-          name={el.fieldName}
-        />
-      ))}
-      {errorBack && (
-        <View className={classes.error}>
-          <Text>{errorBack}</Text>
-        </View>
-      )}
-      <PressableCustom
-        on={{
-          onPress: handleSubmit(onSubmit),
-        }}
-        options={{
-          text: {
-            label: languages[lang].authorization.verificate,
-            styles: null,
-          },
-        }}
-      />
-    </View>
+    <AuthForm
+      title={languages[lang].authorization.verificate}
+      submitBtnTitle={languages[lang].authorization.verificate}
+      configFields={config.verificationFields}
+      onSubmit={onSubmit}
+      errorBack={error}
+      optionsForm={{
+        control,
+        handleSubmit,
+        errors,
+      }}
+    />
   );
 };
 

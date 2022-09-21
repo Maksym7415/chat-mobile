@@ -1,13 +1,9 @@
 import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
-  btn: {
-    width: '100%',
-    marginTop: 16,
-  },
-  btnText: {
+  text: {
     color: '#ffffff',
-    fontSize: 16,
+    fontSize: 26,
     textAlign: 'center',
     paddingVertical: 8,
     paddingHorizontal: 14,

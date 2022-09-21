@@ -1,5 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import * as React from 'react';
+import styles from './styles';
 import {useSelector} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaView, KeyboardAvoidingView, Platform} from 'react-native';
@@ -15,47 +16,46 @@ function MyStack() {
   const [signIn, setSignIn] = React.useState(null);
 
   return (
-    // <KeyboardAvoidingView
-    //   // style={style.container}
-    //   behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    //   enabled>
-    //   <SafeAreaView
-    //   // style={style.container}
-    //   >
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName={signIn ? PathsName.signIn : PathsName.home}
-        // screenOptions={{headerShown: false}}
-      >
-        {isLoading ? (
-          <Stack.Screen name="Splash" component={SplashScreen} />
-        ) : signIn == null ? (
-          navigationNotAuthorized.map(item => {
-            return (
-              <Stack.Screen
-                key={item.id}
-                name={item.pathName}
-                options={item.options}
-                component={item.Component}
-              />
-            );
-          })
-        ) : (
-          navigation.map(item => {
-            return (
-              <Stack.Screen
-                key={item.id}
-                name={item.pathName}
-                options={item.options}
-                component={item.Component}
-              />
-            );
-          })
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
-    //   </SafeAreaView>
-    // </KeyboardAvoidingView>
+    <KeyboardAvoidingView
+      style={styles.container}
+      // behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      // enabled
+    >
+      <SafeAreaView style={styles.container}>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName={signIn ? PathsName.signIn : PathsName.home}
+            // screenOptions={{headerShown: false}}
+          >
+            {isLoading ? (
+              <Stack.Screen name="Splash" component={SplashScreen} />
+            ) : signIn == null ? (
+              navigationNotAuthorized.map(item => {
+                return (
+                  <Stack.Screen
+                    key={item.id}
+                    name={item.pathName}
+                    options={item.options}
+                    component={item.Component}
+                  />
+                );
+              })
+            ) : (
+              navigation.map(item => {
+                return (
+                  <Stack.Screen
+                    key={item.id}
+                    name={item.pathName}
+                    options={item.options}
+                    component={item.Component}
+                  />
+                );
+              })
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 

@@ -32,13 +32,12 @@ const initialState = {
     iat: 0,
     exp: 0,
   },
-  logout: {
-    isLogout: false,
-  },
+  headers: {accessToken: ''},
+  isLogout: false,
 };
 
-const authorizationSlice = createSlice({
-  name: 'authorizationSlice',
+const authSlice = createSlice({
+  name: 'authSlice',
   initialState,
   reducers: {
     authTokenAction(state, {payload}) {
@@ -70,6 +69,12 @@ const authorizationSlice = createSlice({
     },
     actionLogoutAction(state, {payload}) {
       state.searchChats = null;
+    },
+    setAuthHedersAction(state, {payload}) {
+      state.headers = payload;
+    },
+    setIsLogoutAction(state, {payload}) {
+      state.isLogout = true;
     },
   },
   extraReducers: builder => {
@@ -103,7 +108,7 @@ const authorizationSlice = createSlice({
         error: action.payload,
       };
     });
-    builder.addCase(thunks.loginThunk.fulfilled, (state, action) => {
+    builder.addCase(thunks.singUpThunk.fulfilled, (state, action) => {
       state.signUp = {
         success: action.payload,
         error: null,
@@ -121,6 +126,6 @@ const authorizationSlice = createSlice({
   },
 });
 
-export const {authTokenAction} = authorizationSlice.actions;
+export const {authTokenAction, setAuthHedersAction} = authSlice.actions;
 
-export default authorizationSlice.reducer;
+export default authSlice.reducer;

@@ -2,8 +2,8 @@ const languages = {
   en: {
     authorization: {
       signin: 'Sign in',
-      haveAnAccount: 'Have an account?',
-      haveNoAccount: 'Have no account?',
+      haveAnAccount: 'Have an account',
+      haveNoAccount: 'Have no account',
       signUp: 'Sign Up',
       verificateYourAccount: 'Verificate your account',
       verificate: 'Verificate',
@@ -51,8 +51,8 @@ const languages = {
   ua: {
     authorization: {
       signin: 'Увійти',
-      haveAnAccount: 'Є обліковий запис?',
-      haveNoAccount: 'Немає облікового запису?',
+      haveAnAccount: 'Є обліковий запис',
+      haveNoAccount: 'Немає облікового запису',
       signUp: 'Зареєструватися',
       verificateYourAccount: 'Підтвердьте свій обліковий запис',
       verificate: 'Перевірити',
@@ -101,8 +101,8 @@ const languages = {
   ru: {
     authorization: {
       signin: 'Войти',
-      haveAnAccount: 'Есть учетная запись?',
-      haveNoAccount: 'Нет учетной записи?',
+      haveAnAccount: 'Есть учетная запись',
+      haveNoAccount: 'Нет учетной записи',
       signUp: 'Зарегистрироваться',
       verificateYourAccount: 'Подтвердите свою учетную запись',
       verificate: 'Проверить',

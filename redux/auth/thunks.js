@@ -1,13 +1,10 @@
-import axios from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {authSuccessAction, authFailAction} from './index';
-
+import API from '../../config/axios';
 export const loginThunk = createAsyncThunk(
-  'authorization/loginThunk',
+  'auth/loginThunk',
   async (params, {dispatch}) => {
     try {
-      console.log(';;;');
-      const response = await axios.post('http://localhost:3000/api/signIn', {
+      const response = await API.post('/signIn', {
         ...params.data,
       });
       params.cb && params.cb();
@@ -20,10 +17,10 @@ export const loginThunk = createAsyncThunk(
 );
 
 export const verificationThunk = createAsyncThunk(
-  'authorization/verificationThunk',
+  'auth/verificationThunk',
   async (params, {dispatch}) => {
     try {
-      const response = await axios.post('/checkVerificationCode', {
+      const response = await API.post('/checkVerificationCode', {
         ...params.data,
       });
       params.cb && params.cb();
@@ -36,10 +33,10 @@ export const verificationThunk = createAsyncThunk(
 );
 
 export const singUpThunk = createAsyncThunk(
-  'authorization/singUpThunk',
+  'auth/singUpThunk',
   async (params, {dispatch}) => {
     try {
-      const response = await axios.post('/signUp', {
+      const response = await API.post('/signUp', {
         ...params.data,
       });
       params.cb && params.cb();

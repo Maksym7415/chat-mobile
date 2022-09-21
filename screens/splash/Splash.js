@@ -1,14 +1,13 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {View} from 'react-native';
+import styles from './styles';
+import Loader from '../../components/loader';
 
 const Splash = () => {
   return (
     <View>
-      <Text style={{height: '100%', backgroundColor: 'red'}}>Loading...</Text>
+      <Loader />
     </View>
   );
 };
-
-const styles = StyleSheet.create({});
-
 export default Splash;

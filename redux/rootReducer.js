@@ -1,8 +1,10 @@
 import {combineReducers} from '@reduxjs/toolkit';
 import appSlice from './app';
-import authorizationSlice from './authorization';
+import authSlice from './auth';
+import settingSlice from './setting';
 
 export default combineReducers({
   appSlice,
-  authorizationSlice,
+  authSlice,
+  settingSlice,
 });
