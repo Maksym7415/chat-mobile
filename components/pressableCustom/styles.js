@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-export const classes = StyleSheet.create({
+export default StyleSheet.create({
   btn: {
     width: '100%',
     maxWidth: 200,

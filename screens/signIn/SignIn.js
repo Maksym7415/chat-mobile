@@ -1,10 +1,14 @@
 import React from 'react';
-import {StyleSheet, Text, View, TextInput} from 'react-native';
+import {Text, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import {useForm, Controller} from 'react-hook-form';
 import * as config from './config';
+import classes from './styles';
 import {PathsName} from '../../navigation/navigationConfig';
 import languages from '../../config/translations';
 import PressableCustom from '../../components/pressableCustom';
+import TextInputCustom from '../../components/hookFormsComponents/TextInput';
+import {verificationThunk} from '../../redux/authorization/thunks';
 
 const SignIn = ({navigation}) => {
   // HOOKS
@@ -17,17 +21,25 @@ const SignIn = ({navigation}) => {
   );
 
   // STATES
-  const [login, setLogin] = React.useState('');
   const [error, setError] = React.useState('');
 
   // VARIABLES
   const errorBack = null;
 
   // FUNCTIONS
-  const handleSubmit = value => {
-    console.log(login, 'response');
-    setLogin(value);
-    // dispatch(actionLogin(value));
+  const onSubmit = data => {
+    // axios.post('http://localhost:3000/api/signIn');
+    navigation.navigate(PathsName.verification, {
+      login: data.login,
+    });
+    // const {login} = data;
+    // dispatch(
+    //   loginThunk({
+    //     data: {
+    //       login,
+    //     },
+    //   }),
+    // );
     error && setError('');
   };
 
@@ -42,17 +54,39 @@ const SignIn = ({navigation}) => {
       }
   }, [response]);
 
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({
+    defaultValues: {
+      login: '',
+    },
+  });
+
   return (
     <View style={classes.wrapperForm}>
-      <View className={classes.avatar}></View>
       <Text style={classes.title}>{languages[lang].authorization.signin}</Text>
       {config.signInFields.map((el, key) => (
-        <TextInput
+        <Controller
           key={key}
-          placeholder={el.placeHolder}
-          onChangeText={value => setLogin(value)}
-          defaultValue={login}
-          style={classes[el.className]}
+          control={control}
+          rules={el.validate}
+          render={({field: {onChange, onBlur, value}}) => (
+            <TextInputCustom
+              style={el.style}
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              errors={errors}
+              error={errors[el.fieldName]}
+              keyboardType={el.keyboardType}
+              placeholder={el.placeholder}
+              secureTextEntry={false}
+              styles={el.styles}
+            />
+          )}
+          name={el.fieldName}
         />
       ))}
       {errorBack && (
@@ -62,7 +96,7 @@ const SignIn = ({navigation}) => {
       )}
       <PressableCustom
         on={{
-          onPress: () => handleSubmit(),
+          onPress: handleSubmit(onSubmit),
         }}
         options={{
           text: {
@@ -74,35 +108,5 @@ const SignIn = ({navigation}) => {
     </View>
   );
 };
-
-const classes = StyleSheet.create({
-  login: {
-    width: '100%',
-    maxWidth: 300,
-    marginTop: 16,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: '#20232a',
-    color: '#20232a',
-    textAlign: 'center',
-    fontSize: 18,
-    paddingVertical: 8,
-    paddingHorizontal: 8,
-    fontWeight: 'bold',
-  },
-  wrapperForm: {
-    // height: '90%',
-    marginTop: 16,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    width: '100%',
-    fontSize: 36,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-});
 
 export default SignIn;

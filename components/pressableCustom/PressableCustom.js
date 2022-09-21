@@ -1,13 +1,13 @@
 import React from 'react';
 import {Text, Pressable} from 'react-native';
-import {classes} from './styles';
+import stylesRoot from './styles';
 
 const styleRoot = pressed => {
   return [
     {
       backgroundColor: pressed ? '#666666' : '#000000',
     },
-    classes.btn,
+    stylesRoot.btn,
   ];
 };
 const PressableCustom = ({
@@ -33,7 +33,7 @@ const PressableCustom = ({
         return options.componentChildren(actions);
       default:
         return (
-          <Text style={options.text.styles || classes.btnText}>
+          <Text style={options.text.styles || stylesRoot.btnText}>
             {options.text.label}
           </Text>
         );

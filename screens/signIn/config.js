@@ -1,8 +1,16 @@
 export const signInFields = [
   {
-    className: 'login',
     fieldName: 'login',
-    placeHolder: 'email@example.com',
-    required: true,
+    placeholder: 'email@example.com',
+    keyboardType: 'login',
+    validate: {
+      required: 'required',
+    },
+    styles: {
+      container: {
+        maxWidth: 300,
+        marginTop: 16,
+      },
+    },
   },
 ];

@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
-// import * as thunks from './thunks';
-// import {socket} from '../../../core/mainLayout/initSockets';
+import * as thunks from './thunks';
+import jwtDecode from '../../utils/jwtdecode';
 
 const initialState = {
   login: {
@@ -41,14 +41,26 @@ const authorizationSlice = createSlice({
   name: 'authorizationSlice',
   initialState,
   reducers: {
-    loginAction(state, {payload}) {
-      state.searchChats = null;
-    },
-    signUpAction(state, {payload}) {
-      state.searchChats = null;
-    },
-    checkVerificationCodeAction(state, {payload}) {
-      state.searchChats = null;
+    authTokenAction(state, {payload}) {
+      let payloadLocal = {
+        role: '',
+        login: '',
+        userAgent: '',
+        firstName: '',
+        userId: 0,
+        type: '',
+        iat: 0,
+        exp: 0,
+      };
+      try {
+        payloadLocal = jwtDecode(payload.token);
+      } catch (e) {
+        // console.log(e);
+      }
+      return {
+        ...state,
+        tokenPayload: payloadLocal,
+      };
     },
     requestFailAction(state, {payload}) {
       state.searchChats = null;
@@ -60,18 +72,55 @@ const authorizationSlice = createSlice({
       state.searchChats = null;
     },
   },
-  extraReducers: builder => {},
+  extraReducers: builder => {
+    builder.addCase(thunks.loginThunk.fulfilled, (state, action) => {
+      state.login = {
+        success: action.payload,
+        error: null,
+      };
+      state.logout = {
+        isLogout: false,
+      };
+    });
+    builder.addCase(thunks.loginThunk.rejected, (state, action) => {
+      state.login = {
+        ...initialState[state.login],
+        error: action.payload,
+      };
+    });
+    builder.addCase(thunks.verificationThunk.fulfilled, (state, action) => {
+      state.verification = {
+        success: action.payload,
+        error: null,
+      };
+      state.logout = {
+        isLogout: false,
+      };
+    });
+    builder.addCase(thunks.verificationThunk.rejected, (state, action) => {
+      state.verification = {
+        ...initialState[state.verification],
+        error: action.payload,
+      };
+    });
+    builder.addCase(thunks.loginThunk.fulfilled, (state, action) => {
+      state.signUp = {
+        success: action.payload,
+        error: null,
+      };
+      state.logout = {
+        isLogout: false,
+      };
+    });
+    builder.addCase(thunks.singUpThunk.rejected, (state, action) => {
+      state.signUp = {
+        ...initialState[state.signUp],
+        error: action.payload,
+      };
+    });
+  },
 });
 
-export const {
-  addNewMessage,
-  setMessageSeen,
-  addNewChat,
-  clearSearch,
-  setCurrentChat,
-  clearCurrentChat,
-  clearSearchDropDown,
-  updateUnreadNumber,
-} = authorizationSlice.actions;
+export const {authTokenAction} = authorizationSlice.actions;
 
 export default authorizationSlice.reducer;

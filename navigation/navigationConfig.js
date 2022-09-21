@@ -31,19 +31,19 @@ export const navigationNotAuthorized = [
     },
   },
   {
-    id: 1,
-    Component: SignUpScreen,
-    pathName: PathsName.signUp,
-    options: {
-      title: 'Sign Up',
-    },
-  },
-  {
-    id: 1,
+    id: 2,
     Component: verificationScreen,
     pathName: PathsName.verification,
     options: {
       title: 'Verification',
+    },
+  },
+  {
+    id: 3,
+    Component: SignUpScreen,
+    pathName: PathsName.signUp,
+    options: {
+      title: 'Sign Up',
     },
   },
 ];
