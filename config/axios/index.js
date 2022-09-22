@@ -1,13 +1,8 @@
 import axios from 'axios';
-
 import {BASE_URL} from '../constants/url';
-
-import {showSnackbar} from '../../helpers/SnackbarHelper';
-import {getHeaders} from '../../helpers/AuthHelper';
-
+import {showSnackbar, getHeaders} from '../../helpers';
 import {store} from '../../redux/store';
 // import {onLogOut} from '../actions/auth';
-import {getBaseUrl} from './UrlHelper';
 
 const parseErrorCode = error => {
   if (error.response) {

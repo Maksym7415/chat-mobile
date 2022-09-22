@@ -13,8 +13,9 @@ const Stack = createNativeStackNavigator();
 
 function MyStack() {
   const isLoading = useSelector(({appSlice}) => appSlice.isLoading);
-  const [signIn, setSignIn] = React.useState(null);
+  const tokenPayload = useSelector(({authSlice}) => authSlice.tokenPayload);
 
+  console.log(tokenPayload, 'tokenPayload');
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -24,12 +25,14 @@ function MyStack() {
       <SafeAreaView style={styles.container}>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName={signIn ? PathsName.signIn : PathsName.home}
+            initialRouteName={
+              tokenPayload.login ? PathsName.signIn : PathsName.main
+            }
             // screenOptions={{headerShown: false}}
           >
             {isLoading ? (
               <Stack.Screen name="Splash" component={SplashScreen} />
-            ) : signIn == null ? (
+            ) : !tokenPayload.login ? (
               navigationNotAuthorized.map(item => {
                 return (
                   <Stack.Screen

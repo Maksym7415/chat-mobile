@@ -22,7 +22,6 @@ const appSlice = createSlice({
       title: '',
     },
     sheraMessages: [],
-    lang: 'en',
   },
   reducers: {
     preloaderAction(state, {payload}) {

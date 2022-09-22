@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Text} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useForm} from 'react-hook-form';
 import * as config from './config';
 import {PathsName} from '../../navigation/navigationConfig';
 import languages from '../../config/translations';
-import {singUpThunk} from '../../redux/auth/thunks';
+import {postSingUpRequest} from '../../redux/auth/requests';
 import AuthForm from '../../components/authForm';
 
 const SignUp = ({navigation}) => {
@@ -15,38 +15,9 @@ const SignUp = ({navigation}) => {
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
-  const {
-    success: {email: login},
-    error: errorBack,
-  } = useSelector(({authSlice}) => authSlice.signUp);
 
   // STATES
-  const [error, setError] = React.useState('');
-
-  // FUNCTIONS
-  const onSubmit = data => {
-    dispatch(
-      singUpThunk({
-        data: {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          login: data.email,
-        },
-      }),
-    );
-    error && setError('');
-  };
-
-  // USEEFFECTS
-  React.useEffect(() => {
-    if (login && !errorBack) {
-      navigation.navigate(PathsName.verification, {login});
-    }
-    if (errorBack) {
-      const errorBackData = errorBack.response?.data;
-      errorBackData?.message && setError(errorBackData?.message);
-    }
-  }, [errorBack, login]);
+  const [errorBack, setErrorBack] = React.useState('');
 
   const {
     control,
@@ -58,13 +29,35 @@ const SignUp = ({navigation}) => {
     },
   });
 
+  // FUNCTIONS
+  const onSubmit = data => {
+    dispatch(
+      postSingUpRequest({
+        data: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          login: data.email,
+        },
+        cb: () => {
+          navigation.navigate(PathsName.verification, {
+            login: data.email,
+          });
+        },
+        errorCb: dataError => {
+          dataError?.message && setErrorBack(dataError?.message);
+        },
+      }),
+    );
+    errorBack && setErrorBack('');
+  };
+
   return (
     <AuthForm
       title={languages[lang].authorization.signUp}
       submitBtnTitle={languages[lang].authorization.signUp}
       configFields={config.signUpPage}
       onSubmit={onSubmit}
-      errorBack={error}
+      errorBack={errorBack}
       optionsForm={{
         control,
         handleSubmit,

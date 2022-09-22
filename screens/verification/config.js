@@ -5,10 +5,6 @@ export const verificationFields = [
     keyboardType: 'verificationCode',
     validate: {
       required: 'required',
-      // pattern: {
-      //   value: EMAIL_REGEX,
-      //   message: 'not valid',
-      // },
     },
     styles: {
       container: {

@@ -7,7 +7,7 @@ import * as config from './config';
 import {PathsName} from '../../navigation/navigationConfig';
 import languages from '../../config/translations';
 import AuthForm from '../../components/authForm';
-import {loginThunk} from '../../redux/auth/thunks';
+import {postLoginRequest} from '../../redux/auth/requests';
 
 const SignIn = ({navigation}) => {
   // HOOKS
@@ -15,36 +15,10 @@ const SignIn = ({navigation}) => {
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
-  const {error: errorBack, success} = useSelector(
-    ({authSlice}) => authSlice.login,
-  );
+  const loginSingIn = useSelector(({authSlice}) => authSlice.loginSingIn);
 
   // STATES
-  const [error, setError] = React.useState('');
-
-  // FUNCTIONS
-  const onSubmit = data => {
-    const {login} = data;
-    dispatch(
-      loginThunk({
-        data: {
-          login,
-        },
-      }),
-    );
-    error && setError('');
-  };
-
-  //USEEFFECTS
-  React.useEffect(() => {
-    if (success?.status && !errorBack) {
-      if (errorBack) {
-        navigation.navigate(PathsName.verification, success.email);
-        const errorBackData = errorBack.response?.data;
-        errorBackData?.message && setError(errorBackData?.message);
-      }
-    }
-  }, [errorBack, success]);
+  const [errorBack, setErrorBack] = React.useState('');
 
   const {
     control,
@@ -52,17 +26,36 @@ const SignIn = ({navigation}) => {
     formState: {errors},
   } = useForm({
     defaultValues: {
-      login: '',
+      login: loginSingIn || '',
     },
   });
 
+  // FUNCTIONS
+  const onSubmit = data => {
+    const {login} = data;
+    dispatch(
+      postLoginRequest({
+        data: {
+          login,
+        },
+        cb: () => {
+          navigation.navigate(PathsName.verification);
+        },
+        errorCb: dataError => {
+          dataError?.message && setErrorBack(dataError?.message);
+        },
+      }),
+    );
+    errorBack && setErrorBack('');
+  };
+  console.log(errorBack, 'errorBack');
   return (
     <AuthForm
       title={languages[lang].authorization.signin}
       submitBtnTitle={languages[lang].authorization.signin}
       configFields={config.signInFields}
       onSubmit={onSubmit}
-      errorBack={error}
+      errorBack={errorBack}
       optionsForm={{
         control,
         handleSubmit,

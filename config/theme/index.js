@@ -1,4 +1,7 @@
 export const theme = {
+  color_error_text: '#ed2f2f',
+
+  ///
   color_primary_default: '#1F93FF',
   color_white: '#FFFFFF',
 

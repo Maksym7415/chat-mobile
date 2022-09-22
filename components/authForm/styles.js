@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {theme} from '../../config/theme';
+import {errorText} from '../../config/globalStyles';
 
 export default StyleSheet.create({
   container: {
@@ -29,5 +30,10 @@ export default StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  errorText: {
+    ...errorText,
+    marginTop: 10,
+    fontSize: theme.font_size_medium,
   },
 });

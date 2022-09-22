@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
 
 import {theme} from '../../config/theme';
+import {errorText} from '../../config/globalStyles';
 
 export default StyleSheet.create({
   container: {
@@ -19,11 +20,9 @@ export default StyleSheet.create({
     fontWeight: theme.font_medium,
   },
   errorLabel: {
-    color: theme.color_danger_900,
-    textAlign: 'left',
+    ...errorText,
+    textAlign: 'center',
     paddingTop: 2,
-    paddingBottom: 2,
-    fontSize: theme.text_primary_size,
   },
   inputStyle: {
     fontSize: theme.input_font_size,

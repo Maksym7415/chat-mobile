@@ -1,4 +1,4 @@
-import {EMAIL_REGEX} from '../../utils/regx';
+import {EMAIL_REGEX} from '../../helpers';
 
 export const signUpPage = [
   {

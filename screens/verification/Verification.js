@@ -1,81 +1,60 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {useDispatch, useSelector} from 'react-redux';
 import * as config from './config';
-import {PathsName} from '../../navigation/navigationConfig';
 import languages from '../../config/translations';
-import {authTokenAction} from '../../redux/auth';
 import AuthForm from '../../components/authForm';
+import {postVerificationRequest} from '../../redux/auth/requests';
 
-const Verification = ({navigation, route}) => {
+const Verification = () => {
   // HOOKS
   const dispatch = useDispatch();
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
-  const response = useSelector(({authSlice}) => authSlice.verification);
-  const isRedirectToSignIn = useSelector(
-    ({authSlice}) => authSlice.login.success?.status,
-  );
-
   // this provided to prevent redirect in case we signing up, making automatically login and redirecting user straight to verification page
-  const isSignUp = useSelector(
-    ({authSlice}) => authSlice.signUp.success?.email,
+  const {loginSingIn, verificationCode} = useSelector(
+    ({authSlice}) => authSlice,
   );
 
   // STATES
-  const [error, setError] = React.useState('');
-  const [verificationCode, setVerificationCode] = React.useState('');
-
-  console.log(route.params, 'Verification page');
-
-  // FUNCTIONS
-  const onSubmit = value => {
-    navigation.navigate(PathsName.signUp);
-    // dispatch(
-    //   verificationThunk({
-    //     data: {
-    //       verificationCode: value,
-    //       login: route.params?.login,
-    //     },
-    //   }),
-    // );
-    // error && setError('');
-  };
-
-  // USEEFFECTS
-  // React.useEffect(() => {
-  //   if (!isRedirectToSignIn && !isSignUp) {
-  //     navigation.navigate(PathsName.signIn);
-  //   }
-  // }, []);
-
-  // VARIABLES
-  let errorBack = null;
-
-  React.useEffect(() => {
-    errorBack = response.error;
-    if (!!response.success.accessToken && !errorBack) {
-      // localStorage.setItem('accessToken', response.success.accessToken);
-      dispatch(authTokenAction(response.success.accessToken));
-      navigation.navigate(PathsName.home);
-    }
-    if (errorBack) {
-      const errorBackData = errorBack.response?.data;
-      errorBackData?.message && setError(errorBackData?.message);
-    }
-  }, [response]);
+  const [errorBack, setErrorBack] = React.useState('');
 
   const {
     control,
     handleSubmit,
+    getValues,
+    setValue,
     formState: {errors},
   } = useForm({
     defaultValues: {
-      login: '',
+      verificationCode: '',
     },
   });
+
+  // FUNCTIONS
+  const onSubmit = data => {
+    dispatch(
+      postVerificationRequest({
+        data: {
+          verificationCode: data.verificationCode,
+          login: loginSingIn,
+        },
+        errorCb: dataError => {
+          dataError?.message && setErrorBack(dataError?.message);
+        },
+      }),
+    );
+    errorBack && setErrorBack('');
+  };
+
+  useEffect(() => {
+    // set defaultValues form from back
+    if (!getValues('verificationCode') && verificationCode) {
+      setValue('verificationCode', `${verificationCode}`);
+    }
+  }, [verificationCode]);
 
   return (
     <AuthForm
@@ -83,7 +62,7 @@ const Verification = ({navigation, route}) => {
       submitBtnTitle={languages[lang].authorization.verificate}
       configFields={config.verificationFields}
       onSubmit={onSubmit}
-      errorBack={error}
+      errorBack={errorBack}
       optionsForm={{
         control,
         handleSubmit,

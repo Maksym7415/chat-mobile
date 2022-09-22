@@ -1,10 +1,10 @@
-import HomeScreen from '../screens/home';
+import MainScreen from '../screens/main';
 import SignInScreen from '../screens/signIn';
 import SignUpScreen from '../screens/signUp';
 import verificationScreen from '../screens/verification';
 
 export const PathsName = {
-  home: 'home',
+  main: 'main',
   signIn: 'signIn',
   signUp: 'signUp',
   verification: 'verification',
@@ -13,10 +13,10 @@ export const PathsName = {
 export const navigation = [
   {
     id: 4,
-    Component: HomeScreen,
-    pathName: PathsName.home,
+    Component: MainScreen,
+    pathName: PathsName.main,
     options: {
-      title: 'Home',
+      title: 'Main',
     },
   },
 ];

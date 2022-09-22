@@ -1,22 +1,15 @@
 import {createSlice} from '@reduxjs/toolkit';
+import * as requests from './requests';
 
 const initialState = {
   userHistoryConversation: {
-    success: {
-      data: [],
-      pagination: {
-        allItems: 0,
-        currentPage: 0,
-      },
+    data: [],
+    pagination: {
+      allItems: 0,
+      currentPage: 0,
     },
-    error: null,
   },
-  conversationsList: {
-    success: {
-      data: [],
-    },
-    error: null,
-  },
+  conversationsList: [],
   conversations: {
     message: '',
     id: 0,
@@ -46,12 +39,7 @@ const initialState = {
       ],
     },
   },
-  createConversation: {
-    success: {
-      data: [],
-    },
-    error: null,
-  },
+  createConversation: [],
   opponentId: {
     id: 0,
   },
@@ -65,11 +53,6 @@ const conversationsSlice = createSlice({
       [payload.name] = {
         success: payload.data,
         error: null,
-      };
-    },
-    conversationActionFail(state, {payload}) {
-      [payload.name] = {
-        error: payload.data,
       };
     },
     conversationUserHistoryActionRequest(state, {payload}) {
@@ -90,9 +73,6 @@ const conversationsSlice = createSlice({
     },
     clearLastMessage(state, {payload}) {
       state.lastMessages = {};
-    },
-    getUserConversationsActionRequest(state, {payload}) {
-      state.conversationId = payload;
     },
     conversationTypeStateAction(state, {payload}) {
       state.conversationTypeState = {
@@ -118,7 +98,33 @@ const conversationsSlice = createSlice({
       state.searchChats = null;
     },
   },
-  extraReducers: builder => {},
+  extraReducers: builder => {
+    builder.addCase(
+      requests.getUserConversationsRequest.fulfilled,
+      (state, action) => {
+        state.login = {
+          ...state.login.success,
+          success: {
+            status: true,
+            ...action.payload,
+          },
+          error: null,
+        };
+        state.logout = {
+          isLogout: false,
+        };
+      },
+    );
+    builder.addCase(
+      requests.getUserConversationsRequest.rejected,
+      (state, action) => {
+        state.login = {
+          ...initialState[state.login],
+          error: action.payload,
+        };
+      },
+    );
+  },
 });
 
 export const {
@@ -128,7 +134,6 @@ export const {
   lastConversationMessageAction,
   conversationAddNewMessage,
   clearLastMessage,
-  getUserConversationsActionRequest,
   conversationTypeStateAction,
   updateConversationDataAction,
   createNewChatAction,

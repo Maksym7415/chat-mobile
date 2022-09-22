@@ -42,7 +42,7 @@ const AuthForm = ({
         ))}
         {errorBack && (
           <View style={styles.error}>
-            <Text>{errorBack}</Text>
+            <Text style={styles.errorText}>{errorBack}</Text>
           </View>
         )}
         <PressableCustom
@@ -56,7 +56,7 @@ const AuthForm = ({
               },
               {
                 ...stylesRoot.btn,
-                marginTop: 25,
+                marginTop: 15,
               },
             ];
           }}
@@ -67,7 +67,7 @@ const AuthForm = ({
             },
           }}
         />
-        {render.text && render.text(styles)}
+        {render?.text && render.text(styles)}
       </View>
     </SafeAreaView>
   );
