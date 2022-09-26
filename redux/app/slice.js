@@ -22,6 +22,7 @@ const appSlice = createSlice({
       title: '',
     },
     sheraMessages: [],
+    selectedСhats: {},
   },
   reducers: {
     preloaderAction(state, {payload}) {
@@ -57,6 +58,9 @@ const appSlice = createSlice({
     setIsLoading(state, {payload}) {
       state.isLoading = payload;
     },
+    setSelectedСhatsAction(state, {payload}) {
+      state.selectedСhats = payload;
+    },
   },
 });
 
@@ -71,6 +75,7 @@ const {
   showDialogAction,
   hideDialogAction,
   setIsLoading,
+  setSelectedСhatsAction,
 } = appSlice.actions;
 export {
   preloaderAction,
@@ -82,4 +87,5 @@ export {
   showDialogAction,
   hideDialogAction,
   setIsLoading,
+  setSelectedСhatsAction,
 };

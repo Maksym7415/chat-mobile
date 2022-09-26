@@ -1,7 +1,12 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import API from '../../config/axios';
 import {pathBackAuth} from '../../config/constants/urlBack';
-import {authTokenAction, setLoginSingInAction} from './slice';
+import {setTokenStorage} from '../../config/asyncStorageActions';
+import {
+  authTokenAction,
+  setLoginSingInAction,
+  setAuthHedersAction,
+} from './slice';
 
 export const postLoginRequest = createAsyncThunk(
   'auth/postLoginRequest',
@@ -14,7 +19,6 @@ export const postLoginRequest = createAsyncThunk(
       dispatch(setLoginSingInAction(params.data.login));
       return response.data;
     } catch (error) {
-      console.log(error.data, 'error');
       params.errorCb && params.errorCb(error?.data);
       return Promise.reject(error);
     }
@@ -28,11 +32,16 @@ export const postVerificationRequest = createAsyncThunk(
       const response = await API.post(pathBackAuth.checkVerificationCode, {
         ...params.data,
       });
+
       await dispatch(
         authTokenAction({
           token: response.data.accessToken,
         }),
       );
+
+      setTokenStorage(response.data.accessToken);
+
+      await dispatch(setAuthHedersAction(response.data.accessToken));
       params.cb && params.cb();
       return response.data;
     } catch (error) {

@@ -1,43 +1,28 @@
-import {withStyles} from '@ui-kitten/components';
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {View, TouchableOpacity, Text} from 'react-native';
-import PropTypes from 'prop-types';
-import {stylesConversationdata as styles} from './styles';
+import {useNavigation} from '@react-navigation/native';
+import {stylesConversationItem as styles} from './styles';
 import {getCurrentDay} from '../../../helpers';
-// import InboxName from 'src/screens/ChatScreen/components/InboxName';
-
-const propTypes = {
-  eva: PropTypes.shape({
-    style: PropTypes.object,
-    theme: PropTypes.object,
-  }).isRequired,
-  name: PropTypes.string,
-  onSelectConversation: PropTypes.func,
-  inboxes: PropTypes.array.isRequired,
-  conversationTypingUsers: PropTypes.shape({}),
-  data: PropTypes.shape({
-    id: PropTypes.number,
-    meta: PropTypes.shape({
-      sender: PropTypes.shape({
-        name: PropTypes.string,
-        thumbnail: PropTypes.string,
-        availability_status: PropTypes.string,
-      }),
-      channel: PropTypes.string,
-    }),
-    messages: PropTypes.array.isRequired,
-    inbox_id: PropTypes.number,
-  }).isRequired,
-};
+import DefaultAvatar from '../../../components/avatar/defaultAvatar';
+import {PathsName} from '../../../navigation/navigationConfig';
+import {
+  selectedСhatsAction,
+  selectedСhatsActionType,
+} from '../../../redux/app/actions';
+import store from '../../../redux/store';
 
 const ConversationdataComponent = ({
   data,
   onSelectConversation,
   usersTyping,
 }) => {
+  //HOOKS
+  const navigation = useNavigation();
+
   // SELECTORS
-  const lang = useSelector(({commonReducer}) => commonReducer.lang);
+  const lang = useSelector(({settingSlice}) => settingSlice.lang);
+  const {selectedСhats} = useSelector(({appSlice}) => appSlice);
 
   const userId = 0;
 
@@ -51,56 +36,92 @@ const ConversationdataComponent = ({
     return str;
   };
 
+  const handleOnPressChat = () => {
+    if (Object.keys(selectedСhats).length) {
+      selectedСhats?.[data.conversationId]
+        ? store.dispatch(
+            selectedСhatsAction(data, selectedСhatsActionType.remove),
+          )
+        : store.dispatch(
+            selectedСhatsAction(data, selectedСhatsActionType.add),
+          );
+    } else {
+      navigation.navigate(PathsName.chat, {
+        id: data.conversationId,
+      });
+    }
+  };
+
   const someBodyWritting = usersTyping[data.conversationId] && getString(data);
 
   return (
     <TouchableOpacity
       activeOpacity={0.5}
-      style={styles.container}
-      onPress={() => onSelectConversation(data)}>
+      style={(() => {
+        if (selectedСhats?.[data.conversationId]) {
+          return {
+            ...styles.container,
+            ...styles.selectedChat,
+          };
+        }
+        return styles.container;
+      })()}
+      onPress={handleOnPressChat}
+      onLongPress={() =>
+        !Object.keys(selectedСhats).length &&
+        store.dispatch(selectedСhatsAction(data, selectedСhatsActionType.add))
+      }>
       <View style={styles.dataView}>
         <View style={styles.avatarView}>
-          {/* <UserAvatar
-            thumbnail={thumbnail}
-            userName={name}
-            size={40}
-            fontSize={16}
-            defaultBGColor={theme['color-primary-default']}
-            channel={channel}
-            isActive={isActive}
-            availabilityStatus={availabilityStatus}
-          /> */}
+          {data.conversationAvatar ? (
+            {
+              /* <Avatar
+              className={styles.avatar}
+              src={`${process.env.REACT_APP_BASE_URL}/${data.conversationAvatar}`}
+            /> */
+            }
+          ) : (
+            <DefaultAvatar
+              name={data.conversationName}
+              styles={{
+                root: {
+                  width: 50,
+                  height: 50,
+                },
+              }}
+              fontSize={16}
+            />
+          )}
         </View>
-        <View style="flex chat__chats-data-message-container relative">
-          <View style="chat__title-container">
-            <Text style={styles.bold} variant="subtitle1">
-              {data.conversationName}
-            </Text>
+        <View style={styles.wrapperBody}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.bold}>{data.conversationName}</Text>
             <Text
-              style={{...styles?.dateSender, ...styles?.dateSenderChatlist}}
-              variant="subtitle1">
+              style={{...styles?.dateSender, ...styles?.dateSenderChatlist}}>
               {data.Messages[0] === undefined
                 ? ''
                 : getCurrentDay(new Date(data.Messages[0].sendDate), false)}
             </Text>
           </View>
-          {someBodyWritting ? (
-            <Text
-              variant="caption"
-              style={
-                styles.messageText
-              }>{`${lang[lang].generals.isTyping}... (${someBodyWritting})`}</Text>
-          ) : (
-            <Text variant="caption" style={styles.messageText}>
-              {data.Messages[0] === undefined
-                ? lang[lang].generals.noMessages
-                : data.Messages[0]?.User?.id === userId
-                ? `${lang[lang].generals.you}: ${data.Messages[0].message}`
-                : data.conversationType !== 'Dialog'
-                ? data.Messages[0].message
-                : `${data.Messages[0]?.User?.firstName}: ${data.Messages[0].message}`}
-            </Text>
-          )}
+          <View style={styles.message}>
+            {someBodyWritting ? (
+              <Text
+                numberOfLines={1}
+                style={
+                  styles.messageText
+                }>{`${lang[lang].generals.isTyping}... (${someBodyWritting})`}</Text>
+            ) : (
+              <Text style={styles.messageText} numberOfLines={1}>
+                {data.Messages[0] === undefined
+                  ? lang[lang].generals.noMessages
+                  : data.Messages[0]?.User?.id === userId
+                  ? `${lang[lang].generals.you}: ${data.Messages[0].message}`
+                  : data.conversationType !== 'Dialog'
+                  ? data.Messages[0].message
+                  : `${data.Messages[0]?.User?.firstName}: ${data.Messages[0].message}`}
+              </Text>
+            )}
+          </View>
         </View>
       </View>
     </TouchableOpacity>

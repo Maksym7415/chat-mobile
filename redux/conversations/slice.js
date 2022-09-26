@@ -102,17 +102,7 @@ const conversationsSlice = createSlice({
     builder.addCase(
       requests.getUserConversationsRequest.fulfilled,
       (state, action) => {
-        state.login = {
-          ...state.login.success,
-          success: {
-            status: true,
-            ...action.payload,
-          },
-          error: null,
-        };
-        state.logout = {
-          isLogout: false,
-        };
+        state.conversationsList = action.payload.data;
       },
     );
     builder.addCase(
@@ -121,6 +111,15 @@ const conversationsSlice = createSlice({
         state.login = {
           ...initialState[state.login],
           error: action.payload,
+        };
+      },
+    );
+    builder.addCase(
+      requests.getConversationUserHistoryRequest.fulfilled,
+      (state, action) => {
+        state.userHistoryConversation = {
+          data: action.payload?.data,
+          pagination: action.payload?.pagination,
         };
       },
     );

@@ -48,7 +48,7 @@ const SignIn = ({navigation}) => {
     );
     errorBack && setErrorBack('');
   };
-  console.log(errorBack, 'errorBack');
+
   return (
     <AuthForm
       title={languages[lang].authorization.signin}

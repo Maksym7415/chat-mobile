@@ -7,12 +7,13 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
 };
+const reducer = rootReducer;
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
   reducer: rootReducer,
-  devTools: process.env.NODE_ENV !== 'production',
+  // devTools: process.env.NODE_ENV !== 'production',
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false,

@@ -6,4 +6,5 @@ export const pathBackAuth = {
 
 export const pathBackConversations = {
   getUserConversations: '/getUserConversations',
+  conversationHistory: '/conversationHistory',
 };

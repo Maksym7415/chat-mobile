@@ -47,12 +47,6 @@ const authSlice = createSlice({
     builder.addCase(requests.postLoginRequest.fulfilled, (state, action) => {
       state.verificationCode = action.payload.verificationCode;
     });
-    builder.addCase(
-      requests.postVerificationRequest.fulfilled,
-      (state, action) => {
-        state.headers.accessToken = action.payload;
-      },
-    );
   },
 });
 

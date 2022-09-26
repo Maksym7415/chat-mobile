@@ -5,8 +5,14 @@ import Loader from '../../components/loader';
 
 const Splash = () => {
   return (
-    <View>
-      <Loader />
+    <View style={styles.container}>
+      <Loader
+        styles={{
+          text: {
+            color: 'red',
+          },
+        }}
+      />
     </View>
   );
 };

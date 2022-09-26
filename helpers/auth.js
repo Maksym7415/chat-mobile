@@ -1,13 +1,18 @@
-import {store} from '../redux/store';
+import store from '../redux/store';
 
 export const getHeaders = async () => {
   try {
     const state = await store.getState();
     const {
-      headers: {'access-token': accessToken},
+      headers: {accessToken},
     } = state.authSlice;
-    return {
-      'access-token': accessToken,
-    };
+
+    let headersConfig = {};
+
+    if (accessToken) {
+      headersConfig.Authorization = 'Bearer ' + accessToken;
+    }
+
+    return Object.keys(headersConfig).length ? headersConfig : null;
   } catch (error) {}
 };

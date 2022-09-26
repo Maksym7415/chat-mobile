@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './styles';
-import {FlatList, Platform, View, TouchableHighlight, Text} from 'react-native';
+import {FlatList, Platform, View} from 'react-native';
 import ConversationItemComponent from './ConversationItem';
 
 const ConversationItems = ({data, usersTyping}) => {
@@ -15,15 +15,16 @@ const ConversationItems = ({data, usersTyping}) => {
         ))
       }
       data={data}
-      renderItem={({item, _, separators}) => (
-        <ConversationItemComponent
-          key={item.id}
-          data={item}
-          separators={separators}
-          usersTyping={usersTyping}
-        />
-      )}
-      keyExtractor={item => item.id}
+      renderItem={({item, _, separators}) => {
+        return (
+          <ConversationItemComponent
+            data={item}
+            separators={separators}
+            usersTyping={usersTyping}
+          />
+        );
+      }}
+      keyExtractor={item => item.conversationId}
       extraData={selectedId}
     />
   );

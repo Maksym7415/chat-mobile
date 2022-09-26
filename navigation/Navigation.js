@@ -1,21 +1,53 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/react-in-jsx-scope */
 import * as React from 'react';
 import styles from './styles';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaView, KeyboardAvoidingView, Platform} from 'react-native';
 import SplashScreen from '../screens/splash';
 import {PathsName} from './navigationConfig';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {navigationNotAuthorized, navigation} from './navigationConfig';
+import {getTokenStorage} from '../config/asyncStorageActions';
+import {authTokenAction, setAuthHedersAction} from '../redux/auth/slice';
 
 const Stack = createNativeStackNavigator();
 
 function MyStack() {
-  const isLoading = useSelector(({appSlice}) => appSlice.isLoading);
+  // HOOKS
+  const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = React.useState(true);
   const tokenPayload = useSelector(({authSlice}) => authSlice.tokenPayload);
 
-  console.log(tokenPayload, 'tokenPayload');
+  const checkIsToken = async () => {
+    setIsLoading(true);
+    const token = await getTokenStorage();
+    try {
+      if (token) {
+        await dispatch(
+          setAuthHedersAction({
+            accessToken: token,
+          }),
+        );
+        await dispatch(
+          authTokenAction({
+            token,
+          }),
+        );
+      }
+    } catch (error) {
+      console.log(error, 'checkIsToken');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    checkIsToken();
+  }, []);
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
