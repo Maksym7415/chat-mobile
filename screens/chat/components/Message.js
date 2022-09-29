@@ -3,20 +3,25 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, {useLayoutEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {stylesMessageInput as styles} from './styles';
+import {stylesMessage as styles} from './styles';
+import {contextMenuConfig, contextMenuCallback} from '../config';
+import languages from '../../../config/translations';
+import {getCurrentDay} from '../../../helpers';
+import DefaultAvatar from '../../../components/avatar/defaultAvatar';
+import {conversationListActions} from '../../../redux/conversations/actions';
 import {
   editMessageAction,
   deleteMessageAction,
   contextMenuAction,
   showDialogAction,
 } from '../../../redux/app';
-import {getCurrentDay} from '../../../helpers';
-import DefaultAvatar from '../../../components/avatar/defaultAvatar';
-import {contextMenuConfig, contextMenuCallback} from '../config';
-// import {updateConversationData} from '../../../../../redux/conversations/consta';
-import languages from '../../../config/translations';
+import {
+  actionsTypeObjectSelected,
+  selectedMessagesActions,
+} from '../../../redux/app/actions';
+import store from '../../../redux/store';
 
 function Message({
   messageData,
@@ -30,23 +35,22 @@ function Message({
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
-  // const activeConversationType = useSelector(
-  //   ({userConversationReducer}) => userConversationReducer.conversationId.type,
-  // );
-  const conversationsList = useSelector(
-    ({conversationsSlice}) => conversationsSlice.conversationsList.data,
-  );
+  const {
+    conversationId: {type: activeConversationType},
+    conversationsList,
+  } = useSelector(({conversationsSlice}) => conversationsSlice);
+  const {selectedMessages} = useSelector(({appSlice}) => appSlice);
 
   // STATES
   const [settings, setSettings] = useState({
     typeMessage: '',
-    classNames: {
+    styles: {
       root: '',
       rootPaper: '',
     },
   });
-  // FUNCTIONS
 
+  // FUNCTIONS
   const closeContextMenuAction = () =>
     dispatch(
       contextMenuAction({
@@ -68,17 +72,16 @@ function Message({
       message => message.id !== messageData.id && !message.component,
     );
 
-    // updateConversationData(
-    //   {
-    //     mode: 'deleteMessage',
-    //     conversationId,
-    //     messages: filterAllMassages.length
-    //       ? [filterAllMassages[filterAllMassages.length - 1]]
-    //       : [],
-    //     conversationsList,
-    //   },
-    //   dispatch,
-    // );
+    dispatch(
+      conversationListActions({
+        mode: 'deleteMessage',
+        conversationId,
+        messages: filterAllMassages.length
+          ? [filterAllMassages[filterAllMassages.length - 1]]
+          : [],
+        conversationsList,
+      }),
+    );
     dispatch(deleteMessageAction(true, messageData.id));
     closeContextMenuAction();
   };
@@ -106,8 +109,8 @@ function Message({
       return setSettings(prev => ({
         ...prev,
         typeMessage: 'shared',
-        classNames: {
-          root: 'conversations__message-container-margin-shared',
+        styles: {
+          root: styles.containerShared,
           rootPaper: styles.paperSharedMessage,
           wrapperMessage: styles.wrapperTextMessageShared,
         },
@@ -119,8 +122,8 @@ function Message({
       return setSettings(prev => ({
         ...prev,
         typeMessage: 'myMessage',
-        classNames: {
-          root: 'conversations__message-container-margin-sender',
+        styles: {
+          root: styles.containerSender,
           rootPaper: styles.paperSenderMessage,
         },
       }));
@@ -130,104 +133,142 @@ function Message({
     return setSettings(prev => ({
       ...prev,
       typeMessage: 'otherUser',
-      classNames: {
-        root: 'conversations__message-container-margin-friend',
+      styles: {
+        root: styles.containerFriend,
         rootPaper: styles.paperFriendMessage,
       },
     }));
   }, []);
 
-  console.log(messageData.message, 'messageData.message');
-  return (
-    <View
-      style={`conversations__message-container flex ${settings.classNames.root}`}>
-      {isShowAvatar &&
-        (messageData.User.userAvatar ? null : (
-          <DefaultAvatar
-            name={`${messageData.User.firstName} ${messageData.User.lastName}`}
-            styles={{
-              root: {
-                width: 30,
-                height: 30,
-              },
-            }}
-            fontSize={10}
-          />
-        ))}
-      <View
-        onContextMenu={event =>
-          contextMenuCallback(
-            event,
-            messageData.id,
-            contextMenuConfig(
-              lang,
-              messageData.fkSenderId === userId,
-              handleDeleteMessage,
-              handleEditMessage,
-              handleShareMessage,
+  const handleOnPressChat = () => {
+    if (Object.keys(selectedMessages).length && messageData.message) {
+      selectedMessages?.[messageData.id]
+        ? store.dispatch(
+            selectedMessagesActions(
+              messageData,
+              actionsTypeObjectSelected.remove,
             ),
-            dispatch,
           )
+        : store.dispatch(
+            selectedMessagesActions(messageData, actionsTypeObjectSelected.add),
+          );
+    }
+  };
+
+  // console.log(messageData, 'messageData.message');
+  console.log(selectedMessages, 'selectedMessages');
+  return (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      style={(() => {
+        const initialStyles = {...settings.styles.root};
+        if (selectedMessages?.[messageData.id]) {
+          return {
+            ...initialStyles,
+            ...styles.selectedMessages,
+          };
         }
-        onClick={event =>
-          contextMenuCallback(event, messageData.id, [], dispatch)
-        }
-        className="conversations__message-file-container">
-        {messageData.Files && !!messageData.Files.length && (
-          <View className="conversations__message-image-container">
-            {messageData.Files.map(file =>
-              ['png', 'jpg', 'jpeg'].includes(file.extension) ? (
-                <img
-                  key={file.fileStorageName}
-                  className="conversations__message-image-item"
-                  src={`${process.env.REACT_APP_BASE_URL}/${file.fileStorageName}.${file.extension}`}
-                  alt={file.fileStorageName}
-                />
-              ) : null,
-            )}
-          </View>
-        )}
-        {messageData.message && (
-          <View
-          // className={clsx(settings.classNames.rootPaper, {
-          //   [classes.fullWidth]:
-          //     messageData.Files && messageData.Files.length,
-          // })}
-          >
-            {messageData.isEdit && (
-              <Text className={styles.edited}>
-                {languages[lang].generals.edited}
-              </Text>
-            )}
-            <View className="conversations__user-name-date-container relative">
-              {/* {activeConversationType !== 'Dialog' ? (
-                <p className="conversations__message-info-text">
-                  {messageData.forwardedUser
-                    ? languages[lang].generals.forwardedMessage
-                    : messageData.User.tagName}
-                </p>
-              ) : (
-                <div
-                  className="conversations__message-info-text"
-                  style={{height: '2px'}}></div>
-              )} */}
-              <Text className="conversations__message-info-time">
-                {getCurrentDay(new Date(messageData.sendDate), true)}
-              </Text>
+        return initialStyles;
+      })()}
+      onPress={handleOnPressChat}
+      onLongPress={() => {
+        !Object.keys(selectedMessages).length &&
+          messageData.message &&
+          store.dispatch(
+            selectedMessagesActions(messageData, actionsTypeObjectSelected.add),
+          );
+      }}>
+      <View style={{...styles.wrapperUp}}>
+        {isShowAvatar &&
+          (messageData.User.userAvatar ? null : (
+            <DefaultAvatar
+              name={`${messageData.User.firstName} ${messageData.User.lastName}`}
+              styles={{
+                root: {
+                  width: 30,
+                  height: 30,
+                },
+              }}
+              fontSize={10}
+            />
+          ))}
+        <View
+          onContextMenu={event =>
+            contextMenuCallback(
+              event,
+              messageData.id,
+              contextMenuConfig(
+                lang,
+                messageData.fkSenderId === userId,
+                handleDeleteMessage,
+                handleEditMessage,
+                handleShareMessage,
+              ),
+              dispatch,
+            )
+          }
+          onClick={event =>
+            contextMenuCallback(event, messageData.id, [], dispatch)
+          }
+          style={styles.wrapper}>
+          {messageData.Files && !!messageData.Files.length && (
+            <View className="conversations__message-image-container">
+              {messageData.Files.map(file =>
+                ['png', 'jpg', 'jpeg'].includes(file.extension) ? (
+                  <img
+                    key={file.fileStorageName}
+                    className="conversations__message-image-item"
+                    src={`${process.env.REACT_APP_BASE_URL}/${file.fileStorageName}.${file.extension}`}
+                    alt={file.fileStorageName}
+                  />
+                ) : null,
+              )}
             </View>
+          )}
+          {messageData.message && (
             <View
-              className={`conversations__message-text ${settings.classNames.wrapperMessage}`}>
-              {messageData.forwardedUser && (
-                <Text className={styles.wrapperMessageUserName}>
-                  {messageData.User.tagName}
+              // className={clsx(settings.classNames.rootPaper, {
+              //   [classes.fullWidth]:
+              //     messageData.Files && messageData.Files.length,
+              // })}
+              style={{...settings.styles.rootPaper}}>
+              {messageData.isEdit && (
+                <Text className={styles.edited}>
+                  {languages[lang].generals.edited}
                 </Text>
               )}
-              <Text>{messageData.message}</Text>
+              <View style={styles.wrapperNameData}>
+                {activeConversationType !== 'Dialog' ? (
+                  <Text style={styles.name}>
+                    {messageData.forwardedUser
+                      ? languages[lang].generals.forwardedMessage
+                      : messageData.User.tagName}
+                  </Text>
+                ) : (
+                  <View style={{...styles.name, height: 2}} />
+                )}
+                <Text style={styles.messageSendTime}>
+                  {getCurrentDay(new Date(messageData.sendDate), true)}
+                </Text>
+              </View>
+              <View
+                style={{
+                  ...settings.styles.wrapperMessage,
+                }}>
+                {messageData.forwardedUser && (
+                  <Text style={styles.wrapperMessageUserName}>
+                    {messageData.User.tagName}
+                  </Text>
+                )}
+                <Text style={{...styles.messageText}}>
+                  {messageData.message}
+                </Text>
+              </View>
             </View>
-          </View>
-        )}
+          )}
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

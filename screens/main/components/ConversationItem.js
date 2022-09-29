@@ -1,14 +1,14 @@
 import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {View, TouchableOpacity, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {stylesConversationItem as styles} from './styles';
 import {getCurrentDay} from '../../../helpers';
-import DefaultAvatar from '../../../components/avatar/defaultAvatar';
 import {PathsName} from '../../../navigation/navigationConfig';
+import DefaultAvatar from '../../../components/avatar/defaultAvatar';
 import {
-  selectedСhatsAction,
-  selectedСhatsActionType,
+  selectedСhatsActions,
+  actionsTypeObjectSelected,
 } from '../../../redux/app/actions';
 import store from '../../../redux/store';
 
@@ -40,14 +40,18 @@ const ConversationdataComponent = ({
     if (Object.keys(selectedСhats).length) {
       selectedСhats?.[data.conversationId]
         ? store.dispatch(
-            selectedСhatsAction(data, selectedСhatsActionType.remove),
+            selectedСhatsActions(data, actionsTypeObjectSelected.remove),
           )
         : store.dispatch(
-            selectedСhatsAction(data, selectedСhatsActionType.add),
+            selectedСhatsActions(data, actionsTypeObjectSelected.add),
           );
     } else {
       navigation.navigate(PathsName.chat, {
         id: data.conversationId,
+        conversationData: {
+          title: data.conversationName,
+          avatar: data.conversationAvatar,
+        },
       });
     }
   };
@@ -69,7 +73,9 @@ const ConversationdataComponent = ({
       onPress={handleOnPressChat}
       onLongPress={() =>
         !Object.keys(selectedСhats).length &&
-        store.dispatch(selectedСhatsAction(data, selectedСhatsActionType.add))
+        store.dispatch(
+          selectedСhatsActions(data, actionsTypeObjectSelected.add),
+        )
       }>
       <View style={styles.dataView}>
         <View style={styles.avatarView}>

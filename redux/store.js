@@ -7,6 +7,8 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
 };
+
+// rework
 const reducer = rootReducer;
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

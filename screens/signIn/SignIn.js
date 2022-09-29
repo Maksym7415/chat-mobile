@@ -4,8 +4,8 @@ import {Text} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useForm} from 'react-hook-form';
 import * as config from './config';
-import {PathsName} from '../../navigation/navigationConfig';
 import languages from '../../config/translations';
+import {PathsName} from '../../navigation/navigationConfig';
 import AuthForm from '../../components/authForm';
 import {postLoginRequest} from '../../redux/auth/requests';
 

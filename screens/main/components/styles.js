@@ -38,3 +38,37 @@ export const stylesConversationItem = StyleSheet.create({
     textOverflow: 'ellipsis',
   },
 });
+
+export const mainHeader = StyleSheet.create({
+  container: {
+    // flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  selectedСhatsAmountContainer: {
+    backgroundColor: '#ffffff',
+  },
+
+  wrapperBurger: {
+    marginRight: 30,
+  },
+  wrapperTitle: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  wrapperSearch: {},
+  wrapperClose: {
+    marginRight: 40,
+  },
+  wrpperSelectedAmount: {flex: 1},
+  wrapperActions: {
+    flexDirection: 'row',
+  },
+  wrapperAction: {
+    marginRight: 10,
+  },
+  wrapperOptions: {
+    marginRight: 0,
+  },
+});

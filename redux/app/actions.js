@@ -1,30 +1,36 @@
-import {setSelectedСhatsAction} from './slice';
+import {setSelectedСhatsAction, setSelectedMessagesAction} from './slice';
+import {
+  actionsForTypeWithObjKey,
+  actionsTypeObject,
+} from '../../helpers/actionsForType';
 
-export const selectedСhatsActionType = {
-  add: 'add',
-  remove: 'remove',
-  clear: 'clear',
-};
+export const actionsTypeObjectSelected = actionsTypeObject;
 
-export const selectedСhatsAction =
+export const selectedСhatsActions =
   (data, typeAction) => async (dispatch, getState) => {
     const {selectedСhats} = getState().appSlice;
 
-    let updateSelectedСhats = {...selectedСhats};
+    actionsForTypeWithObjKey({
+      prevData: {...selectedСhats},
+      key: data?.conversationId || null,
+      data,
+      typeAction,
+      dispatch,
+      setAction: setSelectedСhatsAction,
+    });
+    return;
+  };
 
-    switch (typeAction) {
-      case selectedСhatsActionType.add:
-        updateSelectedСhats[data.conversationId] = data;
-        dispatch(setSelectedСhatsAction(updateSelectedСhats));
-        return;
-      case selectedСhatsActionType.remove:
-        delete updateSelectedСhats[data.conversationId];
-        dispatch(setSelectedСhatsAction(updateSelectedСhats));
-        return;
-      case selectedСhatsActionType.clear:
-        dispatch(setSelectedСhatsAction({}));
-        return;
-      default:
-        return;
-    }
+export const selectedMessagesActions =
+  (data, typeAction) => async (dispatch, getState) => {
+    const {selectedMessages} = getState().appSlice;
+
+    actionsForTypeWithObjKey({
+      prevData: {...selectedMessages},
+      key: data?.id || null,
+      data,
+      typeAction,
+      dispatch: dispatch,
+      setAction: setSelectedMessagesAction,
+    });
   };

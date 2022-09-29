@@ -1,12 +1,12 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import API from '../../config/axios';
-import {pathBackAuth} from '../../config/constants/urlBack';
-import {setTokenStorage} from '../../config/asyncStorageActions';
 import {
   authTokenAction,
   setLoginSingInAction,
   setAuthHedersAction,
 } from './slice';
+import API from '../../config/axios';
+import {pathBackAuth} from '../../config/constants/urlBack';
+import {setTokenStorage} from '../../config/asyncStorageActions';
 
 export const postLoginRequest = createAsyncThunk(
   'auth/postLoginRequest',

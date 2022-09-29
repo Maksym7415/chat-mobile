@@ -8,3 +8,7 @@ export const pathBackConversations = {
   getUserConversations: '/getUserConversations',
   conversationHistory: '/conversationHistory',
 };
+
+export const pathBackUser = {
+  getUserProfileData: '/getUserProfileData',
+};

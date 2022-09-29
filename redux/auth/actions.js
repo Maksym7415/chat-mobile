@@ -1,7 +1,10 @@
 import {setLangAction} from '../setting';
-import {setIsLogoutAction} from '../auth';
+import {setIsLogoutAction, authTokenAction} from '../auth';
+import {removeTokenStorage} from '../../config/asyncStorageActions';
 
 export const onLogOut = () => async (dispatch, getState) => {
   dispatch(setLangAction('en'));
-  dispatch(setIsLogoutAction());
+  dispatch(setIsLogoutAction(true));
+  dispatch(authTokenAction(null));
+  removeTokenStorage();
 };

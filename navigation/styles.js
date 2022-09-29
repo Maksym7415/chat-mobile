@@ -1,9 +1,11 @@
 import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+    // width: '100%',
+  },
   container: {
-    width: '100%',
-    display: 'flex',
     flex: 1,
   },
 });

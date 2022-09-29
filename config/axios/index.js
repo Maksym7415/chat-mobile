@@ -3,22 +3,20 @@ import axios from 'axios';
 import {BASE_URL} from '../constants/url';
 import {getHeaders} from '../../helpers';
 // import store from '../../redux/store';
-// import {onLogOut} from '../actions/auth';
+// import {onLogOut} from '../../redux/auth/actions';
 
 const parseErrorCode = error => {
   if (error.response) {
     if (error.response?._response) {
       alert(error.response?._response);
     }
-
     if (error.response.status === 401) {
       // store.dispatch(onLogOut());
     } else if (error.response.status === 404) {
       const {message} = error.response.data;
-      // showSnackbar({message});
     }
   } else {
-    // showSnackbar({message: 'something'});
+    // error something
   }
 
   return Promise.reject(error.response);

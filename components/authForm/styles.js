@@ -3,12 +3,13 @@ import {theme} from '../../config/theme';
 import {errorText} from '../../config/globalStyles';
 
 export default StyleSheet.create({
+  keyboardView: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    width: '100%',
-    backgroundColor: theme.background_basic_color_1,
-    display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   wrapperForm: {
     marginTop: 16,

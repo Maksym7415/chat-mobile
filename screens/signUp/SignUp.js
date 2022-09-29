@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Text} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useForm} from 'react-hook-form';

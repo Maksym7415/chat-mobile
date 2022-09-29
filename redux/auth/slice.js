@@ -16,7 +16,6 @@ const initalTokenPayload = {
 const initialState = {
   loginSingIn: null,
   verificationCode: null,
-  refreshToken: '',
   tokenPayload: initalTokenPayload,
   headers: {accessToken: ''},
   isLogout: false,
@@ -29,7 +28,7 @@ const authSlice = createSlice({
     authTokenAction(state, {payload}) {
       let payloadLocal = initalTokenPayload;
       try {
-        payloadLocal = jwtdecode(payload.token);
+        payloadLocal = payload ? jwtdecode(payload.token) : payloadLocal;
       } catch (e) {}
       state.tokenPayload = payloadLocal;
     },
@@ -37,7 +36,7 @@ const authSlice = createSlice({
       state.headers = payload;
     },
     setIsLogoutAction(state, {payload}) {
-      state.isLogout = true;
+      state.isLogout = payload;
     },
     setLoginSingInAction(state, {payload}) {
       state.loginSingIn = payload;

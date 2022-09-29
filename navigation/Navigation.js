@@ -1,16 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/react-in-jsx-scope */
 import * as React from 'react';
-import styles from './styles';
 import {useSelector, useDispatch} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
-import {SafeAreaView, KeyboardAvoidingView, Platform} from 'react-native';
-import SplashScreen from '../screens/splash';
-import {PathsName} from './navigationConfig';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {navigationNotAuthorized, navigation} from './navigationConfig';
+import {SafeAreaView, KeyboardAvoidingView, Platform} from 'react-native';
+import styles from './styles';
+import {
+  PathsName,
+  navigationNotAuthorized,
+  navigation,
+} from './navigationConfig';
 import {getTokenStorage} from '../config/asyncStorageActions';
+import SplashScreen from '../screens/splash';
 import {authTokenAction, setAuthHedersAction} from '../redux/auth/slice';
+import {getUserProfileDataRequest} from '../redux/user/requests';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,20 +52,24 @@ function MyStack() {
     checkIsToken();
   }, []);
 
+  React.useEffect(() => {
+    if (tokenPayload.userId) {
+      dispatch(getUserProfileDataRequest());
+    }
+  }, [tokenPayload]);
+
   return (
     <KeyboardAvoidingView
-      style={styles.container}
-      // behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      // enabled
-    >
+      style={styles.keyboardAvoidingView}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      enabled>
       <SafeAreaView style={styles.container}>
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName={
               tokenPayload.login ? PathsName.signIn : PathsName.main
             }
-            // screenOptions={{headerShown: false}}
-          >
+            screenOptions={{headerShown: false}}>
             {isLoading ? (
               <Stack.Screen name="Splash" component={SplashScreen} />
             ) : !tokenPayload.login ? (

@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {stylesMessageInput as styles} from './styles';
 import {View, TextInput} from 'react-native';
+import {stylesMessageInput as styles} from './styles';
 import socket from '../../../config/socket';
+import languages from '../../../config/translations';
 import {fullDate} from '../../../helpers';
 import {
   editMessageAction,
   deleteMessageAction,
   shareMessageAction,
 } from '../../../redux/app';
-import languages from '../../../config/translations';
 
 export default function MessageInput({
   conversationId,
@@ -87,7 +87,6 @@ export default function MessageInput({
           ...message,
           sendDate: fullDate(new Date()),
         };
-        console.log(message, 'message');
         socketSendMessageCommonFun(conversationId, messageObj, message.User.id);
         return message;
       });
@@ -127,7 +126,7 @@ export default function MessageInput({
   };
 
   // USEEFFECTS
-  useEffect(() => {
+  React.useEffect(() => {
     if (messageEdit.isEdit) {
       const resultMessage = allMessages[conversationId].find(
         message => message.id === messageEdit.messageId,
@@ -154,7 +153,7 @@ export default function MessageInput({
     }
   }, [messageEdit]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     socket.on('deleteMessage', ({conversationId, messageId}) => {
       setAllMessages(messages => ({
         ...messages,
@@ -165,15 +164,16 @@ export default function MessageInput({
     });
   }, []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     handleClearEditMessage();
   }, [conversationId]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setSheredMessages(sheraMessages);
   }, [sheraMessages]);
 
-  console.log(message, 'message');
+  // console.log(message, 'message');
+
   return (
     <>
       {/* {messageEdit.isEdit && (
@@ -225,6 +225,7 @@ export default function MessageInput({
         <TextInput
           // onKeyDown={sendMessageByKey}
           value={message[conversationId] || ''}
+          keyboardType="default"
           onChangeText={handleChangeMessage}
           placeholder={`${languages[lang].generals.typeMessage}...`}
           // endAdornment={

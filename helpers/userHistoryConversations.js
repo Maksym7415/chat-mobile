@@ -8,12 +8,13 @@ export function checkIsShowAvatar(array, userId, index) {
   return false;
 }
 
+// rework
 export const scrollTop = ref => {
-  let element = document.getElementById('messages');
-  element?.scrollTo({
-    top: 10,
-    behavior: 'smooth',
-  });
+  // let element = document.getElementById('messages');
+  // element?.scrollTo({
+  //   top: 10,
+  //   behavior: 'smooth',
+  // });
 };
 
 export function settingFilesObject(file, setFiles) {

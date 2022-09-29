@@ -80,14 +80,8 @@ const conversationsSlice = createSlice({
         [payload.conversationId]: payload,
       };
     },
-    updateConversationDataAction(state, {payload}) {
-      state.conversationsList = {
-        ...state.conversationsList,
-        success: {
-          ...state.conversationsList.success,
-          data: payload,
-        },
-      };
+    updateConversationListAction(state, {payload}) {
+      state.conversationsList = payload;
     },
     createNewChatAction(state, {payload}) {
       state.opponentId = {
@@ -96,6 +90,9 @@ const conversationsSlice = createSlice({
     },
     clearConversationData(state, {payload}) {
       state.searchChats = null;
+    },
+    setConversationIdAction(state, {payload}) {
+      state.conversationId = {...state.conversationId, ...payload};
     },
   },
   extraReducers: builder => {
@@ -134,9 +131,10 @@ export const {
   conversationAddNewMessage,
   clearLastMessage,
   conversationTypeStateAction,
-  updateConversationDataAction,
   createNewChatAction,
   clearConversationData,
+  updateConversationListAction,
+  setConversationIdAction,
 } = conversationsSlice.actions;
 
 export default conversationsSlice.reducer;

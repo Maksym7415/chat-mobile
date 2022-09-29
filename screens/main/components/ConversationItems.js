@@ -1,6 +1,6 @@
 import React from 'react';
-import styles from './styles';
 import {FlatList, Platform, View} from 'react-native';
+import styles from './styles';
 import ConversationItemComponent from './ConversationItem';
 
 const ConversationItems = ({data, usersTyping}) => {
