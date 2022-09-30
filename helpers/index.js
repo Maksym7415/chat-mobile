@@ -8,3 +8,4 @@ export {
   scrollTop,
   checkIsShowAvatar,
 } from './userHistoryConversations';
+export {getNameShort} from './getNameShort';

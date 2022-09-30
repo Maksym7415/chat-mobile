@@ -2,7 +2,8 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import styles from './styles';
+import {useTheme} from 'react-native-paper';
+import makeStyles from './styles';
 import ConversationItems from './components/ConversationItems';
 import MainHeader from './components/MainHeader';
 
@@ -17,6 +18,10 @@ import SocketIOClient from 'socket.io-client/dist/socket.io.js';
 const Main = ({navigation}) => {
   // HOOKS
   const dispatch = useDispatch();
+  const theme = useTheme();
+
+  // STYLES
+  const styles = makeStyles(theme);
 
   // SELECTORS
   const {data: conversationsList} = useSelector(

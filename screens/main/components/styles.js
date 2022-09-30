@@ -1,43 +1,78 @@
 import {StyleSheet} from 'react-native';
-import {theme} from '../../../config/theme';
+import {Dimensions} from 'react-native';
+
+const {width, height} = Dimensions.get('screen');
 
 export default StyleSheet.create({});
 
-export const stylesConversationItem = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    paddingLeft: 5,
-    paddingRight: 5,
-    paddingTop: 12,
-    paddingBottom: 12,
-    borderColor: theme.color_border_main,
-    borderBottomWidth: 1,
-  },
-  selectedChat: {
-    backgroundColor: 'red',
-  },
-  dataView: {
-    flexDirection: 'row',
-  },
-  wrapperBody: {
-    flex: 1,
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  avatarView: {
-    marginRight: 10,
-  },
-  message: {width: '100%', paddingTop: 10},
-  messageText: {
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-});
+export const stylesConversationItem = theme =>
+  StyleSheet.create({
+    container: {
+      height: 80,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      paddingVertical: 9,
+      paddingHorizontal: 10,
+    },
+    wrapperTop: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    wrapperTopRightStatus: {
+      marginRight: 1,
+    },
+    time: {
+      fontWeight: '400',
+      fontSize: 13,
+      // color
+      color: '#95999A',
+    },
+    divider: {
+      color: theme.colors.yellow,
+      backgroundColor: theme.colors.yellow,
+      borderRightWidth: width - 74,
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      justifyContent: 'space-between',
+    },
+    selectedChat: {
+      backgroundColor: 'red',
+    },
+    dataView: {
+      flexDirection: 'row',
+    },
+    wrapperBody: {
+      flex: 1,
+    },
+    title: {
+      fontWeight: '500',
+      fontSize: 16,
+      // color
+      color: '#222222',
+    },
+    avatarView: {
+      marginRight: 10,
+    },
+    whoSenderName: {
+      fontWeight: '500',
+      fontSize: 14.7778,
+      // color
+      color: '#434449',
+    },
+
+    message: {
+      flex: 1,
+      justifyContent: 'center',
+    },
+    innerMessage: {},
+    messageText: {
+      fontWeight: '400',
+      fontSize: 15,
+      // color
+      color: '#8D8E90',
+    },
+  });
 
 export const mainHeader = StyleSheet.create({
   container: {
