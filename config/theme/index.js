@@ -46,5 +46,6 @@ export const themeLight = {
   colors: {
     ...themeDefault.colors,
     ...colors.gray_light,
+    ...colors.steel_gray_light,
   },
 };

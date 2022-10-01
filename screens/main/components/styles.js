@@ -5,7 +5,7 @@ const {width, height} = Dimensions.get('screen');
 
 export default StyleSheet.create({});
 
-export const stylesConversationItem = theme =>
+export const stylesConversationItem = (theme, data) =>
   StyleSheet.create({
     container: {
       height: 80,
@@ -62,15 +62,27 @@ export const stylesConversationItem = theme =>
     },
 
     message: {
-      flex: 1,
-      justifyContent: 'center',
+      // flex: 1,
+      flexDirection: 'row',
+      alignItems: 'flex-end',
     },
-    innerMessage: {},
+    innerMessage: {
+      flex: 1,
+    },
     messageText: {
       fontWeight: '400',
       fontSize: 15,
       // color
       color: '#8D8E90',
+    },
+    numberOfUnreadMessages: {
+      marginLeft: 5,
+      // color
+      backgroundColor:
+        data.conversationType !== 'Dialog'
+          ? theme.colors.steel_gray_6
+          : '#00C73E',
+      color: '#ffffff',
     },
   });
 

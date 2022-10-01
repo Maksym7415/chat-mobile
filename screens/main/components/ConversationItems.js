@@ -3,8 +3,13 @@ import {FlatList, Platform, View} from 'react-native';
 import styles from './styles';
 import ConversationItemComponent from './ConversationItem';
 
-const ConversationItems = ({data, usersTyping}) => {
+const ConversationItems = ({data = [], usersTyping}) => {
   const [selectedId, setSelectedId] = React.useState(null);
+  const dataSortDate =
+    [...data]?.sort(
+      (a, b) =>
+        new Date(b?.Messages[0].sendDate) - new Date(a?.Messages[0].sendDate),
+    ) || [];
 
   return (
     <FlatList
@@ -14,7 +19,7 @@ const ConversationItems = ({data, usersTyping}) => {
           <View style={[styles.separator, highlighted && {marginLeft: 0}]} />
         ))
       }
-      data={data}
+      data={dataSortDate}
       renderItem={({item, _, separators}) => {
         return (
           <ConversationItemComponent

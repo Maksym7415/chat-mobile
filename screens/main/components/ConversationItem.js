@@ -2,7 +2,7 @@ import React from 'react';
 import {useSelector} from 'react-redux';
 import {View, TouchableOpacity, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useTheme, Divider} from 'react-native-paper';
+import {useTheme, Divider, Badge} from 'react-native-paper';
 import {stylesConversationItem as makeStyles} from './styles';
 import {getCurrentDay} from '../../../helpers';
 import languages from '../../../config/translations';
@@ -22,7 +22,7 @@ const ConversationdataComponent = ({
   usersTyping,
 }) => {
   const theme = useTheme();
-  const styles = makeStyles(theme);
+  const styles = makeStyles(theme, data);
 
   //HOOKS
   const navigation = useNavigation();
@@ -63,8 +63,10 @@ const ConversationdataComponent = ({
   };
 
   const someBodyWritting = usersTyping[data.conversationId] && getString(data);
+  const numberOfUnreadMessages = [1, 7].includes(data.conversationId)
+    ? data.conversationId
+    : null;
 
-  console.log(data.Messages[0]?.User?.id, userId, 'data.Messages[0]?.User?.id');
   return (
     <TouchableOpacity
       activeOpacity={0.5}
@@ -99,7 +101,7 @@ const ConversationdataComponent = ({
               <Text style={styles.title}>{data.conversationName}</Text>
             </View>
             <View style={styles.wrapperTopRight}>
-              <View style={styles.wrapperTopRightStatus}></View>
+              <View style={styles.wrapperTopRightStatus} />
               <Text style={styles.time}>
                 {data.Messages[0] === undefined
                   ? ''
@@ -153,6 +155,17 @@ const ConversationdataComponent = ({
                 })()}
               </View>
             )}
+            <Badge
+              visible={numberOfUnreadMessages}
+              style={{
+                ...styles.numberOfUnreadMessages,
+                // backgroundColor:
+                //   data.conversationType !== 'Dialog' ? 'red' : 'green',
+              }}
+              size={24}
+              type={'fuck'}>
+              {numberOfUnreadMessages}
+            </Badge>
           </View>
           {/* <Divider style={{...styles.divider}} /> */}
         </View>
