@@ -61,15 +61,6 @@ export const stylesMessage = StyleSheet.create({
     position: 'relative',
     marginHorizontal: 10,
     marginVertical: 10,
-    '&::before': {
-      content: '""',
-      width: 3,
-      height: 100,
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      background: '#ffffff',
-    },
   },
   paperSenderMessage: {
     position: 'relative',
@@ -130,10 +121,12 @@ export const stylesMessage = StyleSheet.create({
 
 export const chatHeader = StyleSheet.create({
   container: {
-    // flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
+    // paddingVertical: 8,
+  },
+  containerTop: {
+    alignItems: 'center',
   },
   back: {
     marginRight: 30,
@@ -141,9 +134,23 @@ export const chatHeader = StyleSheet.create({
   wrapperConversationData: {
     flex: 1,
     flexDirection: 'row',
+
+    marginLeft: 30,
   },
   wrapperAvatar: {
     marginRight: 10,
+  },
+  title: {
+    fontWeight: '700',
+    fontSize: 17,
+    // color
+    color: '#ffffff',
+  },
+  subtitle: {
+    fontWeight: '400',
+    fontSize: 14,
+    // color
+    color: '#D2E9FB',
   },
   selectedMessagesAmountContainer: {
     backgroundColor: '#ffffff',

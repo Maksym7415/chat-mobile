@@ -22,4 +22,12 @@ export default StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
   },
+  imageBackground: {
+    flex: 1,
+  },
+  wrapperLoader: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

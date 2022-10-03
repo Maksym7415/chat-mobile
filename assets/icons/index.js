@@ -1,4 +1,6 @@
 export default {
   filled: {},
-  line: {},
+  // line: {
+  //   check: require('./Line/Check_Icon.svg'),
+  // },
 };

@@ -9,7 +9,7 @@ import {stylesMessage as styles} from './styles';
 import {contextMenuConfig, contextMenuCallback} from '../config';
 import languages from '../../../config/translations';
 import {getCurrentDay} from '../../../helpers';
-import DefaultAvatar from '../../../components/avatar/defaultAvatar';
+import UserAvatar from '../../../components/avatar/userAvatar';
 import {conversationListActions} from '../../../redux/conversations/actions';
 import {
   editMessageAction,
@@ -155,8 +155,6 @@ function Message({
     }
   };
 
-  // console.log(messageData, 'messageData.message');
-  console.log(selectedMessages, 'selectedMessages');
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -179,19 +177,13 @@ function Message({
           );
       }}>
       <View style={{...styles.wrapperUp}}>
-        {isShowAvatar &&
-          (messageData.User.userAvatar ? null : (
-            <DefaultAvatar
-              name={`${messageData.User.firstName} ${messageData.User.lastName}`}
-              styles={{
-                root: {
-                  width: 30,
-                  height: 30,
-                },
-              }}
-              fontSize={10}
-            />
-          ))}
+        {isShowAvatar && (
+          <UserAvatar
+            source={messageData.User.userAvatar}
+            name={`${messageData.User.firstName} ${messageData.User.lastName}`}
+            sizeAvatar={38}
+          />
+        )}
         <View
           onContextMenu={event =>
             contextMenuCallback(

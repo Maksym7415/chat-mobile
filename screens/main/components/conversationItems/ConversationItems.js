@@ -1,10 +1,13 @@
 import React from 'react';
-import {FlatList, Platform, View} from 'react-native';
-import styles from './styles';
+import {FlatList} from 'react-native';
+import {Divider, useTheme} from 'react-native-paper';
+import {stylesConversationItems as styles} from './styles';
 import ConversationItemComponent from './ConversationItem';
 
 const ConversationItems = ({data = [], usersTyping}) => {
-  const [selectedId, setSelectedId] = React.useState(null);
+  const theme = useTheme();
+
+  // VARIABLES
   const dataSortDate =
     [...data]?.sort(
       (a, b) =>
@@ -13,12 +16,11 @@ const ConversationItems = ({data = [], usersTyping}) => {
 
   return (
     <FlatList
-      ItemSeparatorComponent={
-        Platform.OS !== 'android' &&
-        (({highlighted}) => (
-          <View style={[styles.separator, highlighted && {marginLeft: 0}]} />
-        ))
-      }
+      ItemSeparatorComponent={() => (
+        <Divider
+          style={{...styles.divider, backgroundColor: theme.colors.gray_10}}
+        />
+      )}
       data={dataSortDate}
       renderItem={({item, _, separators}) => {
         return (
@@ -30,7 +32,6 @@ const ConversationItems = ({data = [], usersTyping}) => {
         );
       }}
       keyExtractor={item => item.conversationId}
-      extraData={selectedId}
     />
   );
 };

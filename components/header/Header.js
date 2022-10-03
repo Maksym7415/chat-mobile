@@ -1,13 +1,42 @@
 import React from 'react';
+import {Appbar, useTheme} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
+import makeStyles from './styles';
 import {View} from 'react-native';
-import stylesRoot from './styles';
 
-const Header = ({styles, children}) => {
-  console.log(styles, 'styles');
+const Header = ({
+  renderTopLeftComponent,
+  renderTopCenterComponent,
+  renderTopRightComponent,
+  title = 'title',
+  styles,
+  children,
+}) => {
+  // HOOKS
+  const theme = useTheme();
+  const navigation = useNavigation();
+
+  // STYLES
+  const stylesRoot = makeStyles(theme);
+
+  console.log(renderTopLeftComponent, 'renderTopLeftComponent');
   return (
-    <View style={{...stylesRoot.container, ...styles?.container}}>
+    <Appbar.Header style={{...stylesRoot.container, ...styles?.container}}>
+      <View style={{...stylesRoot.top, ...styles?.top}}>
+        {renderTopLeftComponent ? (
+          renderTopLeftComponent()
+        ) : (
+          <Appbar.BackAction onPress={navigation.goBack} />
+        )}
+        {renderTopCenterComponent ? (
+          renderTopCenterComponent()
+        ) : (
+          <Appbar.Content title={title} />
+        )}
+        {renderTopRightComponent ? renderTopRightComponent() : null}
+      </View>
       {children}
-    </View>
+    </Appbar.Header>
   );
 };
 

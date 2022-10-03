@@ -2,6 +2,8 @@ require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 platform :ios, '12.4'
+pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'chat_mobile_app' do

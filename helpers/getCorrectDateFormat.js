@@ -18,10 +18,8 @@ const months = [
 const weekDays = ['вс.', 'вт.', 'ср.', 'чт.', 'пт.', 'сб', 'пн.'];
 
 export const getCurrentDay = (value, isMessage) => {
-  console.log(value, 'value');
   if (setDays(value)) {
     const date = setDays(value, isMessage).split(':');
-    console.log(date, 'date');
     if (date.length < 3 && Number(date[1])) {
       return date.map(d => (d.length < 2 ? `0${d}` : d)).join(':');
     }

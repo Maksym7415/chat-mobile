@@ -1,9 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {Dimensions} from 'react-native';
 
-const {width, height} = Dimensions.get('screen');
-
-export default StyleSheet.create({});
+const {width} = Dimensions.get('screen');
 
 export const stylesConversationItem = (theme, data) =>
   StyleSheet.create({
@@ -19,6 +17,9 @@ export const stylesConversationItem = (theme, data) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
+    wrapperTopRight: {
+      flexDirection: 'row',
+    },
     wrapperTopRightStatus: {
       marginRight: 1,
     },
@@ -27,14 +28,6 @@ export const stylesConversationItem = (theme, data) =>
       fontSize: 13,
       // color
       color: '#95999A',
-    },
-    divider: {
-      color: theme.colors.yellow,
-      backgroundColor: theme.colors.yellow,
-      borderRightWidth: width - 74,
-      flexDirection: 'row',
-      alignItems: 'flex-end',
-      justifyContent: 'space-between',
     },
     selectedChat: {
       backgroundColor: 'red',
@@ -64,7 +57,7 @@ export const stylesConversationItem = (theme, data) =>
     message: {
       // flex: 1,
       flexDirection: 'row',
-      alignItems: 'flex-end',
+      alignItems: 'center',
     },
     innerMessage: {
       flex: 1,
@@ -86,36 +79,10 @@ export const stylesConversationItem = (theme, data) =>
     },
   });
 
-export const mainHeader = StyleSheet.create({
-  container: {
-    // flex: 1,
+export const stylesConversationItems = StyleSheet.create({
+  divider: {
+    width: width - 75,
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  selectedСhatsAmountContainer: {
-    backgroundColor: '#ffffff',
-  },
-
-  wrapperBurger: {
-    marginRight: 30,
-  },
-  wrapperTitle: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  wrapperSearch: {},
-  wrapperClose: {
-    marginRight: 40,
-  },
-  wrpperSelectedAmount: {flex: 1},
-  wrapperActions: {
-    flexDirection: 'row',
-  },
-  wrapperAction: {
-    marginRight: 10,
-  },
-  wrapperOptions: {
-    marginRight: 0,
+    alignSelf: 'flex-end',
   },
 });

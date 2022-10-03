@@ -2,25 +2,21 @@ import React from 'react';
 import {useSelector} from 'react-redux';
 import {View, TouchableOpacity, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useTheme, Divider, Badge} from 'react-native-paper';
+import {useTheme, Badge} from 'react-native-paper';
 import {stylesConversationItem as makeStyles} from './styles';
-import {getCurrentDay} from '../../../helpers';
-import languages from '../../../config/translations';
-import {REACT_APP_BASE_URL} from '../../../config/constants/url';
+import {getCurrentDay} from '../../../../helpers';
+import languages from '../../../../config/translations';
 
-import {PathsName} from '../../../navigation/navigationConfig';
-import DefaultAvatar from '../../../components/avatar/defaultAvatar';
-import UserAvatar from '../../../components/avatar/userAvatar';
+import SvgMaker from '../../../../components/svgMaker';
+import {PathsName} from '../../../../navigation/navigationConfig';
+import UserAvatar from '../../../../components/avatar/userAvatar';
 import {
   selectedСhatsActions,
   actionsTypeObjectSelected,
-} from '../../../redux/app/actions';
-import store from '../../../redux/store';
-const ConversationdataComponent = ({
-  data,
-  onSelectConversation,
-  usersTyping,
-}) => {
+} from '../../../../redux/app/actions';
+import store from '../../../../redux/store';
+
+const ConversationdataComponent = ({data, usersTyping}) => {
   const theme = useTheme();
   const styles = makeStyles(theme, data);
 
@@ -62,10 +58,18 @@ const ConversationdataComponent = ({
     }
   };
 
+  // VARIABLES
   const someBodyWritting = usersTyping[data.conversationId] && getString(data);
+  const isConversationDialog = data.conversationType === 'Dialog';
+
+  // test
   const numberOfUnreadMessages = [1, 7].includes(data.conversationId)
     ? data.conversationId
     : null;
+  const isMessageUserAuth = data.Messages[0]?.User?.id === userId;
+  const isReadMessageUserAuth = [1, 7].includes(data.conversationId)
+    ? true
+    : false;
 
   return (
     <TouchableOpacity
@@ -74,7 +78,7 @@ const ConversationdataComponent = ({
         if (selectedСhats?.[data.conversationId]) {
           return {
             ...styles.container,
-            ...styles.selectedChat,
+            // ...styles.selectedChat,
           };
         }
         return styles.container;
@@ -89,10 +93,16 @@ const ConversationdataComponent = ({
       <View style={styles.dataView}>
         <View style={styles.avatarView}>
           <UserAvatar
-            source={`${REACT_APP_BASE_URL}/${data.conversationAvatar}`}
-            isImage={data.conversationAvatar}
-            status={'online'}
+            source={data.conversationAvatar}
+            status={
+              !isConversationDialog
+                ? 'online'
+                : selectedСhats?.[data.conversationId]
+                ? 'selected'
+                : ''
+            }
             name={data.conversationName}
+            isSelected={selectedСhats?.[data.conversationId]}
           />
         </View>
         <View style={styles.wrapperBody}>
@@ -101,7 +111,27 @@ const ConversationdataComponent = ({
               <Text style={styles.title}>{data.conversationName}</Text>
             </View>
             <View style={styles.wrapperTopRight}>
-              <View style={styles.wrapperTopRightStatus} />
+              <View style={styles.wrapperTopRightStatus}>
+                {isMessageUserAuth ? (
+                  <>
+                    {isReadMessageUserAuth ? (
+                      <SvgMaker
+                        name="svgs_line_read"
+                        width={20}
+                        height={19}
+                        strokeFill={'#48A938'}
+                      />
+                    ) : (
+                      <SvgMaker
+                        name="svgs_line_check"
+                        width={20}
+                        height={19}
+                        strokeFill={'#48A938'}
+                      />
+                    )}
+                  </>
+                ) : null}
+              </View>
               <Text style={styles.time}>
                 {data.Messages[0] === undefined
                   ? ''
@@ -127,7 +157,7 @@ const ConversationdataComponent = ({
                     );
                   };
                   if (data.Messages[0] !== undefined) {
-                    if (data.Messages[0]?.User?.id === userId) {
+                    if (isMessageUserAuth) {
                       return (
                         <>
                           <Text
@@ -139,7 +169,7 @@ const ConversationdataComponent = ({
                         </>
                       );
                     } else {
-                      if (data.conversationType !== 'Dialog') {
+                      if (!isConversationDialog) {
                         return renderTextMessage(data.Messages[0].message);
                       } else {
                         return renderTextMessage(
@@ -157,17 +187,11 @@ const ConversationdataComponent = ({
             )}
             <Badge
               visible={numberOfUnreadMessages}
-              style={{
-                ...styles.numberOfUnreadMessages,
-                // backgroundColor:
-                //   data.conversationType !== 'Dialog' ? 'red' : 'green',
-              }}
-              size={24}
-              type={'fuck'}>
+              style={styles.numberOfUnreadMessages}
+              size={24}>
               {numberOfUnreadMessages}
             </Badge>
           </View>
-          {/* <Divider style={{...styles.divider}} /> */}
         </View>
       </View>
     </TouchableOpacity>
@@ -175,4 +199,3 @@ const ConversationdataComponent = ({
 };
 
 export default React.memo(ConversationdataComponent);
-// src={`${process.env.REACT_APP_BASE_URL}/${data.conversationAvatar}`}

@@ -2,15 +2,18 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
+import {Menu} from 'react-native-paper';
 import {chatHeader as styles} from './styles';
 import {PathsName} from '../../../navigation/navigationConfig';
+import UserAvatar from '../../../components/avatar/userAvatar';
+import SvgMaker from '../../../components/svgMaker';
 import Header from '../../../components/header';
-import DefaultAvatar from '../../../components/avatar/defaultAvatar';
 import {
   actionsTypeObjectSelected,
   selectedMessagesActions,
 } from '../../../redux/app/actions';
 import store from '../../../redux/store';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 const ChatHeader = ({conversationData}) => {
   //HOOKS
@@ -19,10 +22,20 @@ const ChatHeader = ({conversationData}) => {
   // SELECTORS
   const {selectedMessages} = useSelector(({appSlice}) => appSlice);
 
+  const [visibleOptions, setVisibleOptions] = React.useState(true);
+
+  // FUNCTIONS
+  const openOptions = () => setVisibleOptions(true);
+  const closeOptions = () => setVisibleOptions(false);
+  const handleOptions = value => {
+    console.log(value, 'value');
+    closeOptions();
+    store.dispatch(
+      selectedMessagesActions(null, actionsTypeObjectSelected.clear),
+    );
+  };
+
   // VARIABLES
-  const titleSplit = conversationData.title.split(' ');
-  const firstName = titleSplit[0];
-  const lastName = titleSplit.slice(1, titleSplit.length).join(' ');
   const selectedMessagesAmount = Object.keys(selectedMessages).length;
 
   return (
@@ -32,75 +45,126 @@ const ChatHeader = ({conversationData}) => {
           ? {
               container: styles.selectedMessagesAmountContainer,
             }
-          : null
-      }>
-      <View style={styles.container}>
-        {selectedMessagesAmount ? (
-          <>
-            <View style={styles.wrapperClose}>
-              <Text
-                onPress={() =>
-                  store.dispatch(
-                    selectedMessagesActions(
-                      null,
-                      actionsTypeObjectSelected.clear,
-                    ),
-                  )
-                }>
-                Close
-              </Text>
+          : {
+              container: styles.container,
+              top: styles.containerTop,
+            }
+      }
+      renderTopLeftComponent={() =>
+        selectedMessagesAmount ? (
+          <View
+            style={styles.wrapperClose}
+            onStartShouldSetResponder={() => {
+              store.dispatch(
+                selectedMessagesActions(null, actionsTypeObjectSelected.clear),
+              );
+            }}>
+            <SvgMaker name="svgs_line_bot_close" />
+          </View>
+        ) : (
+          <View
+            onStartShouldSetResponder={() => {
+              navigation.navigate(PathsName.main);
+            }}>
+            <SvgMaker name="svgs_filled_back_arrow" strokeFill={'#ffffff'} />
+          </View>
+        )
+      }
+      renderTopCenterComponent={() =>
+        selectedMessagesAmount ? (
+          <View style={styles.wrpperSelectedAmount}>
+            <Text>{selectedMessagesAmount}</Text>
+          </View>
+        ) : (
+          <View style={styles.wrapperConversationData}>
+            <View style={styles.wrapperAvatar}>
+              <UserAvatar
+                source={conversationData.avatar}
+                name={conversationData.title}
+                sizeAvatar={38}
+              />
             </View>
-            <View style={styles.wrpperSelectedAmount}>
-              <Text>{selectedMessagesAmount}</Text>
+            <View style={styles.wrapperAvatar}>
+              <Text style={styles.title}>{conversationData.title}</Text>
+              <Text style={styles.subtitle}>{'Online'}</Text>
             </View>
-            <View style={styles.wrapperActions}>
-              {selectedMessagesAmount === 1 ? (
-                <View style={styles.wrapperAction}>
-                  <Text>Edit</Text>
-                </View>
-              ) : null}
+          </View>
+        )
+      }
+      renderTopRightComponent={() =>
+        selectedMessagesAmount ? (
+          <View style={styles.wrapperActions}>
+            {selectedMessagesAmount === 1 ? (
               <View style={styles.wrapperAction}>
-                <Text>Copy</Text>
+                <Text>Edit</Text>
               </View>
-              <View style={styles.wrapperAction}>
-                <Text>Forwd</Text>
-              </View>
-              <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
-                <Text>Del</Text>
-              </View>
+            ) : null}
+            <View style={styles.wrapperAction}>
+              <Text>Copy</Text>
             </View>
-          </>
+            <View style={styles.wrapperAction}>
+              <Text>Forwd</Text>
+            </View>
+            <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
+              <Text>Del</Text>
+            </View>
+          </View>
         ) : (
           <>
-            <Text
-              onPress={() => navigation.navigate(PathsName.main)}
-              style={styles.back}>
-              Back
-            </Text>
-            <View style={styles.wrapperConversationData}>
-              <View style={styles.wrapperAvatar}>
-                {conversationData.Avatar ? null : (
-                  <DefaultAvatar
-                    name={`${firstName} ${lastName}`}
-                    styles={{
-                      root: {
-                        width: 30,
-                        height: 30,
-                      },
-                    }}
-                    fontSize={10}
-                  />
-                )}
-              </View>
-              <Text>{conversationData.title}</Text>
+            <View onStartShouldSetResponder={openOptions}>
+              <SvgMaker name="svgs_filled_phone" strokeFill={'#ffffff'} />
             </View>
-            <View style={styles.wrapperOptions}>
-              <Text>Options</Text>
+            <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
+              <Menu
+                visible={visibleOptions}
+                onDismiss={closeOptions}
+                anchor={
+                  <View onStartShouldSetResponder={openOptions}>
+                    <SvgMaker name="svgs_filled_dots" strokeFill={'#ffffff'} />
+                  </View>
+                }>
+                <Menu.Item icon="redo" onPress={() => {}} title="Redo" />
+                <Menu.Item icon="undo" onPress={() => {}} title="Undo" />
+                <Menu.Item
+                  icon="content-cut"
+                  onPress={() => {}}
+                  title="Cut"
+                  disabled
+                />
+                <Menu.Item
+                  icon="content-copy"
+                  onPress={() => {}}
+                  title="Copy"
+                  disabled
+                />
+                <Menu.Item
+                  icon="content-paste"
+                  onPress={() => {}}
+                  title="Paste"
+                />
+                {/* {headerSelectedСhatsAmountDotsOptions(lang).map(action => {
+                return (
+                  <View
+                    key={action.id}
+                    style={styles.dotsOption}
+                    onStartShouldSetResponder={() =>
+                      handleOptions(action.value)
+                    }>
+                    {action.icon.name && (
+                      <View style={styles.wrapperIconOption}>
+                        <SvgMaker name={action.icon.name} />
+                      </View>
+                    )}
+                    <Text>{action.title}</Text>
+                  </View>
+                );
+              })} */}
+              </Menu>
             </View>
           </>
-        )}
-      </View>
-    </Header>
+        )
+      }
+    />
   );
 };
 

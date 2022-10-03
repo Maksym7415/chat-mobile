@@ -2,10 +2,11 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {useTheme} from 'react-native-paper';
+import {useTheme, Portal} from 'react-native-paper';
 import makeStyles from './styles';
-import ConversationItems from './components/ConversationItems';
-import MainHeader from './components/MainHeader';
+import FabComponent from './components/fab';
+import ConversationItems from './components/conversationItems';
+import Header from './components/header';
 
 import {getUserConversationsRequest} from '../../redux/conversations/requests';
 
@@ -13,9 +14,11 @@ navigator.__defineGetter__('userAgent', function () {
   // you have to import rect native first !!
   return 'react-native';
 });
-import SocketIOClient from 'socket.io-client/dist/socket.io.js';
 
-const Main = ({navigation}) => {
+let isEmit = false;
+let newTimer = {};
+
+const MainScreen = ({navigation}) => {
   // HOOKS
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -24,9 +27,10 @@ const Main = ({navigation}) => {
   const styles = makeStyles(theme);
 
   // SELECTORS
-  const {data: conversationsList} = useSelector(
-    ({conversationsSlice}) => conversationsSlice.conversationsList,
-  );
+  const {
+    conversationsList: {data: conversationsList},
+    conversationTypeState: typing,
+  } = useSelector(({conversationsSlice}) => conversationsSlice);
 
   // STATES
   // rework
@@ -41,6 +45,76 @@ const Main = ({navigation}) => {
     },
   });
 
+  // FUNCTIONS
+  const currentUserTyping = (user, conversationId) => {
+    if (!isEmit) {
+      isEmit = true;
+      setUsersTyping(prev => {
+        const conversation = prev[conversationId];
+        return {
+          ...prev,
+          [conversationId]: {
+            ...conversation,
+            [user.userId]: {...user, isTyping: true},
+          },
+        };
+      });
+      newTimer[conversationId] = {...newTimer[conversationId]};
+      newTimer[conversationId][user.userId] = setTimeout(
+        () =>
+          setUsersTyping(prev => {
+            const conversation = prev[conversationId];
+            isEmit = false;
+            return {
+              ...prev,
+              [conversationId]: {
+                ...conversation,
+                [user.userId]: {...user, isTyping: false},
+              },
+            };
+          }),
+        3000,
+      );
+    } else {
+      clearTimeout(newTimer[conversationId][user.userId]);
+      setUsersTyping(prev => {
+        const conversation = prev[conversationId];
+        return {
+          ...prev,
+          [conversationId]: {
+            ...conversation,
+            [user.userId]: {...user, isTyping: true},
+          },
+        };
+      });
+      newTimer[conversationId] = {...newTimer[conversationId]};
+      newTimer[conversationId][user.userId] = setTimeout(
+        () =>
+          setUsersTyping(prev => {
+            const conversation = prev[conversationId];
+            isEmit = false;
+            return {
+              ...prev,
+              [conversationId]: {
+                ...conversation,
+                [user.userId]: {...user, isTyping: false},
+              },
+            };
+          }),
+        3000,
+      );
+    }
+  };
+
+  const timer = (user, conversationId) => {
+    if (conversationId in newTimer) {
+      currentUserTyping(user, conversationId);
+    } else {
+      isEmit = false;
+      currentUserTyping(user, conversationId);
+    }
+  };
+
   // USEEFFECTS
   React.useEffect(() => {
     if (navigation.isFocused()) {
@@ -48,27 +122,31 @@ const Main = ({navigation}) => {
     }
   }, [navigation]);
 
-  // React.useEffect(() => {
-  //   const socket = SocketIOClient('wss://localhost:5050/', {
-  //     jsonp: false,
-  //   });
-  //   socket.on('connect', () => {
-  //     console.log('connected');
-  //     socket.emit('hello', 'world');
-  //   });
-
-  //   socket.on('connect_error', err => {
-  //     console.log(err instanceof Error);
-  //     console.log(err.message);
-  //   });
-  // }, []);
+  React.useEffect(() => {
+    if (conversationsList?.length) {
+      conversationsList.forEach(chat => {
+        // socket.on(`userIdChat${chat.conversationId}`, message => {
+        //   dispatch(conversationAddNewMessage(message, chat.conversationId));
+        // });
+        // socket.on(
+        //   `typingStateId${chat.conversationId}`,
+        //   (conversation: BackUsers) => {
+        //     timer(conversation, chat.conversationId);
+        //   },
+        // );
+      });
+    }
+  }, [conversationsList, typing]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <MainHeader />
+      <Header />
       <ConversationItems data={conversationsList} usersTyping={usersTyping} />
+      <Portal>
+        <FabComponent />
+      </Portal>
     </SafeAreaView>
   );
 };
 
-export default Main;
+export default MainScreen;

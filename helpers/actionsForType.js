@@ -13,16 +13,16 @@ export const actionsForTypeWithObjKey = props => {
       isDispatch
         ? props.dispatch(props.setAction(props.prevData))
         : props.setAction(props.prevData);
-      return;
+      return props.prevData;
     case actionsTypeObject.remove:
       delete props.prevData[props.key];
       isDispatch
         ? props.dispatch(props.setAction(props.prevData))
         : props.setAction(props.prevData);
-      return;
+      return props.prevData;
     case actionsTypeObject.clear:
       isDispatch ? props.dispatch(props.setAction({})) : props.setAction({});
-      return;
+      return {};
     default:
       return;
   }

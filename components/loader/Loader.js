@@ -1,9 +1,16 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {ActivityIndicator} from 'react-native-paper';
 import stylesRoot from './styles';
 
-const Loader = ({styles}) => {
-  return <Text style={{...stylesRoot.text, ...styles?.text}}>Loading...</Text>;
+const Loader = ({styles, size, color}) => {
+  return (
+    <ActivityIndicator
+      animating={true}
+      color={color}
+      style={{...stylesRoot.text, ...styles?.text}}
+      size={size || 'small'}
+    />
+  );
 };
 
 export default Loader;

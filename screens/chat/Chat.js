@@ -1,20 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import {SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+  ImageBackground,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import styles from './styles';
 import MessageInput from './components/MessageInput';
 import Message from './components/Message';
 import ChatHeader from './components/ChatHeader';
+import Loader from '../../components/loader';
 import languages from '../../config/translations';
-import {
-  checkIsShowAvatar,
-  setMessageDate,
-  scrollTop,
-  settingFilesObject,
-} from '../../helpers';
+import {checkIsShowAvatar, setMessageDate, scrollTop} from '../../helpers';
 import {getConversationUserHistoryRequest} from '../../redux/conversations/requests';
 import {setConversationIdAction} from '../../redux/conversations';
+import IMAGE from '../../assets/img';
 
 const Chat = ({navigation, route}) => {
   // HOOKS
@@ -49,6 +52,7 @@ const Chat = ({navigation, route}) => {
   const [isOpenDialog, setIsOpenDialog] = React.useState(false);
   const [isInputState, setIsInputState] = React.useState(false);
   const [timeDivCounter, setTimeDivCounter] = React.useState(0);
+  const [isFetching, setIsFetching] = React.useState(false);
 
   // FUNCTIONS
   const scrollHandler = event => {
@@ -83,11 +87,15 @@ const Chat = ({navigation, route}) => {
 
   React.useEffect(() => {
     if (!allMessages[conversationId] && conversationId) {
+      setIsFetching(true);
       dispatch(
         getConversationUserHistoryRequest({
           data: {
             id: conversationId,
             offset: 0,
+          },
+          cb: () => {
+            setIsFetching(false);
           },
         }),
       );
@@ -142,11 +150,10 @@ const Chat = ({navigation, route}) => {
     }
   }, [isCreateChat]);
 
-  // console.log(allMessages, 'allMessages');
+  // RENDERS
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <ChatHeader conversationData={conversationData} />
+  const renderMainContent = () => {
+    return (
       <ScrollView
         // onScroll={scrollHandler}
         style={
@@ -226,6 +233,32 @@ const Chat = ({navigation, route}) => {
           <View style={{height: 50}} ref={ref} />
         </>
       </ScrollView>
+    );
+  };
+  // IMAGE.wallPaper
+  return (
+    <SafeAreaView style={styles.container}>
+      <ChatHeader conversationData={conversationData} />
+      <ImageBackground
+        source={IMAGE.wallPaper}
+        resizeMode="cover"
+        style={styles.imageBackground}>
+        {isFetching ? (
+          <View style={styles.wrapperLoader}>
+            <Loader
+              styles={{
+                text: {
+                  color: 'red',
+                },
+              }}
+              color={'#517DA2'}
+              size={50}
+            />
+          </View>
+        ) : (
+          renderMainContent()
+        )}
+      </ImageBackground>
       {(!!conversationId || !!opponentId) &&
         !Object.keys(selectedMessages).length && (
           <MessageInput

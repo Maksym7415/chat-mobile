@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 
 export default theme =>
   StyleSheet.create({
-    container: {
-      position: 'relative',
+    fabStyle: {
+      backgroundColor: '#50B7FC',
     },
   });

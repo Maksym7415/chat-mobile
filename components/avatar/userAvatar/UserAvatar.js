@@ -1,8 +1,10 @@
 import * as React from 'react';
 import {View} from 'react-native';
-import makeStyles from './styles';
 import {useTheme, Avatar, Badge} from 'react-native-paper';
+import makeStyles from './styles';
+import {REACT_APP_BASE_URL} from '../../../config/constants/url';
 import {getNameShort} from '../../../helpers';
+import BangeUserAvatar from '../../banges/bangeUserAvatar';
 
 // test
 import IMAGE from '../../../assets/img';
@@ -10,11 +12,12 @@ import IMAGE from '../../../assets/img';
 const UserAvatar = ({
   sizeAvatar = 58,
   source,
-  status = 'online',
+  status = '',
   sizeBadge = 18,
   isImage,
   name = '',
   defaultNameAvatar = 'Chat',
+  isSelected,
 }) => {
   // HOOKS
   const theme = useTheme();
@@ -27,7 +30,7 @@ const UserAvatar = ({
 
   return (
     <View style={styles.container}>
-      {isImage ? (
+      {source ? (
         <Avatar.Image
           size={sizeAvatar}
           source={
@@ -35,7 +38,7 @@ const UserAvatar = ({
               ? {
                   height: sizeAvatar,
                   width: sizeAvatar,
-                  uri: source,
+                  uri: `${REACT_APP_BASE_URL}/${source}`,
                 }
               : IMAGE.emptyNotifications
           }
@@ -44,8 +47,16 @@ const UserAvatar = ({
         <Avatar.Text size={sizeAvatar} label={nameShort || defaultNameAvatar} />
       )}
 
-      {['online'].includes(status) && (
-        <Badge size={sizeBadge} style={styles.badge} />
+      {['online', 'selected'].includes(status) && (
+        <BangeUserAvatar
+          typeBange={isSelected ? 'selected' : status}
+          sizeBadge={sizeBadge}
+          styles={{
+            badge: {
+              bottom: -1,
+            },
+          }}
+        />
       )}
     </View>
   );

@@ -1,5 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
 
+export const settingStatusBarInitial = {
+  backgroundColor: '#517DA2',
+  barStyle: 'light-content',
+};
+
 const appSlice = createSlice({
   name: 'appSlice',
   initialState: {
@@ -24,6 +29,7 @@ const appSlice = createSlice({
     sheraMessages: [],
     selectedСhats: {},
     selectedMessages: {},
+    settingStatusBar: settingStatusBarInitial,
   },
   reducers: {
     preloaderAction(state, {payload}) {
@@ -65,6 +71,9 @@ const appSlice = createSlice({
     setSelectedMessagesAction(state, {payload}) {
       state.selectedMessages = payload;
     },
+    setSettingStatusBarAction(state, {payload}) {
+      state.settingStatusBar = {...state.settingStatusBar, ...payload};
+    },
   },
 });
 
@@ -81,6 +90,7 @@ const {
   setIsLoading,
   setSelectedСhatsAction,
   setSelectedMessagesAction,
+  setSettingStatusBarAction,
 } = appSlice.actions;
 export {
   preloaderAction,
@@ -94,4 +104,5 @@ export {
   setIsLoading,
   setSelectedСhatsAction,
   setSelectedMessagesAction,
+  setSettingStatusBarAction,
 };
