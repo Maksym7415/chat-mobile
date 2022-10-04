@@ -3,6 +3,7 @@
 import * as React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {
@@ -25,8 +26,30 @@ import {authTokenAction, setAuthHedersAction} from '../redux/auth/slice';
 import {getUserProfileDataRequest} from '../redux/user/requests';
 import {themeLight} from '../config/theme';
 import CustomStatusBar from '../components/customBar';
+import DrawerNavigator from './drawerNavigator';
+import MainScreen from '../screens/main';
 
+import SignInScreen from '../screens/signIn';
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
+function Root() {
+  return (
+    <Drawer.Navigator
+      drawerContent={DrawerNavigator}
+      drawerStyle={
+        {
+          // backgroundColor: theme?.colors?.grey4,
+        }
+      }>
+      <Drawer.Screen
+        name="main"
+        component={MainScreen}
+        options={{headerShown: false}}
+      />
+    </Drawer.Navigator>
+  );
+}
 
 function MyStack() {
   // HOOKS
@@ -77,12 +100,6 @@ function MyStack() {
           enabled>
           <CustomStatusBar />
           <SafeAreaView style={styles.container}>
-            <StatusBar
-              barStyle="light-content"
-              animated={true}
-              backgroundColor="#ea392f"
-              translucent={false}
-            />
             <NavigationContainer>
               <Stack.Navigator
                 initialRouteName={
@@ -106,18 +123,48 @@ function MyStack() {
                     );
                   })
                 ) : (
-                  navigation.map(item => {
-                    return (
-                      <Stack.Screen
-                        key={item.id}
-                        name={item.pathName}
-                        options={item.options}
-                        component={item.Component}
-                      />
-                    );
-                  })
+                  <>
+                    <Stack.Screen options={{}} name="Root" component={Root} />
+                    {navigation.map(item => {
+                      return (
+                        <Stack.Screen
+                          key={item.id}
+                          name={item.pathName}
+                          options={item.options}
+                          component={item.Component}
+                        />
+                      );
+                    })}
+                  </>
                 )}
               </Stack.Navigator>
+              {/* <Drawer.Navigator
+                drawerContent={DrawerNavigator}
+                drawerContentOptions={{
+                  activeBackgroundColor: 'transparent',
+                  inactiveBackgroundColor: 'transparent',
+                  labelStyle: {
+                    fontSize: 15,
+                    marginLeft: 0,
+                  },
+                }}
+                drawerStyle={
+                  {
+                    // backgroundColor: theme?.colors?.grey4,
+                  }
+                }>
+                {navigation.map(item => {
+                  return (
+                    <Drawer.Screen
+                      key={item.id}
+                      name={item.pathName}
+                      options={item.options}
+                      component={item.Component}
+                    />
+                  );
+                })}
+                <Drawer.Screen name="Avatars" component={Avatars} />
+              </Drawer.Navigator> */}
             </NavigationContainer>
           </SafeAreaView>
         </KeyboardAvoidingView>

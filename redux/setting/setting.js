@@ -6,6 +6,9 @@ const settingSlice = createSlice({
     error: {},
     isLangSet: false,
     lang: 'en',
+    theme: {
+      core: 'light',
+    },
   },
   reducers: {
     setLangAction(state, {payload}) {

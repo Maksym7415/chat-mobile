@@ -2,6 +2,7 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 import {useTheme, Portal} from 'react-native-paper';
 import makeStyles from './styles';
 import FabComponent from './components/fab';
@@ -18,10 +19,11 @@ navigator.__defineGetter__('userAgent', function () {
 let isEmit = false;
 let newTimer = {};
 
-const MainScreen = ({navigation}) => {
+const MainScreen = ({}) => {
   // HOOKS
   const dispatch = useDispatch();
   const theme = useTheme();
+  const navigation = useNavigation();
 
   // STYLES
   const styles = makeStyles(theme);
@@ -117,7 +119,7 @@ const MainScreen = ({navigation}) => {
 
   // USEEFFECTS
   React.useEffect(() => {
-    if (navigation.isFocused()) {
+    if (navigation?.isFocused()) {
       dispatch(getUserConversationsRequest());
     }
   }, [navigation]);
@@ -142,9 +144,7 @@ const MainScreen = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <Header />
       <ConversationItems data={conversationsList} usersTyping={usersTyping} />
-      <Portal>
-        <FabComponent />
-      </Portal>
+      <Portal>{/* <FabComponent /> */}</Portal>
     </SafeAreaView>
   );
 };

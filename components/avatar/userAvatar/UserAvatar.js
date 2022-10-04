@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {View} from 'react-native';
-import {useTheme, Avatar, Badge} from 'react-native-paper';
+import {useTheme, Avatar} from 'react-native-paper';
 import makeStyles from './styles';
 import {REACT_APP_BASE_URL} from '../../../config/constants/url';
 import {getNameShort} from '../../../helpers';

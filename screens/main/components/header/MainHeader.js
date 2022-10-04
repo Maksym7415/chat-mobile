@@ -1,6 +1,7 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
 import {Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {Menu} from 'react-native-paper';
 import {mainHeader as styles} from './styles';
 import {headerSelectedСhatsAmountDotsOptions} from '../../config';
@@ -13,6 +14,8 @@ import {
 import store from '../../../../redux/store';
 
 const MainHeader = () => {
+  const navigation = useNavigation();
+
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
   const {selectedСhats} = useSelector(({appSlice}) => appSlice);
@@ -52,7 +55,10 @@ const MainHeader = () => {
             <SvgMaker name="svgs_line_bot_close" />
           </View>
         ) : (
-          <View>
+          <View
+            onStartShouldSetResponder={() => {
+              navigation.toggleDrawer();
+            }}>
             <SvgMaker name="svgs_filled_menu" strokeFill={'#ffffff'} />
           </View>
         )

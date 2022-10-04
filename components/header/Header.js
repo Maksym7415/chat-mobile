@@ -19,7 +19,6 @@ const Header = ({
   // STYLES
   const stylesRoot = makeStyles(theme);
 
-  console.log(renderTopLeftComponent, 'renderTopLeftComponent');
   return (
     <Appbar.Header style={{...stylesRoot.container, ...styles?.container}}>
       <View style={{...stylesRoot.top, ...styles?.top}}>
