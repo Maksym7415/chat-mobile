@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme, Portal} from 'react-native-paper';
 import makeStyles from './styles';
 import FabComponent from './components/fab';
+import socket from '../../config/socket';
 import ConversationItems from './components/conversationItems';
 import Header from './components/header';
 
@@ -123,19 +124,16 @@ const MainScreen = ({}) => {
       dispatch(getUserConversationsRequest());
     }
   }, [navigation]);
-
+  socket.on('connection', () => console.log('Connection'));
   React.useEffect(() => {
     if (conversationsList?.length) {
       conversationsList.forEach(chat => {
         // socket.on(`userIdChat${chat.conversationId}`, message => {
         //   dispatch(conversationAddNewMessage(message, chat.conversationId));
         // });
-        // socket.on(
-        //   `typingStateId${chat.conversationId}`,
-        //   (conversation: BackUsers) => {
-        //     timer(conversation, chat.conversationId);
-        //   },
-        // );
+        // socket.on(`typingStateId${chat.conversationId}`, conversation => {
+        //   timer(conversation, chat.conversationId);
+        // });
       });
     }
   }, [conversationsList, typing]);

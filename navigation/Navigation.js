@@ -6,6 +6,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Provider as PaperProvider} from 'react-native-paper';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {
   SafeAreaView,
   KeyboardAvoidingView,
@@ -37,11 +38,9 @@ function Root() {
   return (
     <Drawer.Navigator
       drawerContent={DrawerNavigator}
-      drawerStyle={
-        {
-          // backgroundColor: theme?.colors?.grey4,
-        }
-      }>
+      screenOptions={{
+        drawerType: 'front',
+      }}>
       <Drawer.Screen
         name="main"
         component={MainScreen}
@@ -94,38 +93,26 @@ function MyStack() {
   return (
     <PaperProvider theme={themeLight}>
       <SafeAreaProvider>
-        <KeyboardAvoidingView
-          style={styles.keyboardAvoidingView}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          enabled>
-          <CustomStatusBar />
-          <SafeAreaView style={styles.container}>
-            <NavigationContainer>
-              <Stack.Navigator
-                initialRouteName={
-                  tokenPayload.login ? PathsName.signIn : PathsName.main
-                }
-                screenOptions={{
-                  // header: props => <Header {...props} />,
-                  headerShown: false,
-                }}>
-                {isLoading ? (
-                  <Stack.Screen name="Splash" component={SplashScreen} />
-                ) : !tokenPayload.login ? (
-                  navigationNotAuthorized.map(item => {
-                    return (
-                      <Stack.Screen
-                        key={item.id}
-                        name={item.pathName}
-                        options={item.options}
-                        component={item.Component}
-                      />
-                    );
-                  })
-                ) : (
-                  <>
-                    <Stack.Screen options={{}} name="Root" component={Root} />
-                    {navigation.map(item => {
+        <GestureHandlerRootView style={{flex: 1}}>
+          <KeyboardAvoidingView
+            style={styles.keyboardAvoidingView}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            enabled>
+            <CustomStatusBar />
+            <SafeAreaView style={styles.container}>
+              <NavigationContainer>
+                <Stack.Navigator
+                  initialRouteName={
+                    tokenPayload.login ? PathsName.signIn : PathsName.main
+                  }
+                  screenOptions={{
+                    // header: props => <Header {...props} />,
+                    headerShown: false,
+                  }}>
+                  {isLoading ? (
+                    <Stack.Screen name="Splash" component={SplashScreen} />
+                  ) : !tokenPayload.login ? (
+                    navigationNotAuthorized.map(item => {
                       return (
                         <Stack.Screen
                           key={item.id}
@@ -134,11 +121,24 @@ function MyStack() {
                           component={item.Component}
                         />
                       );
-                    })}
-                  </>
-                )}
-              </Stack.Navigator>
-              {/* <Drawer.Navigator
+                    })
+                  ) : (
+                    <>
+                      <Stack.Screen options={{}} name="Root" component={Root} />
+                      {navigation.map(item => {
+                        return (
+                          <Stack.Screen
+                            key={item.id}
+                            name={item.pathName}
+                            options={item.options}
+                            component={item.Component}
+                          />
+                        );
+                      })}
+                    </>
+                  )}
+                </Stack.Navigator>
+                {/* <Drawer.Navigator
                 drawerContent={DrawerNavigator}
                 drawerContentOptions={{
                   activeBackgroundColor: 'transparent',
@@ -165,9 +165,10 @@ function MyStack() {
                 })}
                 <Drawer.Screen name="Avatars" component={Avatars} />
               </Drawer.Navigator> */}
-            </NavigationContainer>
-          </SafeAreaView>
-        </KeyboardAvoidingView>
+              </NavigationContainer>
+            </SafeAreaView>
+          </KeyboardAvoidingView>
+        </GestureHandlerRootView>
       </SafeAreaProvider>
     </PaperProvider>
   );

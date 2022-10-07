@@ -184,6 +184,25 @@ export const svgs = {
     </Svg>
   ),
 
+  svgs_filled_send: ({
+    width = 27,
+    height = 27,
+    fill = 'none',
+    strokeFill = '#868686',
+  }) => (
+    <Svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg">
+      <Path
+        d="M3.0016 3.98437C3.0016 3.65625 3.0016 3.00001 4.16548 3C5.6619 2.99998 22.2888 11.5313 23.4527 12.5156C24.3838 13.3031 23.9499 14.1562 23.4511 14.4844C22.2875 15.4685 5.50289 23.9949 4.16388 24C3 24 3 23.3438 3 23.0156L4.16505 15.7969C4.29771 15.0094 4.66401 14.8125 4.83057 14.8125L14.8067 13.8281C14.9175 13.8281 15.1392 13.7625 15.1392 13.5C15.1392 13.2375 14.9175 13.1719 14.8067 13.1719L4.83057 12.1875C4.66401 12.1875 4.29771 11.9906 4.16505 11.2031C3.77561 8.82365 3.0016 4.3125 3.0016 3.98437Z"
+        fill={strokeFill}
+      />
+    </Svg>
+  ),
+
   // Line
   svgs_line_check: ({
     width = 17,
@@ -557,6 +576,92 @@ export const svgs = {
       xmlns="http://www.w3.org/2000/svg">
       <Path
         d="M10.3333 11C10.3333 10.2778 10.9 8.83333 13.1667 8.83333C15.4333 8.83333 16 10.6111 16 11.3333C16 13.1667 13.8333 14.5 13.5 14.8333C13.1667 15.1667 13.1667 15.5 13.1667 15.6667V16.6667M13.1667 20V18.3333M23 14C23 19.5228 18.5228 24 13 24C7.47715 24 3 19.5228 3 14C3 8.47715 7.47715 4 13 4C18.5228 4 23 8.47715 23 14Z"
+        strokeWidth={strokeWidth}
+        stroke={strokeFill}
+      />
+    </Svg>
+  ),
+  svgs_line_attach: ({
+    width = 27,
+    height = 27,
+    fill = 'none',
+    strokeFill = '#868686',
+    strokeWidth = '1.5',
+    strokeLinecap = 'round',
+  }) => (
+    <Svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg">
+      <Path
+        d="M6.2782 11.8065L12.9998 4.98249C19.0116 -1.02903 28.0292 7.98825 22.0174 13.9998L13.3335 22.6783C9.32562 26.686 3.31388 20.6745 7.32171 16.6668L16.0057 7.98825C17.9947 6.04839 20.9973 9.09678 19.3452 10.994L11.0383 19.4274"
+        strokeWidth={strokeWidth}
+        strokeLinecap={strokeLinecap}
+        stroke={strokeFill}
+      />
+    </Svg>
+  ),
+  svgs_line_emoji: ({
+    width = 27,
+    height = 27,
+    fill = 'none',
+    strokeFill = '#868686',
+    strokeWidth = '1.5',
+    strokeLinecap = 'round',
+  }) => (
+    <Svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg">
+      <Path
+        d="M9.16667 16.1667C9.55556 16.9444 10.9667 18.5 13.5 18.5C16.0333 18.5 17.4444 16.9444 17.8333 16.1667M24 13.5C24 19.299 19.299 24 13.5 24C7.70101 24 3 19.299 3 13.5C3 7.70101 7.70101 3 13.5 3C19.299 3 24 7.70101 24 13.5ZM17.5 11.6667C17.5 12.1269 17.2761 12.5 17 12.5C16.7239 12.5 16.5 12.1269 16.5 11.6667C16.5 11.2064 16.7239 10.8333 17 10.8333C17.2761 10.8333 17.5 11.2064 17.5 11.6667ZM10.5 11.6667C10.5 12.1269 10.2761 12.5 10 12.5C9.72386 12.5 9.5 12.1269 9.5 11.6667C9.5 11.2064 9.72386 10.8333 10 10.8333C10.2761 10.8333 10.5 11.2064 10.5 11.6667Z"
+        strokeWidth={strokeWidth}
+        strokeLinecap={strokeLinecap}
+        stroke={strokeFill}
+      />
+    </Svg>
+  ),
+  svgs_line_voice: ({
+    width = 27,
+    height = 27,
+    fill = 'none',
+    strokeFill = '#868686',
+    strokeWidth = '1.5',
+    strokeLinecap = 'round',
+  }) => (
+    <Svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg">
+      <Path
+        d="M14 25C14 25 14 22.9525 14 21.4222M14 21.4222C6 21.4222 6 13.4148 6 13.4148M14 21.4222C22 21.4222 22 13.4148 22 13.4148M14 17.3333C18.2553 17.3333 18.2553 13.0741 18.2553 13.0741V6.25926C18.2553 6.25926 18.2553 2 14 2C9.74468 2 9.74468 6.25926 9.74468 6.25926V13.0741C9.74468 13.0741 9.74468 17.3333 14 17.3333Z"
+        strokeWidth={strokeWidth}
+        strokeLinecap={strokeLinecap}
+        stroke={strokeFill}
+      />
+    </Svg>
+  ),
+  svgs_line_video_message: ({
+    width = 27,
+    height = 27,
+    fill = 'none',
+    strokeFill = '#868686',
+    strokeWidth = '1.5',
+  }) => (
+    <Svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg">
+      <Path
+        d="M18.5 13.5C18.5 16.2614 16.2614 18.5 13.5 18.5C10.7386 18.5 8.5 16.2614 8.5 13.5C8.5 10.7386 10.7386 8.5 13.5 8.5C16.2614 8.5 18.5 10.7386 18.5 13.5Z"
         strokeWidth={strokeWidth}
         stroke={strokeFill}
       />

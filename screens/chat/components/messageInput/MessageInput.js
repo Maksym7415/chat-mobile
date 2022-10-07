@@ -1,17 +1,21 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {View, TextInput} from 'react-native';
+import {View} from 'react-native';
+import {TextInput} from 'react-native-paper';
 import {stylesMessageInput as styles} from './styles';
-import socket from '../../../config/socket';
-import languages from '../../../config/translations';
-import {fullDate} from '../../../helpers';
+import socket from '../../../../config/socket';
+import languages from '../../../../config/translations';
+import {fullDate} from '../../../../helpers';
 import {
   editMessageAction,
   deleteMessageAction,
   shareMessageAction,
-} from '../../../redux/app';
+} from '../../../../redux/app';
+import RightInputComponent from './components/RightInputComponent';
+import LeftInputComponent from './components/LeftInputComponent';
+import BottomSheet from '../../../../components/customBottomSheet';
 
 export default function MessageInput({
   conversationId,
@@ -24,6 +28,9 @@ export default function MessageInput({
 }) {
   // HOOKS
   const dispatch = useDispatch();
+
+  // REFS
+  const refBottomSheet = React.useRef(null);
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
@@ -77,6 +84,7 @@ export default function MessageInput({
       fkSenderId: message?.User?.id || userId,
       messageType: 'Text',
     };
+    console.log(messageSend, 'messageSend');
     // if (!conversationId) {
     //   return socketSendMessageCommonFun(undefined);
     // }
@@ -153,6 +161,8 @@ export default function MessageInput({
     }
   }, [messageEdit]);
 
+  socket.on('connection', () => console.log('Connection'));
+
   React.useEffect(() => {
     socket.on('deleteMessage', ({conversationId, messageId}) => {
       setAllMessages(messages => ({
@@ -172,7 +182,7 @@ export default function MessageInput({
     setSheredMessages(sheraMessages);
   }, [sheraMessages]);
 
-  // console.log(message, 'message');
+  // RENDERS
 
   return (
     <>
@@ -222,36 +232,28 @@ export default function MessageInput({
             ? styles.wrapperInput
             : {...styles.wrapperInput, ...styles.wrapperInputShadow}
         }>
+        <LeftInputComponent />
         <TextInput
-          // onKeyDown={sendMessageByKey}
+          multiline={true}
+          style={styles.input}
+          activeUnderlineColor={'#ffffff'}
+          selectionColor={'red'}
+          underlineColor="transparent"
           value={message[conversationId] || ''}
           keyboardType="default"
           onChangeText={handleChangeMessage}
           placeholder={`${languages[lang].generals.typeMessage}...`}
-          // endAdornment={
-          //   (message[conversationId] || '') === '' && !sheredMessages.length ? (
-          //     <InputAdornment position="end">
-          //       <IconButton
-          //         classes={{root: styles.iconButton}}
-          //         onClick={openFileDialog}
-          //         color="primary"
-          //         aria-label="upload picture"
-          //         component="span">
-          //         <CloudUploadIcon />
-          //       </IconButton>
-          //     </InputAdornment>
-          //   ) : (
-          //     <InputAdornment position="end">
-          //       <IconButton
-          //         classes={{root: styles.iconButton}}
-          //         onClick={handleSendMessage}>
-          //         <SendIcon />
-          //       </IconButton>
-          //     </InputAdornment>
-          //   )
-          // }
+          keyboardkey={res => console.log(res, 'res')}
+        />
+        <RightInputComponent
+          message={message[conversationId]}
+          handleSendMessage={handleSendMessage}
+          refBottomSheet={refBottomSheet}
         />
       </View>
+      <BottomSheet ref={refBottomSheet}>
+        <View style={{flex: 1, backgroundColor: 'orange'}} />
+      </BottomSheet>
     </>
   );
 }

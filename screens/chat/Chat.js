@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import styles from './styles';
-import MessageInput from './components/MessageInput';
+import MessageInput from './components/messageInput/MessageInput';
 import Message from './components/Message';
 import ChatHeader from './components/ChatHeader';
 import Loader from '../../components/loader';

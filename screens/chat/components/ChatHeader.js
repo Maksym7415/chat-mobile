@@ -115,7 +115,7 @@ const ChatHeader = ({conversationData}) => {
               <SvgMaker name="svgs_filled_phone" strokeFill={'#ffffff'} />
             </View>
             <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
-              <Menu
+              {/* <Menu
                 visible={visibleOptions}
                 onDismiss={closeOptions}
                 anchor={
@@ -142,24 +142,7 @@ const ChatHeader = ({conversationData}) => {
                   onPress={() => {}}
                   title="Paste"
                 />
-                {/* {headerSelectedСhatsAmountDotsOptions(lang).map(action => {
-                return (
-                  <View
-                    key={action.id}
-                    style={styles.dotsOption}
-                    onStartShouldSetResponder={() =>
-                      handleOptions(action.value)
-                    }>
-                    {action.icon.name && (
-                      <View style={styles.wrapperIconOption}>
-                        <SvgMaker name={action.icon.name} />
-                      </View>
-                    )}
-                    <Text>{action.title}</Text>
-                  </View>
-                );
-              })} */}
-              </Menu>
+              </Menu> */}
             </View>
           </>
         )
