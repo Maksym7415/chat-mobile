@@ -63,7 +63,8 @@ const conversationsSlice = createSlice({
     lastConversationMessageAction(state, {payload}) {
       state.searchChats = null;
     },
-    conversationAddNewMessage(state, {payload}) {
+    conversationAddNewMessageAction(state, {payload}) {
+      // console.log(payload, "payload");
       state.lastMessages = {
         [payload.id]: payload.message,
       };
@@ -99,7 +100,7 @@ const conversationsSlice = createSlice({
     builder.addCase(
       requests.getUserConversationsRequest.fulfilled,
       (state, action) => {
-        state.conversationsList = action.payload.data;
+        state.conversationsList = action.payload;
       },
     );
     builder.addCase(
@@ -128,7 +129,7 @@ export const {
   conversationActionFail,
   conversationUserHistoryActionRequest,
   lastConversationMessageAction,
-  conversationAddNewMessage,
+  conversationAddNewMessageAction,
   clearLastMessage,
   conversationTypeStateAction,
   createNewChatAction,

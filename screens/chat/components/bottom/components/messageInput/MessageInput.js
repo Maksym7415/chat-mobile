@@ -5,17 +5,19 @@ import {useDispatch, useSelector} from 'react-redux';
 import {View} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {stylesMessageInput as styles} from './styles';
-import socket from '../../../../config/socket';
-import languages from '../../../../config/translations';
-import {fullDate} from '../../../../helpers';
+import {socket} from '../../../../../../config/socket';
+import languages from '../../../../../../config/translations';
+import {fullDate} from '../../../../../../helpers';
 import {
   editMessageAction,
   deleteMessageAction,
   shareMessageAction,
-} from '../../../../redux/app';
+} from '../../../../../../redux/app';
 import RightInputComponent from './components/RightInputComponent';
 import LeftInputComponent from './components/LeftInputComponent';
-import BottomSheet from '../../../../components/customBottomSheet';
+import MessageEdit from './components/messageEdit';
+import SheredMessages from './components/sheredMessages';
+import BottomSheet from '../../../../../../components/customBottomSheet';
 
 export default function MessageInput({
   conversationId,
@@ -84,7 +86,6 @@ export default function MessageInput({
       fkSenderId: message?.User?.id || userId,
       messageType: 'Text',
     };
-    console.log(messageSend, 'messageSend');
     // if (!conversationId) {
     //   return socketSendMessageCommonFun(undefined);
     // }
@@ -154,14 +155,12 @@ export default function MessageInput({
           messageId: messageEdit.messageId,
         },
         success => {
-          // if (success) console.log('deleted');
+          if (success) console.log('deleted');
         },
       );
       dispatch(deleteMessageAction(false, null));
     }
   }, [messageEdit]);
-
-  socket.on('connection', () => console.log('Connection'));
 
   React.useEffect(() => {
     socket.on('deleteMessage', ({conversationId, messageId}) => {
@@ -182,50 +181,10 @@ export default function MessageInput({
     setSheredMessages(sheraMessages);
   }, [sheraMessages]);
 
-  // RENDERS
-
   return (
     <>
-      {/* {messageEdit.isEdit && (
-        <div className="conversations__send-message-text conversations__send-message-shadow">
-          <EditIcon color="primary" className="mr-10" />
-          <div className="flex-col conversations__send-message-text-title-wrapper">
-            <Typography color="primary">
-              {languages[lang].generals.editMessage}
-            </Typography>
-            <p className="conversations__edit-message-paragraph">
-              {editedMessage}
-            </p>
-          </div>
-          <div className="ml-auto pd-right-30">
-            <IconButton
-              style={{width: '20px', height: '20px'}}
-              onClick={handleClearEditMessage}>
-              <CloseIcon style={{width: '20px', height: '20px'}} />
-            </IconButton>
-          </div>
-        </div>
-      )} */}
-      {/* {sheredMessages.length ? (
-        <div className="conversations__send-message-text conversations__send-message-shadow">
-          <ShareIcon color="primary" className="mr-10" />
-          <div className="flex-col conversations__send-message-text-title-wrapper">
-            <Typography color="primary">
-              {languages[lang].generals.shareMessage}
-            </Typography>
-            <p className="conversations__edit-message-paragraph">
-              {sheredMessages[0].message}
-            </p>
-          </div>
-          <div className="ml-auto pd-right-30">
-            <IconButton
-              style={{width: '20px', height: '20px'}}
-              onClick={handleClearSheraMessages}>
-              <CloseIcon style={{width: '20px', height: '20px'}} />
-            </IconButton>
-          </div>
-        </div>
-      ) : null} */}
+      {messageEdit.isEdit ? <MessageEdit /> : null}
+      {sheredMessages.length ? <SheredMessages /> : null}
       <View
         style={
           messageEdit.isEdit || sheredMessages.length

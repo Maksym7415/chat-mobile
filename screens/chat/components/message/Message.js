@@ -4,24 +4,25 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, {useLayoutEffect, useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
-import {stylesMessage as styles} from './styles';
-import {contextMenuConfig, contextMenuCallback} from '../config';
-import languages from '../../../config/translations';
-import {getCurrentDay} from '../../../helpers';
-import UserAvatar from '../../../components/avatar/userAvatar';
-import {conversationListActions} from '../../../redux/conversations/actions';
+import makeStyles from './styles';
+import {contextMenuConfig, contextMenuCallback} from '../../config';
+import languages from '../../../../config/translations';
+import {getCurrentDay} from '../../../../helpers';
+import UserAvatar from '../../../../components/avatar/userAvatar';
+import {conversationListActions} from '../../../../redux/conversations/actions';
 import {
   editMessageAction,
   deleteMessageAction,
   contextMenuAction,
   showDialogAction,
-} from '../../../redux/app';
+} from '../../../../redux/app';
 import {
   actionsTypeObjectSelected,
   selectedMessagesActions,
-} from '../../../redux/app/actions';
-import store from '../../../redux/store';
+} from '../../../../redux/app/actions';
+import store from '../../../../redux/store';
 
 function Message({
   messageData,
@@ -32,6 +33,10 @@ function Message({
 }) {
   // HOOKS
   const dispatch = useDispatch();
+  const theme = useTheme();
+
+  // STYLES
+  const styles = makeStyles(theme);
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
@@ -157,7 +162,7 @@ function Message({
 
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
+      activeOpacity={1}
       style={(() => {
         const initialStyles = {...settings.styles.root};
         if (selectedMessages?.[messageData.id]) {
@@ -177,32 +182,14 @@ function Message({
           );
       }}>
       <View style={{...styles.wrapperUp}}>
-        {isShowAvatar && (
+        {activeConversationType === 'Chat' && isShowAvatar && (
           <UserAvatar
             source={messageData.User.userAvatar}
             name={`${messageData.User.firstName} ${messageData.User.lastName}`}
             sizeAvatar={38}
           />
         )}
-        <View
-          onContextMenu={event =>
-            contextMenuCallback(
-              event,
-              messageData.id,
-              contextMenuConfig(
-                lang,
-                messageData.fkSenderId === userId,
-                handleDeleteMessage,
-                handleEditMessage,
-                handleShareMessage,
-              ),
-              dispatch,
-            )
-          }
-          onClick={event =>
-            contextMenuCallback(event, messageData.id, [], dispatch)
-          }
-          style={styles.wrapper}>
+        <View style={styles.wrapper}>
           {messageData.Files && !!messageData.Files.length && (
             <View className="conversations__message-image-container">
               {messageData.Files.map(file =>
@@ -229,20 +216,15 @@ function Message({
                   {languages[lang].generals.edited}
                 </Text>
               )}
-              <View style={styles.wrapperNameData}>
-                {activeConversationType !== 'Dialog' ? (
+              {activeConversationType === 'Chat' && (
+                <View style={styles.wrapperName}>
                   <Text style={styles.name}>
                     {messageData.forwardedUser
                       ? languages[lang].generals.forwardedMessage
                       : messageData.User.tagName}
                   </Text>
-                ) : (
-                  <View style={{...styles.name, height: 2}} />
-                )}
-                <Text style={styles.messageSendTime}>
-                  {getCurrentDay(new Date(messageData.sendDate), true)}
-                </Text>
-              </View>
+                </View>
+              )}
               <View
                 style={{
                   ...settings.styles.wrapperMessage,
@@ -254,6 +236,11 @@ function Message({
                 )}
                 <Text style={{...styles.messageText}}>
                   {messageData.message}
+                </Text>
+              </View>
+              <View style={styles.wrapperDate}>
+                <Text style={styles.messageSendTime}>
+                  {getCurrentDay(new Date(messageData.sendDate), true)}
                 </Text>
               </View>
             </View>

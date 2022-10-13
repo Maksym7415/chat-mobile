@@ -2,26 +2,32 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
-import {Menu} from 'react-native-paper';
-import {chatHeader as styles} from './styles';
-import {PathsName} from '../../../navigation/navigationConfig';
-import UserAvatar from '../../../components/avatar/userAvatar';
-import SvgMaker from '../../../components/svgMaker';
-import Header from '../../../components/header';
+import {Menu, useTheme} from 'react-native-paper';
+import makeStyles from './styles';
+import {headerSelectedСhatsAmount} from './config';
+import {PathsName} from '../../../../navigation/navigationConfig';
+import UserAvatar from '../../../../components/avatar/userAvatar';
+import SvgMaker from '../../../../components/svgMaker';
+import Header from '../../../../components/header';
 import {
   actionsTypeObjectSelected,
   selectedMessagesActions,
-} from '../../../redux/app/actions';
-import store from '../../../redux/store';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
+} from '../../../../redux/app/actions';
+import store from '../../../../redux/store';
 
 const ChatHeader = ({conversationData}) => {
   //HOOKS
   const navigation = useNavigation();
+  const theme = useTheme();
+
+  // STYLES
+  const styles = makeStyles(theme);
 
   // SELECTORS
   const {selectedMessages} = useSelector(({appSlice}) => appSlice);
+  const lang = useSelector(({settingSlice}) => settingSlice.lang);
 
+  // STATES
   const [visibleOptions, setVisibleOptions] = React.useState(true);
 
   // FUNCTIONS
@@ -94,20 +100,17 @@ const ChatHeader = ({conversationData}) => {
       renderTopRightComponent={() =>
         selectedMessagesAmount ? (
           <View style={styles.wrapperActions}>
-            {selectedMessagesAmount === 1 ? (
-              <View style={styles.wrapperAction}>
-                <Text>Edit</Text>
-              </View>
-            ) : null}
-            <View style={styles.wrapperAction}>
-              <Text>Copy</Text>
-            </View>
-            <View style={styles.wrapperAction}>
-              <Text>Forwd</Text>
-            </View>
-            <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
-              <Text>Del</Text>
-            </View>
+            {headerSelectedСhatsAmount(lang).map(action => {
+              return selectedMessagesAmount > 1 &&
+                ['edit'].includes(action.value) ? null : (
+                <View
+                  key={action.id}
+                  style={styles.wrapperAction}
+                  onStartShouldSetResponder={() => handleOptions(action.value)}>
+                  <SvgMaker name={action.icon.name} />
+                </View>
+              );
+            })}
           </View>
         ) : (
           <>

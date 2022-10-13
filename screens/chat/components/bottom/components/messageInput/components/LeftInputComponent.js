@@ -2,7 +2,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import {stylesMessageInput as styles} from '../styles';
-import SvgMaker from '../../../../../components/svgMaker';
+import SvgMaker from '../../../../../../../components/svgMaker';
 
 export default function LeftInputComponent({}) {
   // FUNCTIONS

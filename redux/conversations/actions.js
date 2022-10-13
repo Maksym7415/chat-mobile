@@ -1,8 +1,23 @@
 import {updateConversationListAction} from './slice';
 
 export const conversationListActions = data => dispatch => {
+  console.log(data, 'data');
   switch (data.mode) {
     case 'deleteMessage':
+      return dispatch(
+        updateConversationListAction(
+          data.conversationsList.map(conversation => {
+            if (conversation.conversationId === data.conversationId) {
+              return {
+                ...conversation,
+                Messages: data.messages,
+              };
+            }
+            return conversation;
+          }),
+        ),
+      );
+    case 'updateMessageConversation':
       return dispatch(
         updateConversationListAction(
           data.conversationsList.map(conversation => {

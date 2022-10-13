@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import styles from './styles';
-import MessageInput from './components/messageInput/MessageInput';
-import Message from './components/Message';
-import ChatHeader from './components/ChatHeader';
+import Message from './components/message';
+import ChatHeader from './components/header';
+import ChatBottom from './components/bottom';
 import Loader from '../../components/loader';
 import languages from '../../config/translations';
 import {checkIsShowAvatar, setMessageDate, scrollTop} from '../../helpers';
@@ -37,6 +37,7 @@ const Chat = ({navigation, route}) => {
     userHistoryConversation: {data: messageHistory, pagination},
     opponentId: {id: opponentId},
     createConversation: isCreateChat,
+    lastMessages,
   } = useSelector(({conversationsSlice}) => conversationsSlice);
   const {userId, firstName} = useSelector(
     ({authSlice}) => authSlice.tokenPayload,
@@ -150,8 +151,42 @@ const Chat = ({navigation, route}) => {
     }
   }, [isCreateChat]);
 
-  // RENDERS
+  React.useEffect(() => {
+    if (Object.keys(lastMessages).length && conversationId in lastMessages) {
+      if (lastMessages[conversationId].isEdit) {
+        return setAllMessages(messages => ({
+          ...messages,
+          [conversationId]: messages[conversationId].map(message =>
+            message.id === lastMessages[conversationId].id
+              ? {
+                  ...message,
+                  message: lastMessages[conversationId].message,
+                  isEdit: true,
+                }
+              : message,
+          ),
+        }));
+      }
+    }
+    if (Object.keys(lastMessages).length) {
+      setAllMessages(messages => {
+        const newMessages = Object.entries(lastMessages).reduce((acc, item) => {
+          const prevMessages = messages?.[item[0]] || null;
+          if (prevMessages) {
+            return {
+              ...acc,
+              [item[0]]: [...prevMessages, item[1]],
+            };
+          }
+          return acc;
+        }, {});
+        return {...messages, ...newMessages};
+      });
+      // dispatch(clearLastMessage());
+    }
+  }, [lastMessages]);
 
+  // RENDERS
   const renderMainContent = () => {
     return (
       <ScrollView
@@ -235,7 +270,7 @@ const Chat = ({navigation, route}) => {
       </ScrollView>
     );
   };
-  // IMAGE.wallPaper
+
   return (
     <SafeAreaView style={styles.container}>
       <ChatHeader conversationData={conversationData} />
@@ -259,18 +294,14 @@ const Chat = ({navigation, route}) => {
           renderMainContent()
         )}
       </ImageBackground>
-      {(!!conversationId || !!opponentId) &&
-        !Object.keys(selectedMessages).length && (
-          <MessageInput
-            allMessages={allMessages}
-            setAllMessages={setAllMessages}
-            conversationId={conversationId}
-            userId={userId}
-            firstName={firstName}
-            opponentId={opponentId}
-            openFileDialog={openFileDialog}
-          />
-        )}
+      <ChatBottom
+        allMessages={allMessages}
+        opponentId={opponentId}
+        setAllMessages={setAllMessages}
+        firstName={firstName}
+        userId={userId}
+        conversationId={conversationId}
+      />
     </SafeAreaView>
   );
 };

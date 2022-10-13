@@ -4,7 +4,7 @@ import {Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Menu} from 'react-native-paper';
 import {mainHeader as styles} from './styles';
-import {headerSelectedСhatsAmountDotsOptions} from '../../config';
+import {headerSelectedСhatsAmountDotsOptions} from './config';
 import Header from '../../../../components/header';
 import SvgMaker from '../../../../components/svgMaker';
 import {

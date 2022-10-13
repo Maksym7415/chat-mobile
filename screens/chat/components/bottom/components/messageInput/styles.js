@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {theme} from '../../../../config/theme';
+import {theme} from '../../../../../../config/theme';
 
 export default StyleSheet.create({});
 
@@ -33,6 +33,9 @@ export const stylesMessageInput = StyleSheet.create({
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
     borderBottomEndRadius: 0,
+    // paddingVertical: 0,
+    // marginVertical: 0,
+    // minHeight: 40,
   },
   attachAndTypeMessage: {
     height: '100%',

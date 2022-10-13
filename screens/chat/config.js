@@ -1,57 +1,52 @@
 import languages from '../../config/translations';
 
-export const contextMenuConfig =
-  () => (lang, isMyMessage, deleteMessage, editMessage, shareMessage) => {
-    if (isMyMessage) {
-      return [
-        {
-          id: 1,
-          title: languages[lang].generals.deleteMessage,
-          callback: deleteMessage,
-        },
-        {
-          id: 2,
-          title: languages[lang].generals.editMessage,
-          callback: editMessage,
-        },
-        {
-          id: 3,
-          title: languages[lang].generals.shareMessage,
-          callback: shareMessage,
-        },
-      ];
-    }
-    return [
-      {
-        id: 3,
-        title: languages[lang].generals.shareMessage,
-        callback: shareMessage,
-      },
-    ];
-  };
+const forwardAction = lang => ({
+  id: 10,
+  title: 'Forward',
+  value: 'forward',
+  icon: {
+    name: 'svgs_line_forward',
+  },
+});
 
-export const contextMenuCallback = (event, id, config, dispatch) => {
-  // event.preventDefault();
-  // if (event.type === 'click') {
-  //   dispatch(
-  //     contextMenuAction({
-  //       yPos: '',
-  //       xPos: '',
-  //       isShowMenu: false,
-  //       messageId: 0,
-  //       config,
-  //     }),
-  //   );
-  // }
-  // if (event.type === 'contextmenu') {
-  //   dispatch(
-  //     contextMenuAction({
-  //       yPos: `${event.pageY}px`,
-  //       xPos: `${event.pageX}px`,
-  //       isShowMenu: true,
-  //       messageId: id,
-  //       config,
-  //     }),
-  //   );
-  // }
-};
+const replyAction = lang => ({
+  id: 10,
+  title: 'Reply',
+  value: 'reply',
+  icon: {
+    name: 'svgs_line_reply',
+  },
+});
+
+export const headerSelectedСhatsAmount = lang => [
+  {
+    id: 1,
+    title: 'Edit',
+    value: 'edit',
+    icon: {
+      name: 'svgs_line_pencil',
+    },
+  },
+  {
+    id: 2,
+    title: 'Copy',
+    value: 'copy',
+    icon: {
+      name: 'svgs_line_copy',
+    },
+  },
+  forwardAction(lang),
+  {
+    id: 4,
+    title: 'Del',
+    value: 'Del',
+    icon: {
+      name: 'svgs_line_trash_bin_alt',
+    },
+  },
+];
+
+export const bottomActionsSelecteds = lang => [
+  replyAction(lang),
+  forwardAction(lang),
+];
