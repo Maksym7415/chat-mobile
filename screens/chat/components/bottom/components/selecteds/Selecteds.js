@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import makeStyles from './styles';
 import {bottomActionsSelecteds} from '../../../../config';
 import SvgMaker from '../../../../../../components/svgMaker';
+import {uuid} from '../../../../../../helpers';
 
 function Selecteds() {
   // HOOKS
@@ -28,7 +29,7 @@ function Selecteds() {
       {bottomActionsSelecteds(lang).map(action => {
         return (
           <View
-            key={action.id}
+            key={uuid()}
             style={styles.wrapperAction}
             onStartShouldSetResponder={() => handleOptions(action.value)}>
             <SvgMaker name={action.icon.name} />

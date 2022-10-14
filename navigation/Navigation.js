@@ -74,7 +74,6 @@ function MyStack() {
         );
       }
     } catch (error) {
-      console.log(error, 'checkIsToken');
     } finally {
       setIsLoading(false);
     }

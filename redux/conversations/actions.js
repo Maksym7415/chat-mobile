@@ -1,7 +1,6 @@
 import {updateConversationListAction} from './slice';
 
 export const conversationListActions = data => dispatch => {
-  console.log(data, 'data');
   switch (data.mode) {
     case 'deleteMessage':
       return dispatch(

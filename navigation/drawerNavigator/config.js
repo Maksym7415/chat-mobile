@@ -47,7 +47,7 @@ export const mainMenuRouts = lang => [
       name: 'svgs_line_settings',
     },
     title: 'Settings',
-    navigatePathName: PathsName.settings,
+    navigatePathName: PathsName.profile,
   },
 ];
 

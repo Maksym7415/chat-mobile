@@ -13,10 +13,8 @@ import Selecteds from './components/selecteds';
 function Message({
   firstName,
   conversationId,
-  allMessages,
   userId,
   openFileDialog,
-  setAllMessages,
   opponentId,
 }) {
   // HOOKS
@@ -38,8 +36,6 @@ function Message({
       if (!!conversationId || !!opponentId) {
         return (
           <MessageInput
-            allMessages={allMessages}
-            setAllMessages={setAllMessages}
             conversationId={conversationId}
             userId={userId}
             firstName={firstName}

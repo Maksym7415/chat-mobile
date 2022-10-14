@@ -4,16 +4,19 @@ import {theme} from '../../../../../../config/theme';
 export default StyleSheet.create({});
 
 export const stylesMessageInput = StyleSheet.create({
+  root: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+  },
   wrapperInput: {
     flex: 1,
-    width: '100%',
+
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: 0,
     paddingHorizontal: 0,
     // borderBottomColor: 'transparent',
-    position: 'absolute',
-    bottom: 0,
     // backgroundColor: '#ffffff',
     backgroundColor: 'transparent',
     borderBottomWidth: 0,
@@ -28,12 +31,18 @@ export const stylesMessageInput = StyleSheet.create({
   },
   input: {
     backgroundColor: '#ffffff',
+    display: 'flex',
     flex: 1,
     borderRadius: 0,
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
     borderBottomEndRadius: 0,
-    // paddingVertical: 0,
+    paddingVertical: 0,
+    paddingHorizontal: 10,
+    marginVertical: 0,
+    paddingTop: 0,
+
+    maxHeight: 100,
     // marginVertical: 0,
     // minHeight: 40,
   },

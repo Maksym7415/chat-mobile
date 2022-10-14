@@ -13,6 +13,7 @@ import SvgMaker from '../../components/svgMaker';
 import UserAvatar from '../../components/avatar/userAvatar';
 import {getNameShort} from '../../helpers';
 import {REACT_APP_BASE_URL} from '../../config/constants/url';
+import {PathsName} from '../navigationConfig';
 
 function CustomContentComponent({}) {
   // HOOKS
@@ -70,18 +71,23 @@ function CustomContentComponent({}) {
     <>
       <View style={{...stylesRoot.containerTop}}>
         <View style={{...stylesRoot.wrapperAvatarAndTheme}}>
-          {source ? (
-            <Avatar.Image
-              size={sizeAvatar}
-              source={{
-                height: sizeAvatar,
-                width: sizeAvatar,
-                uri: `${REACT_APP_BASE_URL}/${source}`,
-              }}
-            />
-          ) : (
-            <Avatar.Text size={sizeAvatar} label={nameShort || '!'} />
-          )}
+          <View
+            onStartShouldSetResponder={() => {
+              navigation.navigate(PathsName.profile);
+            }}>
+            {source ? (
+              <Avatar.Image
+                size={sizeAvatar}
+                source={{
+                  height: sizeAvatar,
+                  width: sizeAvatar,
+                  uri: `${REACT_APP_BASE_URL}/${source}`,
+                }}
+              />
+            ) : (
+              <Avatar.Text size={sizeAvatar} label={nameShort || '!'} />
+            )}
+          </View>
           {themeObjState.core === 'light' ? (
             <SvgMaker name="svgs_filled_theme_moon" strokeFill={'#ffffff'} />
           ) : (

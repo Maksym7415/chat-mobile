@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import styles from './styles';
+import {socket} from '../../config/socket';
 import Message from './components/message';
 import ChatHeader from './components/header';
 import ChatBottom from './components/bottom';
@@ -17,7 +18,9 @@ import languages from '../../config/translations';
 import {checkIsShowAvatar, setMessageDate, scrollTop} from '../../helpers';
 import {getConversationUserHistoryRequest} from '../../redux/conversations/requests';
 import {setConversationIdAction} from '../../redux/conversations';
+import {setAllMessagesAction} from '../../redux/app/slice';
 import IMAGE from '../../assets/img';
+import store from '../../redux/store';
 
 const Chat = ({navigation, route}) => {
   // HOOKS
@@ -42,12 +45,11 @@ const Chat = ({navigation, route}) => {
   const {userId, firstName} = useSelector(
     ({authSlice}) => authSlice.tokenPayload,
   );
-  const {sheraMessages, messageEdit, selectedMessages} = useSelector(
-    ({appSlice}) => appSlice,
-  );
+  const {sheraMessages, messageEdit, selectedMessages, allMessages} =
+    useSelector(({appSlice}) => appSlice);
 
   // STATES
-  const [allMessages, setAllMessages] = React.useState({});
+  // const [allMessages, setAllMessages] = React.useState({});
   const [localPagination, setLocalPagination] = React.useState({});
   const [files, setFiles] = React.useState({});
   const [isOpenDialog, setIsOpenDialog] = React.useState(false);
@@ -81,11 +83,6 @@ const Chat = ({navigation, route}) => {
   };
 
   // USEEFFECTS
-  React.useEffect(() => {
-    if (navigation.isFocused()) {
-    }
-  }, [navigation]);
-
   React.useEffect(() => {
     if (!allMessages[conversationId] && conversationId) {
       setIsFetching(true);
@@ -127,7 +124,13 @@ const Chat = ({navigation, route}) => {
         ...value,
         [conversationId]: pagination.currentPage,
       }));
-      setAllMessages(messages => ({...messages, [conversationId]: newArr}));
+      dispatch(
+        setAllMessagesAction({
+          [conversationId]: newArr,
+        }),
+      );
+
+      // setAllMessages(messages => ({...messages, [conversationId]: newArr}));
     }
   }, [messageHistory]);
 
@@ -151,41 +154,7 @@ const Chat = ({navigation, route}) => {
     }
   }, [isCreateChat]);
 
-  React.useEffect(() => {
-    if (Object.keys(lastMessages).length && conversationId in lastMessages) {
-      if (lastMessages[conversationId].isEdit) {
-        return setAllMessages(messages => ({
-          ...messages,
-          [conversationId]: messages[conversationId].map(message =>
-            message.id === lastMessages[conversationId].id
-              ? {
-                  ...message,
-                  message: lastMessages[conversationId].message,
-                  isEdit: true,
-                }
-              : message,
-          ),
-        }));
-      }
-    }
-    if (Object.keys(lastMessages).length) {
-      setAllMessages(messages => {
-        const newMessages = Object.entries(lastMessages).reduce((acc, item) => {
-          const prevMessages = messages?.[item[0]] || null;
-          if (prevMessages) {
-            return {
-              ...acc,
-              [item[0]]: [...prevMessages, item[1]],
-            };
-          }
-          return acc;
-        }, {});
-        return {...messages, ...newMessages};
-      });
-      // dispatch(clearLastMessage());
-    }
-  }, [lastMessages]);
-
+  // console.log(messageEdit, 'messageEdit');
   // RENDERS
   const renderMainContent = () => {
     return (
@@ -273,7 +242,10 @@ const Chat = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ChatHeader conversationData={conversationData} />
+      <ChatHeader
+        conversationData={conversationData}
+        conversationId={conversationId}
+      />
       <ImageBackground
         source={IMAGE.wallPaper}
         resizeMode="cover"
@@ -295,9 +267,7 @@ const Chat = ({navigation, route}) => {
         )}
       </ImageBackground>
       <ChatBottom
-        allMessages={allMessages}
         opponentId={opponentId}
-        setAllMessages={setAllMessages}
         firstName={firstName}
         userId={userId}
         conversationId={conversationId}

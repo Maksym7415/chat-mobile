@@ -12,10 +12,13 @@ import Header from '../../../../components/header';
 import {
   actionsTypeObjectSelected,
   selectedMessagesActions,
+  actionsMessagesChat,
+  actionsTypeActionsChat,
 } from '../../../../redux/app/actions';
 import store from '../../../../redux/store';
+import {uuid} from '../../../../helpers';
 
-const ChatHeader = ({conversationData}) => {
+const ChatHeader = ({conversationData, conversationId}) => {
   //HOOKS
   const navigation = useNavigation();
   const theme = useTheme();
@@ -33,8 +36,16 @@ const ChatHeader = ({conversationData}) => {
   // FUNCTIONS
   const openOptions = () => setVisibleOptions(true);
   const closeOptions = () => setVisibleOptions(false);
-  const handleOptions = value => {
-    console.log(value, 'value');
+  const handleOptions = typeAction => {
+    store.dispatch(
+      actionsMessagesChat(
+        {
+          conversationId: conversationId,
+          selectedMessages,
+        },
+        typeAction,
+      ),
+    );
     closeOptions();
     store.dispatch(
       selectedMessagesActions(null, actionsTypeObjectSelected.clear),
@@ -104,7 +115,7 @@ const ChatHeader = ({conversationData}) => {
               return selectedMessagesAmount > 1 &&
                 ['edit'].includes(action.value) ? null : (
                 <View
-                  key={action.id}
+                  key={uuid()}
                   style={styles.wrapperAction}
                   onStartShouldSetResponder={() => handleOptions(action.value)}>
                   <SvgMaker name={action.icon.name} />

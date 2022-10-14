@@ -3,6 +3,7 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {View} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {TextInput} from 'react-native-paper';
 import {stylesMessageInput as styles} from './styles';
 import {socket} from '../../../../../../config/socket';
@@ -10,9 +11,9 @@ import languages from '../../../../../../config/translations';
 import {fullDate} from '../../../../../../helpers';
 import {
   editMessageAction,
-  deleteMessageAction,
   shareMessageAction,
-} from '../../../../../../redux/app';
+} from '../../../../../../redux/app/slice';
+
 import RightInputComponent from './components/RightInputComponent';
 import LeftInputComponent from './components/LeftInputComponent';
 import MessageEdit from './components/messageEdit';
@@ -21,8 +22,6 @@ import BottomSheet from '../../../../../../components/customBottomSheet';
 
 export default function MessageInput({
   conversationId,
-  allMessages,
-  setAllMessages,
   userId,
   firstName,
   opponentId,
@@ -39,12 +38,11 @@ export default function MessageInput({
   const typing = useSelector(
     ({conversationsSlice}) => conversationsSlice.conversationTypeState,
   );
-  const messageEdit = useSelector(({appSlice}) => appSlice.messageEdit);
+  const {messageEdit} = useSelector(({appSlice}) => appSlice);
   const sheraMessages = useSelector(({appSlice}) => appSlice.sheraMessages);
 
   // STATES
   const [sheredMessages, setSheredMessages] = React.useState([]);
-  const [editedMessage, setEditedMessage] = React.useState('');
   const [message, setMessage] = React.useState({0: ''});
 
   // FUNCTIONS
@@ -75,6 +73,7 @@ export default function MessageInput({
         forwardedFromId: forwardedFromId || null,
       },
       success => {
+        console.log(success, 'success');
         if (success) setMessage({...message, [conversationId]: ''});
       },
     );
@@ -86,15 +85,14 @@ export default function MessageInput({
       fkSenderId: message?.User?.id || userId,
       messageType: 'Text',
     };
-    // if (!conversationId) {
-    //   return socketSendMessageCommonFun(undefined);
-    // }
+    if (!conversationId) {
+      return socketSendMessageCommonFun(undefined);
+    }
     if (sheredMessages.length) {
       sheredMessages.map(message => {
-        // message.sendDate  = fullDate(new Date());
         const messageObj = {
           ...message,
-          sendDate: fullDate(new Date()),
+          // sendDate: fullDate(new Date()),
         };
         socketSendMessageCommonFun(conversationId, messageObj, message.User.id);
         return message;
@@ -102,25 +100,16 @@ export default function MessageInput({
       dispatch(shareMessageAction([]));
     }
     if (message[conversationId]) {
-      if (messageEdit.isEdit) {
+      if (messageEdit.messageId) {
+        console.log('1');
         socketSendMessageCommonFun(conversationId, messageSend);
       } else {
+        console.log('2');
         messageSend.sendDate = fullDate(new Date());
         socketSendMessageCommonFun(conversationId, messageSend);
       }
     }
-    if (messageEdit.isEdit) dispatch(editMessageAction(false, null));
-  };
-
-  const sendMessageByKey = event => {
-    if (event.key === 'Enter') {
-      if (!message[conversationId] && !sheredMessages.length) return;
-      if (!conversationId) {
-        return socketSendMessageCommonFun(undefined);
-      }
-      socketSendMessageCommonFun(conversationId);
-      dispatch(editMessageAction(false, null));
-    }
+    messageEdit.messageId && clearMessageEdit();
   };
 
   const handleClearSheraMessages = () => {
@@ -128,66 +117,42 @@ export default function MessageInput({
     setSheredMessages([]);
   };
 
-  const handleClearEditMessage = () => {
-    // dispatch(editMessageAction(false, null));
-    setMessage({...message, [conversationId]: ''});
-    setEditedMessage('');
+  const clearMessageEdit = () => {
+    dispatch(
+      editMessageAction({
+        message: {},
+        messageId: null,
+      }),
+    );
+    setMessage(prev => ({...prev, [conversationId]: ''}));
   };
 
   // USEEFFECTS
   React.useEffect(() => {
-    if (messageEdit.isEdit) {
-      const resultMessage = allMessages[conversationId].find(
-        message => message.id === messageEdit.messageId,
-      );
-      setEditedMessage(resultMessage ? resultMessage.message : '');
-      setMessage(() => ({
-        ...message,
-        [conversationId]: resultMessage ? resultMessage.message : '',
-      }));
-    }
-    if (messageEdit.isDelete) {
-      socket.emit(
-        'chats',
-        {
-          conversationId,
-          isDeleteMessage: true,
-          messageId: messageEdit.messageId,
-        },
-        success => {
-          if (success) console.log('deleted');
-        },
-      );
-      dispatch(deleteMessageAction(false, null));
-    }
-  }, [messageEdit]);
-
-  React.useEffect(() => {
-    socket.on('deleteMessage', ({conversationId, messageId}) => {
-      setAllMessages(messages => ({
-        ...messages,
-        [conversationId]: messages[conversationId].filter(
-          message => message.id !== messageId,
-        ),
-      }));
-    });
-  }, []);
-
-  React.useEffect(() => {
-    handleClearEditMessage();
-  }, [conversationId]);
-
-  React.useEffect(() => {
     setSheredMessages(sheraMessages);
   }, [sheraMessages]);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      messageEdit.messageId &&
+        setMessage(prev => ({
+          ...prev,
+          [conversationId]: messageEdit.message.message,
+        }));
+
+      return () => messageEdit.messageId && clearMessageEdit();
+    }, [messageEdit.messageId]),
+  );
+
   return (
-    <>
-      {messageEdit.isEdit ? <MessageEdit /> : null}
+    <View style={styles.root}>
+      {messageEdit.messageId ? (
+        <MessageEdit data={messageEdit} onClose={clearMessageEdit} />
+      ) : null}
       {sheredMessages.length ? <SheredMessages /> : null}
       <View
         style={
-          messageEdit.isEdit || sheredMessages.length
+          messageEdit.messageId || sheredMessages.length
             ? styles.wrapperInput
             : {...styles.wrapperInput, ...styles.wrapperInputShadow}
         }>
@@ -195,6 +160,7 @@ export default function MessageInput({
         <TextInput
           multiline={true}
           style={styles.input}
+          // contentStyle={{marginHorizontal: -10, marginVertical: -2}}
           activeUnderlineColor={'#ffffff'}
           selectionColor={'red'}
           underlineColor="transparent"
@@ -213,6 +179,6 @@ export default function MessageInput({
       <BottomSheet ref={refBottomSheet}>
         <View style={{flex: 1, backgroundColor: 'orange'}} />
       </BottomSheet>
-    </>
+    </View>
   );
 }

@@ -3,12 +3,15 @@ import {
   setSelectedMessagesAction,
   setSettingStatusBarAction,
   settingStatusBarInitial,
+  setAllMessagesAction,
+  editMessageAction,
 } from './slice';
 import {
   actionsForTypeWithObjKey,
   actionsTypeObject,
 } from '../../helpers/actionsForType';
 import {deepEqual} from '../../helpers';
+import {socket} from '../../config/socket';
 
 export const actionsTypeObjectSelected = actionsTypeObject;
 
@@ -78,4 +81,38 @@ export const selectedMessagesActions =
         },
       ),
     );
+  };
+
+export const actionsTypeActionsChat = {
+  deleteMessages: 'deleteMessages',
+  editMessage: 'editMessage',
+};
+
+export const actionsMessagesChat =
+  (data, typeAction) => (dispatch, getState) => {
+    const {allMessages} = getState().appSlice;
+
+    switch (typeAction) {
+      case actionsTypeActionsChat.deleteMessages:
+        Object.keys(data.selectedMessages).map(messageId =>
+          socket.emit('chats', {
+            conversationId: data.conversationId,
+            isDeleteMessage: true,
+            messageId,
+          }),
+        );
+        return;
+      case actionsTypeActionsChat.editMessage:
+        Object.keys(data.selectedMessages).map(messageId =>
+          dispatch(
+            editMessageAction({
+              message: data.selectedMessages[messageId],
+              messageId,
+            }),
+          ),
+        );
+        return;
+      default:
+        break;
+    }
   };

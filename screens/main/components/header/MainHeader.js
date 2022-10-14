@@ -29,7 +29,6 @@ const MainHeader = () => {
   const openOptions = () => setVisibleOptions(true);
   const closeOptions = () => setVisibleOptions(false);
   const handleOptions = value => {
-    console.log(value, 'value');
     closeOptions();
     store.dispatch(selectedСhatsActions(null, actionsTypeObjectSelected.clear));
   };

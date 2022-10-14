@@ -10,6 +10,7 @@ const appSlice = createSlice({
   initialState: {
     isLoading: false,
     preloader: false,
+    allMessages: {},
     contextMenu: {
       xPos: '100',
       yPos: '100',
@@ -18,8 +19,7 @@ const appSlice = createSlice({
       config: [],
     },
     messageEdit: {
-      isEdit: false,
-      isDelete: false,
+      message: {},
       messageId: null,
     },
     dialogComponent: {
@@ -34,6 +34,11 @@ const appSlice = createSlice({
   reducers: {
     preloaderAction(state, {payload}) {
       state.preloader = payload;
+    },
+    setAllMessagesAction(state, {payload}) {
+      state.allMessages = {
+        ...payload,
+      };
     },
     contextMenuAction(state, {payload}) {
       state.contextMenu = payload;
@@ -78,7 +83,7 @@ const appSlice = createSlice({
 });
 
 export default appSlice.reducer;
-const {
+export const {
   preloaderAction,
   contextMenuAction,
   editMessageAction,
@@ -91,18 +96,5 @@ const {
   setSelectedСhatsAction,
   setSelectedMessagesAction,
   setSettingStatusBarAction,
+  setAllMessagesAction,
 } = appSlice.actions;
-export {
-  preloaderAction,
-  contextMenuAction,
-  editMessageAction,
-  setLanguageAction,
-  deleteMessageAction,
-  shareMessageAction,
-  showDialogAction,
-  hideDialogAction,
-  setIsLoading,
-  setSelectedСhatsAction,
-  setSelectedMessagesAction,
-  setSettingStatusBarAction,
-};

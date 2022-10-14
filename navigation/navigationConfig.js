@@ -2,6 +2,7 @@ import MainScreen from '../screens/main';
 import ChatScreen from '../screens/chat';
 import NewGroupScreen from '../screens/newGroup';
 import ContactsScreen from '../screens/contacts';
+import ProfileScreen from '../screens/profile';
 import CallsScreen from '../screens/calls';
 import PeopleNearbyScreen from '../screens/peopleNearby';
 import SavedScreen from '../screens/saved';
@@ -27,6 +28,7 @@ export const PathsName = {
   settings: 'settings',
   inviteFriends: 'inviteFriends',
   features: 'features',
+  profile: 'profile',
 };
 
 export const navigation = [
@@ -74,14 +76,19 @@ export const navigation = [
     pathName: PathsName.settings,
   },
   {
-    id: 9,
+    id: 10,
     Component: InviteFriendsScreen,
     pathName: PathsName.inviteFriends,
   },
   {
-    id: 9,
+    id: 11,
     Component: FeaturesScreen,
     pathName: PathsName.features,
+  },
+  {
+    id: 12,
+    Component: ProfileScreen,
+    pathName: PathsName.profile,
   },
 ];
 

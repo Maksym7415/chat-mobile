@@ -1,8 +1,10 @@
+import {actionsTypeActionsChat} from '../../../../redux/app/actions';
+
 export const headerSelectedСhatsAmount = lang => [
   {
     id: 1,
     title: 'Edit',
-    value: 'edit',
+    value: actionsTypeActionsChat.editMessage,
     icon: {
       name: 'svgs_line_pencil',
     },
@@ -26,7 +28,7 @@ export const headerSelectedСhatsAmount = lang => [
   {
     id: 4,
     title: 'Del',
-    value: 'Del',
+    value: actionsTypeActionsChat.deleteMessages,
     icon: {
       name: 'svgs_line_trash_bin_alt',
     },

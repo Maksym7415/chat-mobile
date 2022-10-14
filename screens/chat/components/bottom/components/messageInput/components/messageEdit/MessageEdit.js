@@ -1,35 +1,36 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import {View} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {View, Text} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import makeStyles from './styles';
 import SvgMaker from '../../../../../../../../components/svgMaker';
+import languages from '../../../../../../../../config/translations';
 
-export default function MessageEdit({}) {
+export default function MessageEdit({data, onClose}) {
   //HOOKS
   const theme = useTheme();
+
+  // SELECTORS
+  const lang = useSelector(({settingSlice}) => settingSlice.lang);
 
   // STYLES
   const styles = makeStyles(theme);
 
   return (
-    <>
-      <View className="conversations__send-message-text conversations__send-message-shadow">
-        {/* <EditIcon color="primary" className="mr-10" />
-        <View style="flex-col conversations__send-message-text-title-wrapper">
-          <Typography color="primary">
-            {languages[lang].generals.editMessage}
-          </Typography>
-          <p style="conversations__edit-message-paragraph">{editedMessage}</p>
-        </View>
-        <View style="ml-auto pd-right-30">
-          <IconButton
-            style={{width: '20px', height: '20px'}}
-            onClick={handleClearEditMessage}>
-            <CloseIcon style={{width: '20px', height: '20px'}} />
-          </IconButton>
-        </View> */}
+    <View style={styles.root}>
+      <View style={styles.wrapperIconEdit}>
+        <SvgMaker name={'svgs_filled_pencil'} />
       </View>
-    </>
+      <View style={styles.wrapperMainContent}>
+        <Text>{languages[lang].generals.editMessage}</Text>
+        <Text style="conversations__edit-message-paragraph">
+          {data.message.message}
+        </Text>
+      </View>
+      <View style={styles.close} onStartShouldSetResponder={onClose}>
+        <SvgMaker name={'svgs_filled_cross'} />
+      </View>
+    </View>
   );
 }
