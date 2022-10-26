@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, Text, Animated, Easing} from 'react-native';
+import {View, Text, Animated, Easing, Pressable} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import {useNavigation} from '@react-navigation/native';
@@ -15,7 +15,7 @@ import {getNameShort} from '../../helpers';
 import {REACT_APP_BASE_URL} from '../../config/constants/url';
 import {PathsName} from '../navigationConfig';
 
-function CustomContentComponent({}) {
+function CustomContentComponent(props) {
   // HOOKS
   const theme = useTheme();
   const navigation = useNavigation();
@@ -36,7 +36,7 @@ function CustomContentComponent({}) {
     navigatePathName && navigation.navigate(navigatePathName);
   };
 
-  const source = userInfo.Avatar;
+  const source = userInfo.userAvatar;
   const nameShort = userInfo.fullName ? getNameShort(userInfo.fullName) : null;
   const sizeAvatar = 59;
 
@@ -56,23 +56,22 @@ function CustomContentComponent({}) {
   // RENDERS
   const renderMenuItems = items =>
     items(lang).map(item => (
-      <View
+      <Pressable
         key={item.id}
-        onStartShouldSetResponder={() =>
-          handleMenuAction(item.navigatePathName)
-        }
+        onPress={() => handleMenuAction(item.navigatePathName)}
         style={stylesRoot.wrapperMenuItem}>
         <SvgMaker name={item.icon.name} />
         <Text style={stylesRoot.menuItemTitle}>{item.title}</Text>
-      </View>
+      </Pressable>
     ));
 
   return (
     <>
       <View style={{...stylesRoot.containerTop}}>
         <View style={{...stylesRoot.wrapperAvatarAndTheme}}>
-          <View
-            onStartShouldSetResponder={() => {
+          <Pressable
+            onPress={() => {
+              props.navigation.closeDrawer();
               navigation.navigate(PathsName.profile);
             }}>
             {source ? (
@@ -87,7 +86,7 @@ function CustomContentComponent({}) {
             ) : (
               <Avatar.Text size={sizeAvatar} label={nameShort || '!'} />
             )}
-          </View>
+          </Pressable>
           {themeObjState.core === 'light' ? (
             <SvgMaker name="svgs_filled_theme_moon" strokeFill={'#ffffff'} />
           ) : (
@@ -124,12 +123,10 @@ function CustomContentComponent({}) {
             {/* </View> */}
             <Text style={stylesRoot.menuItemTitle}>{userInfo.fullName}</Text>
           </View>
-          <View
-            onStartShouldSetResponder={() => {}}
-            style={stylesRoot.wrapperMenuItem}>
+          <Pressable onPress={() => {}} style={stylesRoot.wrapperMenuItem}>
             <IconEntypo name={'plus'} color={'#868686'} size={27} />
             <Text style={stylesRoot.menuItemTitle}>{'Add account'}</Text>
-          </View>
+          </Pressable>
           <Divider />
         </View>
       ) : null}

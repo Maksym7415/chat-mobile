@@ -73,7 +73,6 @@ export default function MessageInput({
         forwardedFromId: forwardedFromId || null,
       },
       success => {
-        console.log(success, 'success');
         if (success) setMessage({...message, [conversationId]: ''});
       },
     );
@@ -101,10 +100,8 @@ export default function MessageInput({
     }
     if (message[conversationId]) {
       if (messageEdit.messageId) {
-        console.log('1');
         socketSendMessageCommonFun(conversationId, messageSend);
       } else {
-        console.log('2');
         messageSend.sendDate = fullDate(new Date());
         socketSendMessageCommonFun(conversationId, messageSend);
       }

@@ -15,3 +15,17 @@ export const getUserProfileDataRequest = createAsyncThunk(
     }
   },
 );
+
+export const getUserAvatars = createAsyncThunk(
+  'user/getUserAvatars',
+  async (params, {dispatch}) => {
+    try {
+      const response = await API.get(pathBackUser.getAvatars);
+      params?.cb && params.cb();
+      return response.data;
+    } catch (error) {
+      params?.errorCb && params.errorCb();
+      return Promise.reject(error);
+    }
+  },
+);

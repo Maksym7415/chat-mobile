@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {View, Text} from 'react-native';
+import {View, Text, Pressable} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import makeStyles from './styles';
 import SvgMaker from '../../../../../../../../components/svgMaker';
@@ -28,9 +28,9 @@ export default function MessageEdit({data, onClose}) {
           {data.message.message}
         </Text>
       </View>
-      <View style={styles.close} onStartShouldSetResponder={onClose}>
+      <Pressable style={styles.close} onPress={onClose}>
         <SvgMaker name={'svgs_filled_cross'} />
-      </View>
+      </Pressable>
     </View>
   );
 }

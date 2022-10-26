@@ -1,6 +1,15 @@
 import {createSlice} from '@reduxjs/toolkit';
 import * as requests from './requests';
 
+// avatars: [
+//   {
+//     id: 0,
+//     fileName: '',
+//     defaultAvatar: true,
+//     fkUserId: 0,
+//   },
+// ],
+
 const initialState = {
   userInfo: {
     id: 0,
@@ -22,19 +31,7 @@ const initialState = {
     },
     error: null,
   },
-  avatars: {
-    success: {
-      data: [
-        {
-          id: 0,
-          fileName: '',
-          defaultAvatar: true,
-          fkUserId: 0,
-        },
-      ],
-    },
-    error: null,
-  },
+  avatars: [],
   upload: {
     success: {
       data: '',
@@ -58,6 +55,9 @@ const userSlice = createSlice({
         state.userInfo = action.payload;
       },
     );
+    builder.addCase(requests.getUserAvatars.fulfilled, (state, action) => {
+      state.avatars = action.payload;
+    });
   },
 });
 

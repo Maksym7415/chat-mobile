@@ -11,3 +11,4 @@ export {
 export {getNameShort} from './getNameShort';
 export {deepEqual} from './deepEqual';
 export {uuid} from './uuid';
+export {flatListFormatDataColumns} from './flatListFormatDataColumns';

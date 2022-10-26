@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Text, View} from 'react-native';
+import {Text, View, Pressable} from 'react-native';
 import {useSelector} from 'react-redux';
 import {Menu, useTheme} from 'react-native-paper';
 import makeStyles from './styles';
@@ -9,6 +9,7 @@ import {PathsName} from '../../../../navigation/navigationConfig';
 import UserAvatar from '../../../../components/avatar/userAvatar';
 import SvgMaker from '../../../../components/svgMaker';
 import Header from '../../../../components/header';
+import MenuPaper from '../../../../components/menu/menuPaper';
 import {
   actionsTypeObjectSelected,
   selectedMessagesActions,
@@ -31,7 +32,7 @@ const ChatHeader = ({conversationData, conversationId}) => {
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
 
   // STATES
-  const [visibleOptions, setVisibleOptions] = React.useState(true);
+  const [visibleOptions, setVisibleOptions] = React.useState(false);
 
   // FUNCTIONS
   const openOptions = () => setVisibleOptions(true);
@@ -69,22 +70,22 @@ const ChatHeader = ({conversationData, conversationId}) => {
       }
       renderTopLeftComponent={() =>
         selectedMessagesAmount ? (
-          <View
+          <Pressable
             style={styles.wrapperClose}
-            onStartShouldSetResponder={() => {
+            onPress={() => {
               store.dispatch(
                 selectedMessagesActions(null, actionsTypeObjectSelected.clear),
               );
             }}>
             <SvgMaker name="svgs_line_bot_close" />
-          </View>
+          </Pressable>
         ) : (
-          <View
-            onStartShouldSetResponder={() => {
+          <Pressable
+            onPress={() => {
               navigation.navigate(PathsName.main);
             }}>
             <SvgMaker name="svgs_filled_back_arrow" strokeFill={'#ffffff'} />
-          </View>
+          </Pressable>
         )
       }
       renderTopCenterComponent={() =>
@@ -114,29 +115,25 @@ const ChatHeader = ({conversationData, conversationId}) => {
             {headerSelectedСhatsAmount(lang).map(action => {
               return selectedMessagesAmount > 1 &&
                 ['edit'].includes(action.value) ? null : (
-                <View
+                <Pressable
                   key={uuid()}
                   style={styles.wrapperAction}
-                  onStartShouldSetResponder={() => handleOptions(action.value)}>
+                  onPress={() => handleOptions(action.value)}>
                   <SvgMaker name={action.icon.name} />
-                </View>
+                </Pressable>
               );
             })}
           </View>
         ) : (
           <>
-            <View onStartShouldSetResponder={openOptions}>
+            <Pressable onPress={openOptions}>
               <SvgMaker name="svgs_filled_phone" strokeFill={'#ffffff'} />
-            </View>
+            </Pressable>
             <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
-              {/* <Menu
-                visible={visibleOptions}
-                onDismiss={closeOptions}
-                anchor={
-                  <View onStartShouldSetResponder={openOptions}>
-                    <SvgMaker name="svgs_filled_dots" strokeFill={'#ffffff'} />
-                  </View>
-                }>
+              <MenuPaper
+                anchor={{strokeFill: '#ffffff'}}
+                setShowMenu={setVisibleOptions}
+                showMenu={visibleOptions}>
                 <Menu.Item icon="redo" onPress={() => {}} title="Redo" />
                 <Menu.Item icon="undo" onPress={() => {}} title="Undo" />
                 <Menu.Item
@@ -156,7 +153,7 @@ const ChatHeader = ({conversationData, conversationId}) => {
                   onPress={() => {}}
                   title="Paste"
                 />
-              </Menu> */}
+              </MenuPaper>
             </View>
           </>
         )

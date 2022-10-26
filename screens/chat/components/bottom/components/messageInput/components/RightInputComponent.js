@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import {View} from 'react-native';
+import {View, Pressable} from 'react-native';
 import {stylesMessageInput as styles} from '../styles';
 import SvgMaker from '../../../../../../../components/svgMaker';
 
@@ -42,16 +42,16 @@ export default function RightInputComponent({
           ...stylesRightIcons(),
         }}>
         {message ? (
-          <View onStartShouldSetResponder={handleSendMessage}>
+          <Pressable onPress={handleSendMessage}>
             <SvgMaker name="svgs_filled_send" strokeFill={'#5EA7DE'} />
-          </View>
+          </Pressable>
         ) : (
           <>
-            <View onStartShouldSetResponder={onPress}>
+            <Pressable onPress={onPress}>
               <SvgMaker name="svgs_line_attach" />
-            </View>
-            <View
-              onStartShouldSetResponder={() =>
+            </Pressable>
+            <Pressable
+              onPress={() =>
                 setToggleTypeMessage(prev =>
                   prev === 'voice' ? 'video' : 'voice',
                 )
@@ -61,7 +61,7 @@ export default function RightInputComponent({
               ) : (
                 <SvgMaker name="svgs_line_video_message" />
               )}
-            </View>
+            </Pressable>
           </>
         )}
       </View>

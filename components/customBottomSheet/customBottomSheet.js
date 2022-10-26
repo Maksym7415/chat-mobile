@@ -13,65 +13,79 @@ import Animated, {
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 
-const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 50;
+const BottomSheet = React.forwardRef(
+  ({children, closeTranslateYBottomSheet, setСurrentHeight}, ref) => {
+    const translateY = useSharedValue(0);
+    const active = useSharedValue(false);
 
-const BottomSheet = React.forwardRef(({children}, ref) => {
-  const translateY = useSharedValue(0);
-  const active = useSharedValue(false);
+    const MAX_TRANSLATE_Y = -SCREEN_HEIGHT;
 
-  const scrollTo = useCallback(destination => {
-    'worklet';
-    active.value = destination !== 0;
+    const scrollTo = useCallback(destination => {
+      'worklet';
+      active.value = destination !== 0;
+      translateY.value = withSpring(destination, {damping: 50});
+    }, []);
 
-    translateY.value = withSpring(destination, {damping: 50});
-  }, []);
+    const isActive = useCallback(() => {
+      return active.value;
+    }, []);
 
-  const isActive = useCallback(() => {
-    return active.value;
-  }, []);
+    useImperativeHandle(ref, () => ({scrollTo, isActive}), [
+      scrollTo,
+      isActive,
+    ]);
 
-  useImperativeHandle(ref, () => ({scrollTo, isActive}), [scrollTo, isActive]);
+    const context = useSharedValue({y: 0});
+    const gesture = Gesture.Pan()
+      .onStart(() => {
+        context.value = {y: translateY.value};
+      })
+      .onUpdate(event => {
+        translateY.value = event.translationY + context.value.y;
+        translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y);
+      })
+      .onEnd(() => {
+        setСurrentHeight &&
+          setСurrentHeight(
+            translateY.value < -SCREEN_HEIGHT / 1.5
+              ? MAX_TRANSLATE_Y
+              : translateY.value,
+          );
+        const closeTranslateY = !!closeTranslateYBottomSheet
+          ? translateY.value > closeTranslateYBottomSheet
+          : translateY.value > -SCREEN_HEIGHT / 3;
+        if (closeTranslateY) {
+          scrollTo(0);
+          setСurrentHeight && setСurrentHeight(closeTranslateYBottomSheet);
+        } else if (translateY.value < -SCREEN_HEIGHT / 1.5) {
+          scrollTo(MAX_TRANSLATE_Y);
+        }
+      });
 
-  const context = useSharedValue({y: 0});
-  const gesture = Gesture.Pan()
-    .onStart(() => {
-      context.value = {y: translateY.value};
-    })
-    .onUpdate(event => {
-      translateY.value = event.translationY + context.value.y;
-      translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y);
-    })
-    .onEnd(() => {
-      if (translateY.value > -SCREEN_HEIGHT / 3) {
-        scrollTo(0);
-      } else if (translateY.value < -SCREEN_HEIGHT / 1.5) {
-        scrollTo(MAX_TRANSLATE_Y);
-      }
+    const rBottomSheetStyle = useAnimatedStyle(() => {
+      const borderRadius = interpolate(
+        translateY.value,
+        [MAX_TRANSLATE_Y + 50, MAX_TRANSLATE_Y],
+        [25, 5],
+        Extrapolate.CLAMP,
+      );
+
+      return {
+        borderRadius,
+        transform: [{translateY: translateY.value}],
+      };
     });
 
-  const rBottomSheetStyle = useAnimatedStyle(() => {
-    const borderRadius = interpolate(
-      translateY.value,
-      [MAX_TRANSLATE_Y + 50, MAX_TRANSLATE_Y],
-      [25, 5],
-      Extrapolate.CLAMP,
+    return (
+      <GestureDetector gesture={gesture}>
+        <Animated.View style={[styles.bottomSheetContainer, rBottomSheetStyle]}>
+          <View style={styles.line} />
+          {children}
+        </Animated.View>
+      </GestureDetector>
     );
-
-    return {
-      borderRadius,
-      transform: [{translateY: translateY.value}],
-    };
-  });
-
-  return (
-    <GestureDetector gesture={gesture}>
-      <Animated.View style={[styles.bottomSheetContainer, rBottomSheetStyle]}>
-        <View style={styles.line} />
-        {children}
-      </Animated.View>
-    </GestureDetector>
-  );
-});
+  },
+);
 
 const styles = StyleSheet.create({
   bottomSheetContainer: {
@@ -81,6 +95,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: SCREEN_HEIGHT,
     borderRadius: 25,
+    zIndex: 100,
   },
   line: {
     width: 75,

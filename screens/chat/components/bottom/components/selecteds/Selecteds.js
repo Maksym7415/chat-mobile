@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Pressable} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import makeStyles from './styles';
@@ -28,12 +28,12 @@ function Selecteds() {
     <View style={styles.wrapper}>
       {bottomActionsSelecteds(lang).map(action => {
         return (
-          <View
+          <Pressable
             key={uuid()}
             style={styles.wrapperAction}
-            onStartShouldSetResponder={() => handleOptions(action.value)}>
+            onPress={() => handleOptions(action.value)}>
             <SvgMaker name={action.icon.name} />
-          </View>
+          </Pressable>
         );
       })}
     </View>

@@ -1,12 +1,13 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {Text, View} from 'react-native';
+import {Text, View, Pressable} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Menu} from 'react-native-paper';
 import {mainHeader as styles} from './styles';
 import {headerSelectedСhatsAmountDotsOptions} from './config';
 import Header from '../../../../components/header';
 import SvgMaker from '../../../../components/svgMaker';
+import MenuPaper from '../../../../components/menu/menuPaper';
 import {
   selectedСhatsActions,
   actionsTypeObjectSelected,
@@ -20,17 +21,14 @@ const MainHeader = () => {
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
   const {selectedСhats} = useSelector(({appSlice}) => appSlice);
 
-  const [visibleOptions, setVisibleOptions] = React.useState(true);
+  const [visibleOptions, setVisibleOptions] = React.useState(false);
 
   // VARIABLES
   const selectedСhatsAmount = Object.keys(selectedСhats).length;
 
-  // FUNCTIONS
-  const openOptions = () => setVisibleOptions(true);
-  const closeOptions = () => setVisibleOptions(false);
   const handleOptions = value => {
-    closeOptions();
-    store.dispatch(selectedСhatsActions(null, actionsTypeObjectSelected.clear));
+    setVisibleOptions(false);
+    // store.dispatch(selectedСhatsActions(null, actionsTypeObjectSelected.clear));
   };
 
   return (
@@ -44,22 +42,22 @@ const MainHeader = () => {
       }
       renderTopLeftComponent={() =>
         selectedСhatsAmount ? (
-          <View
+          <Pressable
             style={styles.wrapperClose}
-            onStartShouldSetResponder={() => {
+            onPress={() => {
               store.dispatch(
                 selectedСhatsActions(null, actionsTypeObjectSelected.clear),
               );
             }}>
             <SvgMaker name="svgs_line_bot_close" />
-          </View>
+          </Pressable>
         ) : (
-          <View
-            onStartShouldSetResponder={() => {
+          <Pressable
+            onPress={() => {
               navigation.toggleDrawer();
             }}>
             <SvgMaker name="svgs_filled_menu" strokeFill={'#ffffff'} />
-          </View>
+          </Pressable>
         )
       }
       renderTopCenterComponent={() =>
@@ -76,9 +74,12 @@ const MainHeader = () => {
       renderTopRightComponent={() =>
         selectedСhatsAmount ? (
           <View style={styles.wrapperActions}>
-            <View style={styles.wrapperAction}>
+            <Pressable
+              style={styles.wrapperAction}
+              // onPress={() => setVisibleOptions(true)}
+            >
               <SvgMaker name="svgs_line_mute" width={27} height={27} />
-            </View>
+            </Pressable>
             <View style={styles.wrapperAction}>
               <SvgMaker name="svgs_line_archive" width={27} height={27} />
             </View>
@@ -86,32 +87,25 @@ const MainHeader = () => {
               <SvgMaker name="svgs_line_trash_bin_alt" width={27} height={27} />
             </View>
             <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
-              <Menu
-                visible={visibleOptions}
-                onDismiss={closeOptions}
-                anchor={
-                  <View onStartShouldSetResponder={openOptions}>
-                    <SvgMaker name="svgs_filled_dots" />
-                  </View>
-                }>
+              <MenuPaper
+                setShowMenu={setVisibleOptions}
+                showMenu={visibleOptions}>
                 {headerSelectedСhatsAmountDotsOptions(lang).map(action => {
                   return (
-                    <View
+                    <Pressable
                       key={action.id}
                       style={styles.dotsOption}
-                      onStartShouldSetResponder={() =>
-                        handleOptions(action.value)
-                      }>
+                      onPress={() => handleOptions(action.value)}>
                       {action.icon.name && (
                         <View style={styles.wrapperIconOption}>
                           <SvgMaker name={action.icon.name} />
                         </View>
                       )}
                       <Text>{action.title}</Text>
-                    </View>
+                    </Pressable>
                   );
                 })}
-              </Menu>
+              </MenuPaper>
             </View>
           </View>
         ) : (
