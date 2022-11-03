@@ -94,19 +94,28 @@ const ChatHeader = ({conversationData, conversationId}) => {
             <Text>{selectedMessagesAmount}</Text>
           </View>
         ) : (
-          <View style={styles.wrapperConversationData}>
+          <Pressable
+            onPress={() =>
+              navigation.navigate(PathsName.profile, {
+                typeProfile: conversationData.conversationType,
+                conversationData,
+              })
+            }
+            style={styles.wrapperConversationData}>
             <View style={styles.wrapperAvatar}>
               <UserAvatar
-                source={conversationData.avatar}
-                name={conversationData.title}
+                source={conversationData.conversationAvatar}
+                name={conversationData.conversationName}
                 sizeAvatar={38}
               />
             </View>
             <View style={styles.wrapperAvatar}>
-              <Text style={styles.title}>{conversationData.title}</Text>
+              <Text style={styles.title}>
+                {conversationData.conversationName}
+              </Text>
               <Text style={styles.subtitle}>{'Online'}</Text>
             </View>
-          </View>
+          </Pressable>
         )
       }
       renderTopRightComponent={() =>

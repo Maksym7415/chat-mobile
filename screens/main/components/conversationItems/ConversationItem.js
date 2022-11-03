@@ -50,10 +50,7 @@ const ConversationdataComponent = ({data, usersTyping}) => {
     } else {
       navigation.navigate(PathsName.chat, {
         id: data.conversationId,
-        conversationData: {
-          title: data.conversationName,
-          avatar: data.conversationAvatar,
-        },
+        conversationData: data,
       });
     }
   };

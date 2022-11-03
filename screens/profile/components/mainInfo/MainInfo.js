@@ -1,13 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Text, View, Pressable, TouchableOpacity} from 'react-native';
+import {Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {Divider, useTheme, Switch} from 'react-native-paper';
 import makeStyles from './styles';
 import makeStylesListMenu from '../listMenu/styles';
 import RITitleWithSubtitleAndRightComponent from '../../../../components/rendersItem/RITitleWithSubtitleAndRightComponent';
+import {TYPES_CONVERSATIONS} from '../../../../config/constants/general';
 
-const MainInfo = ({isPhotos, typeProfile}) => {
+const MainInfo = ({typeProfile}) => {
   // HOOKS
   const theme = useTheme();
 
@@ -18,15 +19,17 @@ const MainInfo = ({isPhotos, typeProfile}) => {
   // SELECTORS
   const {lang} = useSelector(({settingSlice}) => settingSlice);
 
+  // STATES
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
 
+  // FUNCTIONS
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
   return (
     <View style={{...stylesListMenu.wrapperList, marginTop: 0}}>
       {(() => {
         switch (typeProfile) {
-          case 'dialog':
+          case TYPES_CONVERSATIONS.dialog:
             return (
               <>
                 <Text style={stylesListMenu.listTitle}>Data</Text>
@@ -64,7 +67,7 @@ const MainInfo = ({isPhotos, typeProfile}) => {
                 <Divider style={styles.divider} />
               </>
             );
-          case 'group':
+          case TYPES_CONVERSATIONS.group:
             return (
               <>
                 <Text style={stylesListMenu.listTitle}>Вescription</Text>
@@ -88,8 +91,8 @@ const MainInfo = ({isPhotos, typeProfile}) => {
         }
       })()}
       <RITitleWithSubtitleAndRightComponent
-        title={'notification'}
-        subTitle={'enabled'}
+        title={'Notification'}
+        subTitle={isSwitchOn ? 'enabled' : 'turned off'}
         styles={{
           wrapperItem: {
             paddingLeft: 0,

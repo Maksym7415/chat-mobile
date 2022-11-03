@@ -1,13 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Text, View, Pressable, TouchableOpacity} from 'react-native';
+import {Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {Divider, useTheme} from 'react-native-paper';
 import makeStyles from './styles';
 import makeStylesListMenu from '../listMenu/styles';
 import RITitleWithSubtitleAndRightComponent from '../../../../components/rendersItem/RITitleWithSubtitleAndRightComponent';
 
-const ProfileAccount = ({isPhotos}) => {
+const ProfileAccount = ({avatar}) => {
   // HOOKS
   const theme = useTheme();
 
@@ -19,7 +19,7 @@ const ProfileAccount = ({isPhotos}) => {
   const {lang} = useSelector(({settingSlice}) => settingSlice);
 
   return (
-    <View style={{...stylesListMenu.wrapperList, marginTop: isPhotos ? 0 : 12}}>
+    <View style={{...stylesListMenu.wrapperList, marginTop: avatar ? 0 : 12}}>
       <Text style={stylesListMenu.listTitle}>Account</Text>
       <View style={stylesListMenu.list}>
         <RITitleWithSubtitleAndRightComponent

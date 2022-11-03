@@ -72,7 +72,9 @@ function CustomContentComponent(props) {
           <Pressable
             onPress={() => {
               props.navigation.closeDrawer();
-              navigation.navigate(PathsName.profile);
+              navigation.navigate(PathsName.profile, {
+                isOwnerProfile: true,
+              });
             }}>
             {source ? (
               <Avatar.Image

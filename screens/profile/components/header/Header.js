@@ -1,19 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Text, View, Pressable, Dimensions, ImageBackground} from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {useDispatch, useSelector} from 'react-redux';
-import {useTheme, Avatar, Menu, Modal} from 'react-native-paper';
+import {useTheme, Avatar} from 'react-native-paper';
 import makeStyles from './styles';
 import SvgMaker from '../../../../components/svgMaker';
 import {PathsName} from '../../../../navigation/navigationConfig';
-import {getNameShort} from '../../../../helpers';
 import MenuPaper from '../../../../components/menu/menuPaper';
 import {REACT_APP_BASE_URL} from '../../../../config/constants/url';
-import {headerOptions} from './config';
+import {headerOptions, headerOptionsChat, headerOptionsGroup} from './config';
 import {getUserAvatars} from '../../../../redux/user/requests';
 import {handleInsertPhotoVideo} from '../../config';
+import {TYPES_CONVERSATIONS} from '../../../../config/constants/general';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -22,8 +22,7 @@ const Header = ({
   showBiggerImg,
   refBottomSheet,
   openTranslateYBottomSheet,
-  typeProfile,
-  isOwnerProfile,
+  setting,
 }) => {
   // HOOKS
   const dispatch = useDispatch();
@@ -37,9 +36,7 @@ const Header = ({
   const carouselRef = React.useRef(null);
 
   // SELECTORS
-  const {userInfo, avatars: userAvatars} = useSelector(
-    ({userSlice}) => userSlice,
-  );
+  const {avatars: userAvatars} = useSelector(({userSlice}) => userSlice);
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
 
   // STATES
@@ -48,10 +45,7 @@ const Header = ({
   const [visibleOptions, setVisibleOptions] = React.useState(false);
 
   // VARIABLES
-  const nameShort = userInfo.fullName ? getNameShort(userInfo.fullName) : null;
   const sizeAvatar = 59;
-  const isPhotos = true;
-  const source = userInfo.userAvatar;
 
   // FUNCTIONS
   const onSelect = indexSelected => {
@@ -75,7 +69,6 @@ const Header = ({
       default:
         break;
     }
-    console.log('bottom');
     setVisibleOptions(false);
   };
 
@@ -86,7 +79,7 @@ const Header = ({
         style={styles.imageContainer}>
         <View style={{...styles.info, marginLeft: 0}}>
           <Text style={{...styles.userName, fontSize: 26, marginBottom: 10}}>
-            {userInfo.fullName}
+            {setting.conversationName}
           </Text>
           <Text style={styles.status}>online*</Text>
         </View>
@@ -95,18 +88,22 @@ const Header = ({
   };
 
   const renderIconAction = () => {
-    if (['group', 'chat'].includes(typeProfile)) {
+    if (
+      [TYPES_CONVERSATIONS.group, TYPES_CONVERSATIONS.chat].includes(
+        setting.typeProfile,
+      )
+    ) {
       return <></>;
     }
-    return isPhotos ? (
+    return setting.avatar ? (
       <Pressable
         style={styles.wrapperSetPhoto}
         onPress={() => {
-          isOwnerProfile
+          setting.isOwnerProfile
             ? handleInsertPhotoVideo(refBottomSheet, openTranslateYBottomSheet)
             : navigation.goBack();
         }}>
-        {isOwnerProfile ? (
+        {setting.isOwnerProfile ? (
           <SvgMaker name={'svgs_line_camera_add'} />
         ) : (
           <SvgMaker name={'svgs_line_chat_2'} />
@@ -115,22 +112,42 @@ const Header = ({
     ) : null;
   };
 
+  const selectOptions = (typeProfile, isOwnerProfile) => {
+    if (isOwnerProfile) {
+      return headerOptions(lang);
+    }
+
+    switch (typeProfile) {
+      case TYPES_CONVERSATIONS.chat:
+        return headerOptionsChat(lang);
+      case TYPES_CONVERSATIONS.group:
+        return headerOptionsGroup(lang);
+      default:
+        return [];
+    }
+  };
+
   // USEEFFECTS
   useFocusEffect(
     React.useCallback(() => {
-      if (isOwnerProfile && !userAvatars.length) {
+      if (setting.isOwnerProfile && !userAvatars.length) {
         dispatch(getUserAvatars());
       }
-      console.log('render');
-    }, [isOwnerProfile]),
+    }, [setting.isOwnerProfile]),
   );
+
+  React.useEffect(() => {
+    setting.avatar &&
+      !images.length &&
+      setImages([{id: 1, fileName: setting.avatar}]);
+  }, [setting.avatar]);
 
   React.useEffect(() => {
     if (
       JSON.stringify(userAvatars.data) !== JSON.stringify(images) &&
-      userAvatars.length
+      userAvatars.length &&
+      setting.isOwnerProfile
     ) {
-      console.log('here');
       setImages(userAvatars);
     }
   }, [userAvatars]);
@@ -139,6 +156,10 @@ const Header = ({
     showBiggerImg && indexSelected !== 0 && setIndexSelected(0);
   }, [showBiggerImg]);
 
+  console.log(
+    selectOptions(setting.typeProfile, setting.isOwnerProfile),
+    'headerOptionsChat(lang)',
+  );
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
@@ -151,25 +172,35 @@ const Header = ({
           </Pressable>
           <View style={styles.wrapperTopCenterComponent} />
           <>
-            <View style={styles.wrapperAction}>
-              <SvgMaker name={'svgs_line_qr_code'} strokeFill={'#ffffff'} />
-            </View>
-            <View style={styles.wrapperAction}>
-              <SvgMaker name={'svgs_line_search'} strokeFill={'#ffffff'} />
-            </View>
+            {setting.isOwnerProfile ? (
+              <>
+                <View style={styles.wrapperAction}>
+                  <SvgMaker name={'svgs_line_qr_code'} strokeFill={'#ffffff'} />
+                </View>
+                <View style={styles.wrapperAction}>
+                  <SvgMaker name={'svgs_line_search'} strokeFill={'#ffffff'} />
+                </View>
+              </>
+            ) : [TYPES_CONVERSATIONS.chat].includes(setting.typeProfile) ? (
+              <View style={styles.wrapperAction}>
+                <SvgMaker name={'svgs_filled_pencil'} strokeFill={'#ffffff'} />
+              </View>
+            ) : (
+              <></>
+            )}
             <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
               <MenuPaper
                 setShowMenu={setVisibleOptions}
                 showMenu={visibleOptions}
                 anchor={{strokeFill: '#ffffff'}}>
-                {headerOptions(lang)
-                  .filter(item => {
+                {selectOptions(setting.typeProfile, setting.isOwnerProfile)
+                  ?.filter(item => {
                     if (item.show === 1) {
                       return true;
                     }
                     return showBiggerImg ? item.show === 2 : item.show === 3;
                   })
-                  .map(action => {
+                  ?.map(action => {
                     return (
                       <Pressable
                         key={action.id}
@@ -222,22 +253,25 @@ const Header = ({
             <View style={styles.wrapperAvatarAndInfo}>
               <Pressable
                 style={styles.avatar}
-                onPress={() => setShowBiggerImg(true)}>
-                {source ? (
+                onPress={() => images.length && setShowBiggerImg(true)}>
+                {setting.avatar ? (
                   <Avatar.Image
                     size={sizeAvatar}
                     source={{
                       height: sizeAvatar,
                       width: sizeAvatar,
-                      uri: `${REACT_APP_BASE_URL}/${source}`,
+                      uri: `${REACT_APP_BASE_URL}/${setting.avatar}`,
                     }}
                   />
                 ) : (
-                  <Avatar.Text size={sizeAvatar} label={nameShort || '!'} />
+                  <Avatar.Text
+                    size={sizeAvatar}
+                    label={setting.nameShort || '!'}
+                  />
                 )}
               </Pressable>
               <View style={styles.info}>
-                <Text style={styles.userName}>{userInfo.fullName}</Text>
+                <Text style={styles.userName}>{setting.conversationName}</Text>
                 <Text style={styles.status}>online*</Text>
               </View>
             </View>

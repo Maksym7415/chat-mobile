@@ -16,6 +16,7 @@ const ListMenu = ({title, list, onPress}) => {
   // SELECTORS
   const {lang} = useSelector(({settingSlice}) => settingSlice);
 
+  // FUNCTIONS
   const ListItem = ({item}) => {
     return (
       <Pressable
@@ -28,6 +29,7 @@ const ListMenu = ({title, list, onPress}) => {
     );
   };
 
+  // VARIABLES
   const items = list(lang);
 
   return (

@@ -1,12 +1,9 @@
-import {StyleSheet, Platform, Dimensions} from 'react-native';
-
-const {width: screenWidth} = Dimensions.get('window');
+import {StyleSheet} from 'react-native';
 
 export default theme =>
   StyleSheet.create({
     container: {
       flex: 1,
-      // paddingHorizontal: 10,
       paddingTop: 10,
     },
     title: {
@@ -15,8 +12,6 @@ export default theme =>
     },
     wrapper: {
       backgroundColor: '#517DA2',
-      // height: 300,
-      // flex: 1,
       marginTop: 10,
     },
     wrapperFile: {

@@ -3,24 +3,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import {SafeAreaView, Text, View, Pressable, ScrollView} from 'react-native';
-import Animated from 'react-native-reanimated';
-import {Divider, useTheme} from 'react-native-paper';
+import Animated, {runOnJS} from 'react-native-reanimated';
+import {useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import makeStyles from './styles';
 import Header from './components/header';
 import ListMenu from './components/listMenu';
 import ProfileAccount from './components/profileAccount';
-import BottomSheet from './components/BottomSheet';
+import BottomSheet from './components/bottomSheet';
 import MainInfo from './components/mainInfo';
-
+import {getNameShort} from '../../helpers';
 import * as config from './config';
 import SvgMaker from '../../components/svgMaker';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+import FilesProfile from '../../components/sliders/filesProfile';
+import {TYPES_CONVERSATIONS} from '../../config/constants/general';
 
 const openTranslateYBottomSheet = -400;
 
-const Profile = route => {
+const Profile = ({route}) => {
   // HOOKS
   const theme = useTheme();
   const navigation = useNavigation();
@@ -33,21 +35,61 @@ const Profile = route => {
 
   // STATES
   const [showBiggerImg, setShowBiggerImg] = React.useState(false);
+  const [setting, setSetting] = React.useState({
+    nameShort: '',
+    avatar: '',
+    conversationData: null,
+    isOwnerProfile: false,
+    typeProfile: TYPES_CONVERSATIONS.dialog,
+    conversationName: '',
+  });
 
   // SELECTORS
   const {lang} = useSelector(({settingSlice}) => settingSlice);
   const {userInfo} = useSelector(({userSlice}) => userSlice);
 
-  // VARIABLES
-  const isOwnerProfile = true;
-  const isPhotos = userInfo.userAvatar;
-  // typeProfile: group, dialog, chat
-  const typeProfile = 'dialog';
-
   // FUNCtIONS
+  const fSetShowBiggerImg = bool => {
+    setShowBiggerImg(bool);
+  };
+
   const singleTap = Gesture.Tap().onStart(() => {
-    showBiggerImg && setShowBiggerImg(false);
+    if (showBiggerImg) {
+      runOnJS(fSetShowBiggerImg)(false);
+    }
   });
+
+  // USEEFFECTS
+  React.useEffect(() => {
+    let settingLocal = {
+      typeProfile:
+        route.params?.typeProfile?.toLowerCase() || TYPES_CONVERSATIONS.dialog,
+    };
+    const conversationData = route.params?.conversationData;
+    console.log(route.params, 'route.params');
+    if (route.params?.isOwnerProfile) {
+      settingLocal = {
+        ...settingLocal,
+        nameShort: getNameShort(userInfo?.fullName),
+        avatar: userInfo.userAvatar || '',
+        conversationName: userInfo?.fullName,
+        isOwnerProfile: true,
+      };
+    } else {
+      settingLocal = {
+        ...settingLocal,
+        nameShort: getNameShort(conversationData?.conversationName),
+        conversationData: conversationData || null,
+        avatar: conversationData?.conversationAvatar || '',
+        conversationName: conversationData?.conversationName,
+        isOwnerProfile: false,
+      };
+    }
+    setSetting(prev => ({
+      ...prev,
+      ...settingLocal,
+    }));
+  }, [route.params, userInfo]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -56,16 +98,15 @@ const Profile = route => {
         showBiggerImg={showBiggerImg}
         refBottomSheet={refBottomSheet}
         openTranslateYBottomSheet={openTranslateYBottomSheet}
-        typeProfile={typeProfile}
-        isOwnerProfile={isOwnerProfile}
+        setting={setting}
       />
 
       <ScrollView style={styles.scrollView}>
         <GestureDetector gesture={Gesture.Exclusive(singleTap)}>
-          <View>
-            {isOwnerProfile ? (
+          <View style={{flex: 1}}>
+            {setting.isOwnerProfile ? (
               <>
-                {!isPhotos ? (
+                {!setting.avatar ? (
                   <Pressable
                     style={styles.wrapperSetPhoto}
                     onPress={() =>
@@ -81,7 +122,7 @@ const Profile = route => {
                     <Text style={styles.setPhotoTitle}>Insert photo</Text>
                   </Pressable>
                 ) : null}
-                <ProfileAccount isPhotos={isPhotos} />
+                <ProfileAccount avatar={setting.avatar} />
                 <ListMenu
                   title={'Settings'}
                   list={config.settingsList}
@@ -98,7 +139,20 @@ const Profile = route => {
               </>
             ) : (
               <>
-                <MainInfo typeProfile={typeProfile} />
+                <MainInfo typeProfile={setting.typeProfile} />
+                <FilesProfile
+                  files={{
+                    media: [{id: 1, src: 'sss'}],
+                    files: [{id: 1, src: 'sss'}],
+                    links: [{id: 1, src: 'sss'}],
+                    music: [{id: 1, src: 'sss'}],
+                    voice: [{id: 1, src: 'sss'}],
+                    gif: [{id: 1, src: 'sss'}],
+                  }}
+                  styles={{
+                    container: {marginTop: 10},
+                  }}
+                />
               </>
             )}
           </View>

@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Text, View, Image, FlatList} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import makeStyles from './styles';
@@ -17,6 +17,7 @@ const BottomSheet = ({refBottomSheet, closeTranslateYBottomSheet}) => {
     closeTranslateYBottomSheet,
   );
 
+  // STATES
   const [files, setFiles] = React.useState([
     {
       id: 0,
@@ -104,6 +105,7 @@ const BottomSheet = ({refBottomSheet, closeTranslateYBottomSheet}) => {
     },
   ]);
 
+  // FUNCTIONS
   const renderItem = ({item, index}) => {
     return (
       <View style={styles.wrapperFile}>

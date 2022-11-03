@@ -5,7 +5,6 @@ import {useSelector} from 'react-redux';
 import {Divider, useTheme} from 'react-native-paper';
 import makeStyles from './styles';
 import makeStylesListMenu from '../ListMenu/styles';
-import SvgMaker from '../../../../components/svgMaker';
 
 const ProfileAccount = ({isPhotos}) => {
   // HOOKS
@@ -34,9 +33,7 @@ const ProfileAccount = ({isPhotos}) => {
           <Text style={styles.subTitle}>Username</Text>
         </Pressable>
         <Divider style={styles.divider} />
-        <Pressable
-          // onPress={() => data.onPress(item)}
-          style={styles.wrapperItemAccount}>
+        <Pressable style={styles.wrapperItemAccount}>
           <Text style={styles.title}>@voidrainbow*</Text>
           <Text style={styles.subTitle}>Bio</Text>
         </Pressable>
