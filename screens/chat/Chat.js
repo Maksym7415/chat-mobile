@@ -7,6 +7,7 @@ import {
   View,
   ImageBackground,
 } from 'react-native';
+import {Snackbar} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import styles from './styles';
 import {socket} from '../../config/socket';
@@ -21,6 +22,7 @@ import {setConversationIdAction} from '../../redux/conversations';
 import {setAllMessagesAction} from '../../redux/app/slice';
 import IMAGE from '../../assets/img';
 import store from '../../redux/store';
+import SnackbarComponent from '../../components/snackbar';
 
 const Chat = ({navigation, route}) => {
   // HOOKS
@@ -31,8 +33,8 @@ const Chat = ({navigation, route}) => {
   const ref = React.useRef(null);
 
   // VARIABLES
-  const conversationId = route.params.id;
-  const conversationData = route.params.conversationData;
+  const conversationId = route?.params?.id;
+  const conversationData = route?.params?.conversationData;
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
@@ -241,38 +243,41 @@ const Chat = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ChatHeader
-        conversationData={conversationData}
-        conversationId={conversationId}
-      />
-      <ImageBackground
-        source={IMAGE.wallPaper}
-        resizeMode="cover"
-        style={styles.imageBackground}>
-        {isFetching ? (
-          <View style={styles.wrapperLoader}>
-            <Loader
-              styles={{
-                text: {
-                  color: 'red',
-                },
-              }}
-              color={'#517DA2'}
-              size={50}
-            />
-          </View>
-        ) : (
-          renderMainContent()
-        )}
-      </ImageBackground>
-      <ChatBottom
-        opponentId={opponentId}
-        firstName={firstName}
-        userId={userId}
-        conversationId={conversationId}
-      />
-    </SafeAreaView>
+    <>
+      <SafeAreaView style={styles.container}>
+        <ChatHeader
+          conversationData={conversationData}
+          conversationId={conversationId}
+        />
+        <ImageBackground
+          source={IMAGE.wallPaper}
+          resizeMode="cover"
+          style={styles.imageBackground}>
+          {isFetching ? (
+            <View style={styles.wrapperLoader}>
+              <Loader
+                styles={{
+                  text: {
+                    color: 'red',
+                  },
+                }}
+                color={'#517DA2'}
+                size={50}
+              />
+            </View>
+          ) : (
+            renderMainContent()
+          )}
+        </ImageBackground>
+        <ChatBottom
+          opponentId={opponentId}
+          firstName={firstName}
+          userId={userId}
+          conversationId={conversationId}
+        />
+        <SnackbarComponent />
+      </SafeAreaView>
+    </>
   );
 };
 

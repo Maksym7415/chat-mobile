@@ -12,7 +12,7 @@ export const headerSelectedСhatsAmount = lang => [
   {
     id: 2,
     title: 'Copy',
-    value: 'copy',
+    value: actionsTypeActionsChat.copyMessage,
     icon: {
       name: 'svgs_line_copy',
     },
@@ -20,7 +20,7 @@ export const headerSelectedСhatsAmount = lang => [
   {
     id: 3,
     title: 'Forward',
-    value: 'forward',
+    value: actionsTypeActionsChat.forwardMessage,
     icon: {
       name: 'svgs_line_forward',
     },

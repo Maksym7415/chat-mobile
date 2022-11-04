@@ -4,6 +4,7 @@ import authSlice from './auth';
 import settingSlice from './setting';
 import conversationsSlice from './conversations';
 import userSlice from './user';
+import snackBarSlice from '../components/snackbar/slice';
 
 export default combineReducers({
   appSlice,
@@ -11,4 +12,5 @@ export default combineReducers({
   settingSlice,
   conversationsSlice,
   userSlice,
+  snackBarSlice,
 });

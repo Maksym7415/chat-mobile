@@ -111,7 +111,7 @@ const ChatHeader = ({conversationData, conversationId}) => {
             </View>
             <View style={styles.wrapperAvatar}>
               <Text style={styles.title}>
-                {conversationData.conversationName}
+                {conversationData?.conversationName}
               </Text>
               <Text style={styles.subtitle}>{'Online'}</Text>
             </View>

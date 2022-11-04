@@ -5,15 +5,16 @@ import {Provider} from 'react-redux';
 import Navigation from './navigation';
 import store, {persistor} from './redux';
 import {startSocketIO} from './config/socket';
+
 // const App = () => {
 //   return (
 //     <React.Fragment>
-//       <Provider store={store}>
-//         <Navigation />
+//       <Proaigation />
 //       </Provider>
 //     </React.Fragment>
 //   );
 // };
+
 class App extends React.Component {
   componentDidMount() {
     startSocketIO(store);
