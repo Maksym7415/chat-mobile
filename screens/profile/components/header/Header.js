@@ -53,14 +53,6 @@ const Header = ({
   };
 
   const handleOptions = value => {
-    // if (value === 'insertPhotoVideo') {
-    //   const isActive = refBottomSheet?.current?.isActive();
-    //   if (isActive) {
-    //     refBottomSheet?.current?.scrollTo(0);
-    //   } else {
-    //     refBottomSheet?.current?.scrollTo(-200);
-    //   }
-    // }
     switch (value) {
       case 'insertPhotoVideo':
         handleInsertPhotoVideo(refBottomSheet, openTranslateYBottomSheet);
@@ -70,46 +62,6 @@ const Header = ({
         break;
     }
     setVisibleOptions(false);
-  };
-
-  const renderItem = ({item}) => {
-    return (
-      <ImageBackground
-        source={{uri: `${REACT_APP_BASE_URL}/${item.fileName}`}}
-        style={styles.imageContainer}>
-        <View style={{...styles.info, marginLeft: 0}}>
-          <Text style={{...styles.userName, fontSize: 26, marginBottom: 10}}>
-            {setting.conversationName}
-          </Text>
-          <Text style={styles.status}>online*</Text>
-        </View>
-      </ImageBackground>
-    );
-  };
-
-  const renderIconAction = () => {
-    if (
-      [TYPES_CONVERSATIONS.group, TYPES_CONVERSATIONS.chat].includes(
-        setting.typeProfile,
-      )
-    ) {
-      return <></>;
-    }
-    return setting.avatar ? (
-      <Pressable
-        style={styles.wrapperSetPhoto}
-        onPress={() => {
-          setting.isOwnerProfile
-            ? handleInsertPhotoVideo(refBottomSheet, openTranslateYBottomSheet)
-            : navigation.goBack();
-        }}>
-        {setting.isOwnerProfile ? (
-          <SvgMaker name={'svgs_line_camera_add'} />
-        ) : (
-          <SvgMaker name={'svgs_line_chat_2'} />
-        )}
-      </Pressable>
-    ) : null;
   };
 
   const selectOptions = (typeProfile, isOwnerProfile) => {
@@ -156,10 +108,47 @@ const Header = ({
     showBiggerImg && indexSelected !== 0 && setIndexSelected(0);
   }, [showBiggerImg]);
 
-  console.log(
-    selectOptions(setting.typeProfile, setting.isOwnerProfile),
-    'headerOptionsChat(lang)',
-  );
+  // RENDERS
+  const renderItem = ({item}) => {
+    return (
+      <ImageBackground
+        source={{uri: `${REACT_APP_BASE_URL}/${item.fileName}`}}
+        style={styles.imageContainer}>
+        <View style={{...styles.info, marginLeft: 0}}>
+          <Text style={{...styles.userName, fontSize: 26, marginBottom: 10}}>
+            {setting.conversationName}
+          </Text>
+          <Text style={styles.status}>online*</Text>
+        </View>
+      </ImageBackground>
+    );
+  };
+
+  const renderIconAction = () => {
+    if (
+      [TYPES_CONVERSATIONS.group, TYPES_CONVERSATIONS.chat].includes(
+        setting.typeProfile,
+      )
+    ) {
+      return <></>;
+    }
+    return setting.avatar ? (
+      <Pressable
+        style={styles.wrapperSetPhoto}
+        onPress={() => {
+          setting.isOwnerProfile
+            ? handleInsertPhotoVideo(refBottomSheet, openTranslateYBottomSheet)
+            : navigation.goBack();
+        }}>
+        {setting.isOwnerProfile ? (
+          <SvgMaker name={'svgs_line_camera_add'} />
+        ) : (
+          <SvgMaker name={'svgs_line_chat_2'} />
+        )}
+      </Pressable>
+    ) : null;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>

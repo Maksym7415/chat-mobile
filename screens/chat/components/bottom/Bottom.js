@@ -3,7 +3,6 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, {useLayoutEffect, useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import makeStyles from './styles';
@@ -36,7 +35,6 @@ function Message({
       if (!!conversationId || !!opponentId) {
         return (
           <MessageInput
-            conversationId={conversationId}
             userId={userId}
             firstName={firstName}
             opponentId={opponentId}

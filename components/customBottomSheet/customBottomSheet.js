@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import React, {useCallback, useEffect, useImperativeHandle} from 'react';
+import {Dimensions, StyleSheet, View} from 'react-native';
+import React, {useCallback, useImperativeHandle} from 'react';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   Extrapolate,
@@ -8,18 +8,19 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
 } from 'react-native-reanimated';
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 const BottomSheet = React.forwardRef(
   ({children, closeTranslateYBottomSheet, setСurrentHeight}, ref) => {
+    // VARIABLES
     const translateY = useSharedValue(0);
     const active = useSharedValue(false);
-
+    const context = useSharedValue({y: 0});
     const MAX_TRANSLATE_Y = -SCREEN_HEIGHT;
 
+    // FUNCTIONS
     const scrollTo = useCallback(destination => {
       'worklet';
       active.value = destination !== 0;
@@ -35,7 +36,6 @@ const BottomSheet = React.forwardRef(
       isActive,
     ]);
 
-    const context = useSharedValue({y: 0});
     const gesture = Gesture.Pan()
       .onStart(() => {
         context.value = {y: translateY.value};
@@ -51,7 +51,7 @@ const BottomSheet = React.forwardRef(
               ? MAX_TRANSLATE_Y
               : translateY.value,
           );
-        const closeTranslateY = !!closeTranslateYBottomSheet
+        const closeTranslateY = closeTranslateYBottomSheet
           ? translateY.value > closeTranslateYBottomSheet
           : translateY.value > -SCREEN_HEIGHT / 3;
         if (closeTranslateY) {

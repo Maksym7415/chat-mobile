@@ -3,11 +3,11 @@
 import React from 'react';
 import {useTheme} from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
+import {View, Dimensions, Text, Pressable} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import {useSelector} from 'react-redux';
 import makeStyles from './styles';
 import * as config from './config';
-import {View, Dimensions, Text, Pressable} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -53,6 +53,25 @@ const FilesProfile = ({
     setIndexSelected(selectedIndex);
   };
 
+  // FINCTIONS
+  React.useEffect(() => {
+    const dataLocal = [];
+    files.media.length &&
+      dataLocal.push({...config.tabMedia(lang), data: files.media});
+    files.files.length &&
+      dataLocal.push({...config.tabFiles(lang), data: files.files});
+    files.links.length &&
+      dataLocal.push({...config.tabLinks(lang), data: files.links});
+    files.music.length &&
+      dataLocal.push({...config.tabMusic(lang), data: files.music});
+    files.voice.length &&
+      dataLocal.push({...config.tabVoice(lang), data: files.voice});
+    files.gif.length &&
+      dataLocal.push({...config.tabGif(lang), data: files.gif});
+    setData(dataLocal);
+  }, [files]);
+
+  // RENDERS
   const renderItem = ({item}) => {
     return (
       <ScrollView
@@ -83,23 +102,6 @@ const FilesProfile = ({
       </ScrollView>
     );
   };
-
-  React.useEffect(() => {
-    const dataLocal = [];
-    files.media.length &&
-      dataLocal.push({...config.tabMedia(lang), data: files.media});
-    files.files.length &&
-      dataLocal.push({...config.tabFiles(lang), data: files.files});
-    files.links.length &&
-      dataLocal.push({...config.tabLinks(lang), data: files.links});
-    files.music.length &&
-      dataLocal.push({...config.tabMusic(lang), data: files.music});
-    files.voice.length &&
-      dataLocal.push({...config.tabVoice(lang), data: files.voice});
-    files.gif.length &&
-      dataLocal.push({...config.tabGif(lang), data: files.gif});
-    setData(dataLocal);
-  }, [files]);
 
   return (
     <View style={{...stylesRoot.container, ...styles.container}}>

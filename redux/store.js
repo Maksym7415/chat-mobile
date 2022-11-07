@@ -10,7 +10,6 @@ const persistConfig = {
 
 // rework
 const reducer = rootReducer;
-
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({

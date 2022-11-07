@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, {useLayoutEffect, useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {useTheme, Divider} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import makeStyles from './styles';
 import {contextMenuConfig, contextMenuCallback} from '../../config';
@@ -23,14 +23,9 @@ import {
   selectedMessagesActions,
 } from '../../../../redux/app/actions';
 import store from '../../../../redux/store';
+import {TYPES_CONVERSATIONS} from '../../../../config/constants/general';
 
-function Message({
-  messageData,
-  isShowAvatar,
-  userId,
-  conversationId,
-  allMassages,
-}) {
+function Message({messageData, isShowAvatar, userId, typeConversation}) {
   // HOOKS
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -42,9 +37,9 @@ function Message({
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
   const {
     conversationId: {type: activeConversationType},
-    conversationsList,
   } = useSelector(({conversationsSlice}) => conversationsSlice);
   const {selectedMessages} = useSelector(({appSlice}) => appSlice);
+  const {userInfo} = useSelector(({userSlice}) => userSlice);
 
   // STATES
   const [settings, setSettings] = useState({
@@ -56,56 +51,19 @@ function Message({
   });
 
   // FUNCTIONS
-  const closeContextMenuAction = () =>
-    dispatch(
-      contextMenuAction({
-        yPos: '',
-        xPos: '',
-        isShowMenu: false,
-        messageId: 0,
-        config: [],
-      }),
-    );
-
-  const handleEditMessage = () => {
-    dispatch(editMessageAction(true, messageData.id));
-    closeContextMenuAction();
-  };
-
-  const handleDeleteMessage = () => {
-    const filterAllMassages = allMassages.filter(
-      message => message.id !== messageData.id && !message.component,
-    );
-
-    dispatch(
-      conversationListActions({
-        mode: 'deleteMessage',
-        conversationId,
-        messages: filterAllMassages.length
-          ? [filterAllMassages[filterAllMassages.length - 1]]
-          : [],
-        conversationsList,
-      }),
-    );
-    dispatch(deleteMessageAction(true, messageData.id));
-    closeContextMenuAction();
-  };
-
-  const handleShareMessage = () => {
-    dispatch(
-      showDialogAction('Share Message', [
-        {
-          Files: messageData.Files,
-          User: messageData.User,
-          fkSenderId: messageData.fkSenderId,
-          id: messageData.id,
-          isEditing: messageData.isEditing,
-          message: messageData.message,
-          sendDate: messageData.sendDate,
-        },
-      ]),
-    );
-    closeContextMenuAction();
+  const handleOnPressChat = () => {
+    if (Object.keys(selectedMessages).length && messageData.message) {
+      selectedMessages?.[messageData.id]
+        ? store.dispatch(
+            selectedMessagesActions(
+              messageData,
+              actionsTypeObjectSelected.remove,
+            ),
+          )
+        : store.dispatch(
+            selectedMessagesActions(messageData, actionsTypeObjectSelected.add),
+          );
+    }
   };
 
   useLayoutEffect(() => {
@@ -116,7 +74,11 @@ function Message({
         typeMessage: 'shared',
         styles: {
           root: styles.containerShared,
-          rootPaper: styles.paperSharedMessage,
+          rootPaper: {
+            ...styles.paperSharedMessage,
+            alignSelf:
+              userInfo.id === messageData.User.id ? 'flex-end' : 'flex-start',
+          },
           wrapperMessage: styles.wrapperTextMessageShared,
         },
       }));
@@ -144,21 +106,6 @@ function Message({
       },
     }));
   }, []);
-
-  const handleOnPressChat = () => {
-    if (Object.keys(selectedMessages).length && messageData.message) {
-      selectedMessages?.[messageData.id]
-        ? store.dispatch(
-            selectedMessagesActions(
-              messageData,
-              actionsTypeObjectSelected.remove,
-            ),
-          )
-        : store.dispatch(
-            selectedMessagesActions(messageData, actionsTypeObjectSelected.add),
-          );
-    }
-  };
 
   return (
     <TouchableOpacity
@@ -205,38 +152,43 @@ function Message({
             </View>
           )}
           {messageData.message && (
-            <View
-              // className={clsx(settings.classNames.rootPaper, {
-              //   [classes.fullWidth]:
-              //     messageData.Files && messageData.Files.length,
-              // })}
-              style={{...settings.styles.rootPaper}}>
+            <View style={{...settings.styles.rootPaper}}>
               {messageData.isEdit && (
                 <Text className={styles.edited}>
                   {languages[lang].generals.edited}
                 </Text>
               )}
-              {activeConversationType === 'Chat' && (
-                <View style={styles.wrapperName}>
-                  <Text style={styles.name}>
-                    {messageData.forwardedUser
-                      ? languages[lang].generals.forwardedMessage
-                      : messageData.User.tagName}
-                  </Text>
-                </View>
-              )}
+              {[TYPES_CONVERSATIONS.chat, TYPES_CONVERSATIONS.dialog].includes(
+                typeConversation,
+              ) &&
+                messageData.forwardedUser && (
+                  <View style={styles.wrapperName}>
+                    <Text style={styles.name}>
+                      {messageData.forwardedUser
+                        ? languages[lang].generals.forwardedMessage
+                        : messageData.User.tagName ||
+                          `${messageData.User.firstName} ${messageData.User.lastName}`}
+                    </Text>
+                  </View>
+                )}
               <View
                 style={{
                   ...settings.styles.wrapperMessage,
                 }}>
                 {messageData.forwardedUser && (
-                  <Text style={styles.wrapperMessageUserName}>
-                    {messageData.User.tagName}
-                  </Text>
+                  <Divider style={styles.divider} />
                 )}
-                <Text style={{...styles.messageText}}>
-                  {messageData.message}
-                </Text>
+                <View>
+                  {messageData.forwardedUser && (
+                    <Text style={styles.wrapperMessageUserName}>
+                      {messageData.User.tagName ||
+                        `${messageData.User.firstName} ${messageData.User.lastName}`}
+                    </Text>
+                  )}
+                  <Text style={{...styles.messageText}}>
+                    {messageData.message}
+                  </Text>
+                </View>
               </View>
               <View style={styles.wrapperDate}>
                 <Text style={styles.messageSendTime}>

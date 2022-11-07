@@ -11,7 +11,7 @@ export const stylesMessageInput = StyleSheet.create({
   },
   wrapperInput: {
     flex: 1,
-
+    // height: 40,
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: 0,
@@ -40,11 +40,11 @@ export const stylesMessageInput = StyleSheet.create({
     paddingVertical: 0,
     paddingHorizontal: 10,
     marginVertical: 0,
+    marginTop: 0,
     paddingTop: 0,
 
     maxHeight: 100,
     // marginVertical: 0,
-    // minHeight: 40,
   },
   attachAndTypeMessage: {
     height: '100%',

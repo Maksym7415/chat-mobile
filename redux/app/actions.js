@@ -6,8 +6,8 @@ import {
   settingStatusBarInitial,
   setAllMessagesAction,
   editMessageAction,
+  shareMessageAction,
 } from './slice';
-import {Text} from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {
   actionsForTypeWithObjKey,
@@ -17,6 +17,7 @@ import {deepEqual} from '../../helpers';
 import {getSnackBar} from '../../components/snackbar/slice';
 import {socket} from '../../config/socket';
 import TemplatesContent from '../../components/snackbar/components/templatesContent/TemplatesContent';
+import {PathsName} from '../../navigation/navigationConfig';
 
 export const actionsTypeObjectSelected = actionsTypeObject;
 
@@ -96,18 +97,41 @@ export const actionsTypeActionsChat = {
 };
 
 export const actionsMessagesChat =
-  (data, typeAction) => (dispatch, getState) => {
-    const {allMessages} = getState().appSlice;
+  (data, typeAction, navigation, additionalData) => (dispatch, getState) => {
+    let messagesMass = [];
 
     switch (typeAction) {
       case actionsTypeActionsChat.deleteMessages:
-        Object.keys(data.selectedMessages).map(messageId =>
-          socket.emit('chats', {
-            conversationId: data.conversationId,
-            isDeleteMessage: true,
-            messageId,
-          }),
-        );
+        const getRemoveMessages = (conversationId, messageId) => {
+          const allMessages = getState().appSlice.allMessages;
+
+          dispatch(
+            setAllMessagesAction({
+              [conversationId]: allMessages[conversationId.toString()]?.filter(
+                message =>
+                  ![messageId?.toString()]?.includes(message?.id?.toString()),
+              ),
+            }),
+          );
+        };
+
+        Object.keys(data.selectedMessages).map(messageId => {
+          console.log(data.conversationId, 'data.conversationId');
+          console.log(messageId, 'messageId');
+          socket.emit(
+            'chats',
+            {
+              conversationId: data.conversationId,
+              isDeleteMessage: true,
+              messageId: +messageId,
+            },
+            success => {
+              // why success is false?
+
+              getRemoveMessages(data.conversationId, messageId);
+            },
+          );
+        });
         return;
       case actionsTypeActionsChat.editMessage:
         Object.keys(data.selectedMessages).map(messageId =>
@@ -120,7 +144,7 @@ export const actionsMessagesChat =
         );
         return;
       case actionsTypeActionsChat.copyMessage:
-        const messagesMass = Object.keys(data.selectedMessages).reduce(
+        messagesMass = Object.keys(data.selectedMessages).reduce(
           (acc, messageId) => {
             return [...acc, data.selectedMessages[messageId].message];
           },
@@ -143,10 +167,34 @@ export const actionsMessagesChat =
         );
         return;
       case actionsTypeActionsChat.forwardMessage:
-        console.log(data.selectedMessages, 'forwardMessage');
+        messagesMass = Object.keys(data.selectedMessages).reduce(
+          (acc, messageId) => {
+            const messageData = data.selectedMessages[messageId];
+            return [
+              ...acc,
+              {
+                Files: messageData.Files,
+                User: messageData.User,
+                fkSenderId: messageData.fkSenderId,
+                id: messageData.id,
+                isEditing: messageData.isEditing,
+                message: messageData.message,
+                sendDate: messageData.sendDate,
+              },
+            ];
+          },
+          [],
+        );
+
+        dispatch(shareMessageAction(messagesMass));
+
+        navigation.navigate(PathsName.main, {
+          typeAction: 'forwardMessage',
+          additionalData,
+        });
 
         return;
       default:
-        break;
+        return;
     }
   };

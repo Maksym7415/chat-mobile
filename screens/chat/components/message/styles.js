@@ -33,12 +33,14 @@ export default theme =>
       paddingVertical: 10,
       maxWidth: 600,
       borderRadius: 10,
+      alignSelf: 'flex-start',
       overflow: 'hidden',
     },
     wrapperTextMessageShared: {
       position: 'relative',
-      marginHorizontal: 10,
+      paddingHorizontal: 10,
       marginVertical: 10,
+      flexDirection: 'row',
     },
     paperSenderMessage: {
       position: 'relative',
@@ -99,5 +101,13 @@ export default theme =>
     },
     selectedMessages: {
       backgroundColor: 'rgba(132, 202, 254, 0.2)',
+    },
+    divider: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      backgroundColor: 'green',
+      width: 3,
+      height: '100%',
     },
   });

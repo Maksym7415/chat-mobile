@@ -14,7 +14,6 @@ import {
   actionsTypeObjectSelected,
   selectedMessagesActions,
   actionsMessagesChat,
-  actionsTypeActionsChat,
 } from '../../../../redux/app/actions';
 import store from '../../../../redux/store';
 import {uuid} from '../../../../helpers';
@@ -45,6 +44,11 @@ const ChatHeader = ({conversationData, conversationId}) => {
           selectedMessages,
         },
         typeAction,
+        navigation,
+        {
+          id: conversationId,
+          conversationData,
+        },
       ),
     );
     closeOptions();

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import {useTheme} from 'react-native-paper';
-import {useSelector, useDispatch} from 'react-redux';
 import {Text, View} from 'react-native';
-import {getSnackBar, initialState} from './slice';
 import SvgMaker from '../../../svgMaker';
 import makeStyles from './styles';
 

@@ -5,8 +5,6 @@ import {stylesMessageInput as styles} from '../styles';
 import SvgMaker from '../../../../../../../components/svgMaker';
 
 export default function LeftInputComponent({}) {
-  // FUNCTIONS
-
   return (
     <>
       <View style={styles.emojies}>

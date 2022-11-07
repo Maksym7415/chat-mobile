@@ -2,9 +2,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {useRoute} from '@react-navigation/native';
 import {View} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {TextInput} from 'react-native-paper';
+import {Button, Paragraph, Dialog, Portal} from 'react-native-paper';
 import {stylesMessageInput as styles} from './styles';
 import {socket} from '../../../../../../config/socket';
 import languages from '../../../../../../config/translations';
@@ -21,7 +23,6 @@ import SheredMessages from './components/sheredMessages';
 import BottomSheet from '../../../../../../components/customBottomSheet';
 
 export default function MessageInput({
-  conversationId,
   userId,
   firstName,
   opponentId,
@@ -29,6 +30,7 @@ export default function MessageInput({
 }) {
   // HOOKS
   const dispatch = useDispatch();
+  const route = useRoute();
 
   // REFS
   const refBottomSheet = React.useRef(null);
@@ -39,13 +41,25 @@ export default function MessageInput({
     ({conversationsSlice}) => conversationsSlice.conversationTypeState,
   );
   const {messageEdit} = useSelector(({appSlice}) => appSlice);
-  const sheraMessages = useSelector(({appSlice}) => appSlice.sheraMessages);
+  const forwardMessages = useSelector(({appSlice}) => appSlice.sheraMessages);
 
+  const closeTranslateYBottomSheet = -400;
   // STATES
   const [sheredMessages, setSheredMessages] = React.useState([]);
   const [message, setMessage] = React.useState({0: ''});
+  const [visible, setVisible] = React.useState(false);
+  const [currentHeight, setСurrentHeight] = React.useState(
+    closeTranslateYBottomSheet,
+  );
+
+  // VARIABLES
+  const conversationId = route?.params?.id;
+  const conversationData = route?.params?.conversationData;
 
   // FUNCTIONS
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
+
   const handleChangeMessage = text => {
     setMessage({...message, [conversationId]: text});
     const user = {
@@ -112,6 +126,7 @@ export default function MessageInput({
   const handleClearSheraMessages = () => {
     dispatch(shareMessageAction([]));
     setSheredMessages([]);
+    hideDialog();
   };
 
   const clearMessageEdit = () => {
@@ -126,8 +141,8 @@ export default function MessageInput({
 
   // USEEFFECTS
   React.useEffect(() => {
-    setSheredMessages(sheraMessages);
-  }, [sheraMessages]);
+    setSheredMessages(forwardMessages);
+  }, [forwardMessages]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -142,40 +157,75 @@ export default function MessageInput({
   );
 
   return (
-    <View style={styles.root}>
-      {messageEdit.messageId ? (
-        <MessageEdit data={messageEdit} onClose={clearMessageEdit} />
-      ) : null}
-      {sheredMessages.length ? <SheredMessages /> : null}
-      <View
-        style={
-          messageEdit.messageId || sheredMessages.length
-            ? styles.wrapperInput
-            : {...styles.wrapperInput, ...styles.wrapperInputShadow}
-        }>
-        <LeftInputComponent />
-        <TextInput
-          multiline={true}
-          style={styles.input}
-          // contentStyle={{marginHorizontal: -10, marginVertical: -2}}
-          activeUnderlineColor={'#ffffff'}
-          selectionColor={'red'}
-          underlineColor="transparent"
-          value={message[conversationId] || ''}
-          keyboardType="default"
-          onChangeText={handleChangeMessage}
-          placeholder={`${languages[lang].generals.typeMessage}...`}
-          keyboardkey={res => console.log(res, 'res')}
-        />
-        <RightInputComponent
-          message={message[conversationId]}
-          handleSendMessage={handleSendMessage}
-          refBottomSheet={refBottomSheet}
-        />
+    <>
+      <View style={styles.root}>
+        {messageEdit.messageId ? (
+          <MessageEdit data={messageEdit} onClose={clearMessageEdit} />
+        ) : null}
+        {forwardMessages.length ? (
+          <SheredMessages
+            forwardMessages={forwardMessages}
+            handleClearSheraMessages={showDialog}
+          />
+        ) : null}
+        <View
+          style={
+            messageEdit.messageId || forwardMessages.length
+              ? styles.wrapperInput
+              : {...styles.wrapperInput, ...styles.wrapperInputShadow}
+          }>
+          <LeftInputComponent />
+          <TextInput
+            multiline={true}
+            style={styles.input}
+            contentStyle={{paddingTop: 0, marginVertical: -2}}
+            activeUnderlineColor={'#ffffff'}
+            selectionColor={'red'}
+            underlineColor="transparent"
+            value={message[conversationId] || ''}
+            keyboardType="default"
+            onChangeText={handleChangeMessage}
+            placeholder={`${languages[lang].generals.typeMessage}...`}
+            keyboardkey={res => console.log(res, 'res')}
+            dense={true}
+          />
+          <RightInputComponent
+            message={message[conversationId]}
+            handleSendMessage={handleSendMessage}
+            refBottomSheet={refBottomSheet}
+            forwardMessages={forwardMessages}
+            closeTranslateYBottomSheet={closeTranslateYBottomSheet}
+          />
+        </View>
       </View>
-      <BottomSheet ref={refBottomSheet}>
+      <BottomSheet
+        ref={refBottomSheet}
+        closeTranslateYBottomSheet={closeTranslateYBottomSheet}
+        setСurrentHeight={setСurrentHeight}>
         <View style={{flex: 1, backgroundColor: 'orange'}} />
       </BottomSheet>
-    </View>
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog.Title>
+            {forwardMessages.length}{' '}
+            {forwardMessages.length > 1 ? 'Messages' : 'Message'}
+          </Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>
+              What to do with {forwardMessages.length}{' '}
+              {forwardMessages.length > 1 ? 'messages' : 'Message'} messages
+              from your chat with {conversationData?.conversationName}?
+            </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions
+            style={{flexDirection: 'column', alignItems: 'flex-end'}}>
+            <Button onPress={hideDialog}>Show forwarding options</Button>
+            <Button onPress={handleClearSheraMessages} color={'red'}>
+              Cancel forwarding
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    </>
   );
 }

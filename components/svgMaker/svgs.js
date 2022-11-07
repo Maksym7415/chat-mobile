@@ -202,6 +202,24 @@ export const svgs = {
       />
     </Svg>
   ),
+  svgs_filled_send_arrow: ({
+    width = 27,
+    height = 27,
+    fill = 'none',
+    strokeFill = '#868686',
+  }) => (
+    <Svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg">
+      <Path
+        d="M15.4351 22L24 13.5L15.4351 5V10.6667H2V16.3333H15.4351V22Z"
+        fill={strokeFill}
+      />
+    </Svg>
+  ),
 
   svgs_filled_pencil: ({
     width = 27,

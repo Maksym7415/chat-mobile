@@ -9,4 +9,11 @@ export default theme =>
       height: 40,
       backgroundColor: '#ffffff',
     },
+    wrapperAction: {
+      flexDirection: 'row-reverse',
+      alignItems: 'center',
+    },
+    title: {
+      paddingLeft: 5,
+    },
   });

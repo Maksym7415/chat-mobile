@@ -8,22 +8,15 @@ export default function RightInputComponent({
   message,
   handleSendMessage,
   refBottomSheet,
+  forwardMessages,
+  closeTranslateYBottomSheet,
 }) {
   // STATES
   const [toggleTypeMessage, setToggleTypeMessage] = React.useState('voice');
 
   // FUNCTIONS
-  const onPress = React.useCallback(() => {
-    const isActive = refBottomSheet?.current?.isActive();
-    if (isActive) {
-      refBottomSheet?.current?.scrollTo(0);
-    } else {
-      refBottomSheet?.current?.scrollTo(-200);
-    }
-  }, []);
-
   const stylesRightIcons = () => {
-    return message
+    return message || forwardMessages.length
       ? {
           justifyContent: 'flex-end',
           width: 40,
@@ -41,13 +34,21 @@ export default function RightInputComponent({
           ...styles.attachAndTypeMessage,
           ...stylesRightIcons(),
         }}>
-        {message ? (
+        {message || forwardMessages.length ? (
           <Pressable onPress={handleSendMessage}>
             <SvgMaker name="svgs_filled_send" strokeFill={'#5EA7DE'} />
           </Pressable>
         ) : (
           <>
-            <Pressable onPress={onPress}>
+            <Pressable
+              onPress={() => {
+                const isActive = refBottomSheet?.current?.isActive();
+                if (isActive) {
+                  refBottomSheet?.current?.scrollTo(0);
+                } else {
+                  refBottomSheet?.current?.scrollTo(closeTranslateYBottomSheet);
+                }
+              }}>
               <SvgMaker name="svgs_line_attach" />
             </Pressable>
             <Pressable

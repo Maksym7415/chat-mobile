@@ -1,4 +1,3 @@
-import MainScreen from '../screens/main';
 import ChatScreen from '../screens/chat';
 import NewGroupScreen from '../screens/newGroup';
 import ContactsScreen from '../screens/contacts';
@@ -32,14 +31,6 @@ export const PathsName = {
 };
 
 export const navigation = [
-  // {
-  //   id: 1,
-  //   Component: MainScreen,
-  //   pathName: PathsName.main,
-  //   options: {
-  //     title: 'Main',
-  //   },
-  // },
   {
     id: 3,
     Component: ChatScreen,

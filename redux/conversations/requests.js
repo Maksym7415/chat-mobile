@@ -25,7 +25,7 @@ export const getConversationUserHistoryRequest = createAsyncThunk(
       const response = await API.get(
         `${pathBackConversations.conversationHistory}/${params.data.id}?offset=${params.data.offset}`,
       );
-      params?.cb && params.cb();
+      params?.cb && params.cb(response.data);
       return {data: response.data.data, pagination: response.data.pagination};
     } catch (error) {
       params?.errorCb && params.errorCb();

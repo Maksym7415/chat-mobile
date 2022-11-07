@@ -7,13 +7,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Provider as PaperProvider} from 'react-native-paper';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
-  StatusBar,
-  View,
-} from 'react-native';
+import {SafeAreaView, KeyboardAvoidingView, Platform} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import styles from './styles';
 import {
@@ -30,7 +24,6 @@ import CustomStatusBar from '../components/customBar';
 import DrawerNavigator from './drawerNavigator';
 import MainScreen from '../screens/main';
 
-import SignInScreen from '../screens/signIn';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -54,9 +47,13 @@ function MyStack() {
   // HOOKS
   const dispatch = useDispatch();
 
-  const [isLoading, setIsLoading] = React.useState(true);
+  // SELECTORS
   const tokenPayload = useSelector(({authSlice}) => authSlice.tokenPayload);
 
+  // STATES
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  // FUNCTIONS
   const checkIsToken = async () => {
     setIsLoading(true);
     const token = await getTokenStorage();
@@ -79,6 +76,7 @@ function MyStack() {
     }
   };
 
+  // USEEFFECTS
   React.useEffect(() => {
     checkIsToken();
   }, []);
@@ -105,7 +103,6 @@ function MyStack() {
                     tokenPayload.login ? PathsName.signIn : PathsName.main
                   }
                   screenOptions={{
-                    // header: props => <Header {...props} />,
                     headerShown: false,
                   }}>
                   {isLoading ? (
@@ -123,7 +120,7 @@ function MyStack() {
                     })
                   ) : (
                     <>
-                      <Stack.Screen options={{}} name="Root" component={Root} />
+                      <Stack.Screen name="Root" component={Root} />
                       {navigation.map(item => {
                         return (
                           <Stack.Screen
@@ -137,33 +134,6 @@ function MyStack() {
                     </>
                   )}
                 </Stack.Navigator>
-                {/* <Drawer.Navigator
-                drawerContent={DrawerNavigator}
-                drawerContentOptions={{
-                  activeBackgroundColor: 'transparent',
-                  inactiveBackgroundColor: 'transparent',
-                  labelStyle: {
-                    fontSize: 15,
-                    marginLeft: 0,
-                  },
-                }}
-                drawerStyle={
-                  {
-                    // backgroundColor: theme?.colors?.grey4,
-                  }
-                }>
-                {navigation.map(item => {
-                  return (
-                    <Drawer.Screen
-                      key={item.id}
-                      name={item.pathName}
-                      options={item.options}
-                      component={item.Component}
-                    />
-                  );
-                })}
-                <Drawer.Screen name="Avatars" component={Avatars} />
-              </Drawer.Navigator> */}
               </NavigationContainer>
             </SafeAreaView>
           </KeyboardAvoidingView>

@@ -5,6 +5,7 @@ import {stylesConversationItems as styles} from './styles';
 import ConversationItemComponent from './ConversationItem';
 
 const ConversationItems = ({data = [], usersTyping}) => {
+  // HOOKS
   const theme = useTheme();
 
   // VARIABLES

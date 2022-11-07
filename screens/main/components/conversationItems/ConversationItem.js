@@ -17,11 +17,12 @@ import {
 import store from '../../../../redux/store';
 
 const ConversationdataComponent = ({data, usersTyping}) => {
-  const theme = useTheme();
-  const styles = makeStyles(theme, data);
-
   //HOOKS
+  const theme = useTheme();
   const navigation = useNavigation();
+
+  // STYLES
+  const styles = makeStyles(theme, data);
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
@@ -48,6 +49,7 @@ const ConversationdataComponent = ({data, usersTyping}) => {
             selectedСhatsActions(data, actionsTypeObjectSelected.add),
           );
     } else {
+      navigation.closeDrawer();
       navigation.navigate(PathsName.chat, {
         id: data.conversationId,
         conversationData: data,

@@ -14,6 +14,7 @@ const SnackbarComponent = () => {
   // FUNCTIONS
   const onDismissSnackBar = () => dispatch(getSnackBar(initialState.options));
 
+  // VARIABLES
   const message = options.message;
 
   return (

@@ -26,21 +26,17 @@ export default theme =>
       flexDirection: 'row',
     },
     wrapperNotification: {
-      // backgroundColor: 'red',
       height: '100%',
       flexDirection: 'row',
       alignItems: 'center',
       alignSelf: 'flex-end',
-      // flex: 1,
     },
     switchNotification: {},
     dividerNotification: {
-      // flexDirection: 'row',
       backgroundColor: theme.colors.gray_10,
       width: 1,
       height: '100%',
       marginRight: 15,
-      // flex: 1,
     },
     divider: {
       flexDirection: 'row',

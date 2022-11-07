@@ -141,10 +141,12 @@ export const socketOnTypingStateId = (chat, setUsersTyping) => {
   });
 };
 
-// Delete Message
+// Delete Message not working
 export const socketOnDeleteMessage = () => {
   const getRemoveMessages = (conversationId, messageId) => {
+    console.log(messageId, 'messageId!!');
     const allMessages = store.getState().appSlice.allMessages;
+    console.log(allMessages, 'allMessages');
     store.dispatch(
       setAllMessagesAction({
         [conversationId]: allMessages[conversationId.toString()]?.filter(
@@ -156,6 +158,7 @@ export const socketOnDeleteMessage = () => {
   };
 
   return socket.on('deleteMessage', ({conversationId, messageId}) => {
+    console.log(conversationId, messageId, 'eeee');
     getRemoveMessages(conversationId, messageId);
   });
 };

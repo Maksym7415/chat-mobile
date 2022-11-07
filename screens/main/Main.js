@@ -3,13 +3,13 @@ import React from 'react';
 import {SafeAreaView} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import {useTheme, Portal} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import makeStyles from './styles';
 import {socket} from '../../config/socket';
 import {
   socketOnUserIdChat,
   socketOnTypingStateId,
-  socketOnDeleteMessage,
+  // socketOnDeleteMessage,
 } from '../../config/socket/actions/socketOn';
 import ConversationItems from './components/conversationItems';
 import Header from './components/header';
@@ -20,7 +20,7 @@ navigator.__defineGetter__('userAgent', function () {
   return 'react-native';
 });
 
-const MainScreen = ({}) => {
+const MainScreen = ({route}) => {
   // HOOKS
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -34,6 +34,9 @@ const MainScreen = ({}) => {
     ({conversationsSlice}) => conversationsSlice,
   );
   const {userId} = useSelector(({authSlice}) => authSlice.tokenPayload);
+
+  // VARIABLES
+  const routeParams = route.params;
 
   // STATES
   // rework
@@ -71,15 +74,15 @@ const MainScreen = ({}) => {
     });
   }, [conversationsList, typing]);
 
-  React.useEffect(() => {
-    socketOnDeleteMessage();
-  }, []);
+  // not working socketOnDeleteMessage
+  // React.useEffect(() => {
+  //   socketOnDeleteMessage();
+  // }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      <Header routeParams={routeParams} />
       <ConversationItems data={conversationsList} usersTyping={usersTyping} />
-      <Portal>{/* <FabComponent /> */}</Portal>
     </SafeAreaView>
   );
 };

@@ -1,35 +1,70 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import {View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {View, Text, Pressable} from 'react-native';
+import {useSelector} from 'react-redux';
+import {useTheme, IconButton} from 'react-native-paper';
 import makeStyles from './styles';
+import languages from '../../../../../../../../config/translations';
 import SvgMaker from '../../../../../../../../components/svgMaker';
 
-export default function SheredMessages({}) {
+export default function SheredMessages({
+  forwardMessages,
+  handleClearSheraMessages,
+}) {
   //HOOKS
   const theme = useTheme();
 
   // STYLES
   const styles = makeStyles(theme);
 
+  // SELECTORS
+  const lang = useSelector(({settingSlice}) => settingSlice.lang);
+
   return (
-    <View style="conversations__send-message-text conversations__send-message-shadow">
-      {/* <ShareIcon color="primary" style="mr-10" />
-      <View style="flex-col conversations__send-message-text-title-wrapper">
-        <Typography color="primary">
-          {languages[lang].generals.shareMessage}
-        </Typography>
-        <p style="conversations__edit-message-paragraph">
-          {sheredMessages[0].message}
-        </p>
+    <View style={styles.root}>
+      <View style={styles.wrapperLeft}>
+        <SvgMaker name="svgs_filled_send_arrow" strokeFill={'#517DA2'} />
       </View>
-      <View style="ml-auto pd-right-30">
+      <View style={styles.wrapperCenter}>
+        <Text style={styles.title}>
+          {forwardMessages.length
+            ? `Forward ${forwardMessages.length} ${
+                forwardMessages.length > 1 ? 'messages' : 'message'
+              }`
+            : languages[lang].generals.shareMessage}
+        </Text>
+        <Text style="conversations__edit-message-paragraph">
+          {(() => {
+            if (forwardMessages.length < 2) {
+              return forwardMessages[0].message;
+            }
+
+            let usersSheredMessages = forwardMessages?.reduce((acc, item) => {
+              if (acc.includes(item.User.firstName)) return acc;
+              return [...acc, item.User.firstName];
+            }, []);
+
+            console.log(usersSheredMessages, 'usersSheredMessages');
+            if (forwardMessages.length > 2) {
+              return `from ${usersSheredMessages[0]} and ${
+                usersSheredMessages.length - 1
+              } more`;
+            } else {
+              return `from ${usersSheredMessages[0]}${
+                usersSheredMessages?.[1] ? `, ${usersSheredMessages?.[1]}` : ''
+              }`;
+            }
+          })()}
+        </Text>
+      </View>
+      <Pressable style={styles.wrapperRight}>
         <IconButton
-          style={{width: '20px', height: '20px'}}
-          onClick={handleClearSheraMessages}>
-          <CloseIcon style={{width: '20px', height: '20px'}} />
-        </IconButton>
-      </View> */}
+          icon="close"
+          size={20}
+          onPress={handleClearSheraMessages}
+          style={{marginHorizontal: 0}}
+        />
+      </Pressable>
     </View>
   );
 }

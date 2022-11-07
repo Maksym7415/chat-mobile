@@ -1,27 +1,26 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   Text,
   View,
   ImageBackground,
+  SectionList,
 } from 'react-native';
-import {Snackbar} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import styles from './styles';
-import {socket} from '../../config/socket';
 import Message from './components/message';
 import ChatHeader from './components/header';
 import ChatBottom from './components/bottom';
 import Loader from '../../components/loader';
+import ScrollToBottomButton from '../../components/scrolles/scrollToBottomButton';
 import languages from '../../config/translations';
 import {checkIsShowAvatar, setMessageDate, scrollTop} from '../../helpers';
 import {getConversationUserHistoryRequest} from '../../redux/conversations/requests';
 import {setConversationIdAction} from '../../redux/conversations';
 import {setAllMessagesAction} from '../../redux/app/slice';
 import IMAGE from '../../assets/img';
-import store from '../../redux/store';
 import SnackbarComponent from '../../components/snackbar';
 
 const Chat = ({navigation, route}) => {
@@ -31,10 +30,7 @@ const Chat = ({navigation, route}) => {
   // REFS
   const inputRef = React.useRef(null);
   const ref = React.useRef(null);
-
-  // VARIABLES
-  const conversationId = route?.params?.id;
-  const conversationData = route?.params?.conversationData;
+  const onEndReachedCalledDuringMomentum = React.useRef(false);
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
@@ -42,41 +38,28 @@ const Chat = ({navigation, route}) => {
     userHistoryConversation: {data: messageHistory, pagination},
     opponentId: {id: opponentId},
     createConversation: isCreateChat,
-    lastMessages,
   } = useSelector(({conversationsSlice}) => conversationsSlice);
   const {userId, firstName} = useSelector(
     ({authSlice}) => authSlice.tokenPayload,
   );
-  const {sheraMessages, messageEdit, selectedMessages, allMessages} =
-    useSelector(({appSlice}) => appSlice);
+  const {sheraMessages, messageEdit, allMessages} = useSelector(
+    ({appSlice}) => appSlice,
+  );
 
   // STATES
-  // const [allMessages, setAllMessages] = React.useState({});
   const [localPagination, setLocalPagination] = React.useState({});
-  const [files, setFiles] = React.useState({});
-  const [isOpenDialog, setIsOpenDialog] = React.useState(false);
-  const [isInputState, setIsInputState] = React.useState(false);
   const [timeDivCounter, setTimeDivCounter] = React.useState(0);
   const [isFetching, setIsFetching] = React.useState(false);
+  const [showScrollToButton, setShowScrollToButton] = React.useState(false);
+
+  // VARIABLES
+  const conversationId = route?.params?.id;
+  const conversationData = route?.params?.conversationData;
+  const typeConversation =
+    conversationData?.conversationType.toLowerCase() || '';
+  let SectionListReference = null;
 
   // FUNCTIONS
-  const scrollHandler = event => {
-    let element = event.currentTarget;
-    if (
-      allMessages[conversationId]?.length % (15 + timeDivCounter) === 0 &&
-      element.scrollTop === 0
-    ) {
-      dispatch(
-        getConversationUserHistoryRequest({
-          data: {
-            id: conversationId,
-            offset: localPagination[conversationId] + 15,
-          },
-        }),
-      );
-    }
-  };
-
   const openFileDialog = () => {
     const element = inputRef.current;
     if (element) {
@@ -84,9 +67,56 @@ const Chat = ({navigation, route}) => {
     }
   };
 
+  const scrollToBottom = () => {
+    SectionListReference.scrollToLocation({
+      animated: true,
+      itemIndex: 0,
+      viewPosition: 0,
+    });
+  };
+
+  const loadMoreMessages = () => {
+    dispatch(
+      getConversationUserHistoryRequest({
+        data: {
+          id: conversationId,
+          offset: pagination.currentPage + 1,
+        },
+        cb: response => {
+          dispatch(
+            setAllMessagesAction({
+              [conversationId]: [
+                ...response.data,
+                ...allMessages[conversationId],
+              ],
+            }),
+          );
+        },
+      }),
+    );
+  };
+
+  const onEndReached = ({distanceFromEnd}) => {
+    if (!onEndReachedCalledDuringMomentum.current) {
+      loadMoreMessages();
+      onEndReachedCalledDuringMomentum.current = true;
+    }
+  };
+
+  const setCurrentReadOffset = event => {
+    const scrollHight = Math.floor(event.nativeEvent.contentOffset.y);
+
+    if (scrollHight > 100) {
+      !showScrollToButton && setShowScrollToButton(true);
+    } else {
+      showScrollToButton && setShowScrollToButton(false);
+    }
+  };
+
   // USEEFFECTS
   React.useEffect(() => {
     if (!allMessages[conversationId] && conversationId) {
+      console.log('!render!');
       setIsFetching(true);
       dispatch(
         getConversationUserHistoryRequest({
@@ -100,14 +130,11 @@ const Chat = ({navigation, route}) => {
         }),
       );
     }
-    if (sheraMessages.length) {
-      // console.log(sheraMessages, 'sheraMessages');
-    }
   }, [conversationId]);
 
   React.useEffect(() => {
     ref && scrollTop(ref);
-    if (messageHistory.length) {
+    if (messageHistory.length && !allMessages[conversationId]) {
       let currentDay = 0;
       let newArr = [];
       messageHistory.map(el => {
@@ -131,8 +158,6 @@ const Chat = ({navigation, route}) => {
           [conversationId]: newArr,
         }),
       );
-
-      // setAllMessages(messages => ({...messages, [conversationId]: newArr}));
     }
   }, [messageHistory]);
 
@@ -156,47 +181,55 @@ const Chat = ({navigation, route}) => {
     }
   }, [isCreateChat]);
 
-  // console.log(messageEdit, 'messageEdit');
   // RENDERS
   const renderMainContent = () => {
     return (
-      <ScrollView
-        // onScroll={scrollHandler}
-        style={
-          {
-            // height:
-            //   messageEdit.isEdit || sheraMessages.length
-            //     ? 'calc(100% - 100px)'
-            //     : 'calc(100% - 50px)',
-            // overflowY: 'scroll',
-          }
-        }>
-        <>
-          {(() => {
-            if (Number.isNaN(conversationId) && !opponentId) {
-              return <Text>{languages[lang].mainScreen.chooseAChat}</Text>;
+      <>
+        {(() => {
+          if (Number.isNaN(conversationId) && !opponentId) {
+            return <Text>{languages[lang].mainScreen.chooseAChat}</Text>;
+          } else {
+            if (opponentId && !conversationId) {
+              return (
+                <Text>
+                  {languages[lang].mainScreen.sendANewMessageToStartAChat}
+                </Text>
+              );
             } else {
-              if (opponentId && !conversationId) {
+              if (
+                allMessages[conversationId] &&
+                allMessages[conversationId].length === 0
+              ) {
                 return (
                   <Text>
-                    {languages[lang].mainScreen.sendANewMessageToStartAChat}
+                    {languages[lang].mainScreen.thereAreNoMessagesInChatYet}
                   </Text>
                 );
               } else {
-                if (
-                  allMessages[conversationId] &&
-                  allMessages[conversationId].length === 0
-                ) {
-                  return (
-                    <Text>
-                      {languages[lang].mainScreen.thereAreNoMessagesInChatYet}
-                    </Text>
-                  );
-                } else {
-                  return (
-                    allMessages[conversationId] &&
-                    allMessages[conversationId].map(
-                      (messageData, index, arr) => {
+                return (
+                  allMessages[conversationId] && (
+                    <SectionList
+                      keyboardShouldPersistTaps="never"
+                      scrollEventThrottle={16}
+                      onScroll={event => setCurrentReadOffset(event)}
+                      ref={ref => {
+                        SectionListReference = ref;
+                      }}
+                      inverted
+                      onEndReached={onEndReached}
+                      onEndReachedThreshold={0.1}
+                      onMomentumScrollBegin={() => {
+                        onEndReachedCalledDuringMomentum.current = false;
+                      }}
+                      style={{
+                        marginBottom:
+                          messageEdit.isEdit || sheraMessages.length ? 95 : 40,
+                      }}
+                      sections={
+                        [{data: [...allMessages[conversationId]].reverse()}] ||
+                        []
+                      }
+                      renderItem={({item: messageData, index}) => {
                         let isShowAvatar = false;
                         if (
                           messageData.fkSenderId !== userId &&
@@ -225,20 +258,28 @@ const Chat = ({navigation, route}) => {
                             isShowAvatar={isShowAvatar}
                             messageData={messageData}
                             userId={userId}
-                            conversationId={conversationId}
-                            allMassages={allMessages[conversationId]}
+                            typeConversation={typeConversation}
                           />
                         );
-                      },
-                    )
-                  );
-                }
+                      }}
+                    />
+                  )
+                );
               }
             }
-          })()}
-          <View style={{height: 50}} ref={ref} />
-        </>
-      </ScrollView>
+          }
+        })()}
+        {showScrollToButton && (
+          <ScrollToBottomButton
+            scrollToBottom={scrollToBottom}
+            styles={{
+              button: {
+                bottom: messageEdit.isEdit || sheraMessages.length ? 100 : 50,
+              },
+            }}
+          />
+        )}
+      </>
     );
   };
 
@@ -274,6 +315,7 @@ const Chat = ({navigation, route}) => {
           firstName={firstName}
           userId={userId}
           conversationId={conversationId}
+          conversationData={conversationData}
         />
         <SnackbarComponent />
       </SafeAreaView>

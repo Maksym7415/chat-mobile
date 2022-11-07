@@ -36,7 +36,9 @@ const appSlice = createSlice({
       state.preloader = payload;
     },
     setAllMessagesAction(state, {payload}) {
+      console.log(payload, 'payload');
       state.allMessages = {
+        ...state.allMessages,
         ...payload,
       };
     },

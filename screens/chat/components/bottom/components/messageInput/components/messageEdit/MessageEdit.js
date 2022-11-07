@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {View, Text, Pressable} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import makeStyles from './styles';

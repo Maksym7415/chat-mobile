@@ -3,7 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import {SafeAreaView, Text, View, Pressable, ScrollView} from 'react-native';
-import Animated, {runOnJS} from 'react-native-reanimated';
+import {runOnJS} from 'react-native-reanimated';
 import {useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -33,6 +33,10 @@ const Profile = ({route}) => {
   // STYLES
   const styles = makeStyles(theme);
 
+  // SELECTORS
+  const {lang} = useSelector(({settingSlice}) => settingSlice);
+  const {userInfo} = useSelector(({userSlice}) => userSlice);
+
   // STATES
   const [showBiggerImg, setShowBiggerImg] = React.useState(false);
   const [setting, setSetting] = React.useState({
@@ -43,10 +47,6 @@ const Profile = ({route}) => {
     typeProfile: TYPES_CONVERSATIONS.dialog,
     conversationName: '',
   });
-
-  // SELECTORS
-  const {lang} = useSelector(({settingSlice}) => settingSlice);
-  const {userInfo} = useSelector(({userSlice}) => userSlice);
 
   // FUNCtIONS
   const fSetShowBiggerImg = bool => {
@@ -65,8 +65,9 @@ const Profile = ({route}) => {
       typeProfile:
         route.params?.typeProfile?.toLowerCase() || TYPES_CONVERSATIONS.dialog,
     };
+
     const conversationData = route.params?.conversationData;
-    console.log(route.params, 'route.params');
+
     if (route.params?.isOwnerProfile) {
       settingLocal = {
         ...settingLocal,

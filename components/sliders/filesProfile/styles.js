@@ -14,9 +14,6 @@ export default theme => {
     wrapper: {
       height: 400,
       backgroundColor: '#ffffff',
-      // display: 'flex',
-      // justifyContent: 'center',
-      // alignItems: 'center',
     },
     tab: {
       paddingHorizontal: 18,
