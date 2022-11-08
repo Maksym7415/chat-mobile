@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import makeStyles from './styles';
 import MessageInput from './components/messageInput/MessageInput';
 import Selecteds from './components/selecteds';
+import BottomSheet from './components/bottomSheet';
 
 function Message({
   firstName,
@@ -19,6 +20,9 @@ function Message({
   // HOOKS
   const dispatch = useDispatch();
   const theme = useTheme();
+
+  // REFS
+  const refBottomSheet = React.useRef(null);
 
   // STYLES
   const styles = makeStyles(theme);
@@ -39,13 +43,19 @@ function Message({
             firstName={firstName}
             opponentId={opponentId}
             openFileDialog={openFileDialog}
+            refBottomSheet={refBottomSheet}
           />
         );
       }
     }
   };
 
-  return <>{renderBottom()}</>;
+  return (
+    <>
+      {renderBottom()}
+      <BottomSheet ref={refBottomSheet} />
+    </>
+  );
 }
 
 export default Message;

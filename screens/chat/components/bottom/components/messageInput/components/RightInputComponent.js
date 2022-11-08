@@ -42,12 +42,8 @@ export default function RightInputComponent({
           <>
             <Pressable
               onPress={() => {
-                const isActive = refBottomSheet?.current?.isActive();
-                if (isActive) {
-                  refBottomSheet?.current?.scrollTo(0);
-                } else {
-                  refBottomSheet?.current?.scrollTo(closeTranslateYBottomSheet);
-                }
+                console.log(refBottomSheet, 'refBottomSheet');
+                refBottomSheet.current?.snapToIndex(1);
               }}>
               <SvgMaker name="svgs_line_attach" />
             </Pressable>

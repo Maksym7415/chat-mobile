@@ -3,7 +3,7 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useRoute} from '@react-navigation/native';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {TextInput} from 'react-native-paper';
 import {Button, Paragraph, Dialog, Portal} from 'react-native-paper';
@@ -20,20 +20,17 @@ import RightInputComponent from './components/RightInputComponent';
 import LeftInputComponent from './components/LeftInputComponent';
 import MessageEdit from './components/messageEdit';
 import SheredMessages from './components/sheredMessages';
-import BottomSheet from '../../../../../../components/customBottomSheet';
 
 export default function MessageInput({
   userId,
   firstName,
   opponentId,
+  refBottomSheet,
   openFileDialog,
 }) {
   // HOOKS
   const dispatch = useDispatch();
   const route = useRoute();
-
-  // REFS
-  const refBottomSheet = React.useRef(null);
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
@@ -43,14 +40,10 @@ export default function MessageInput({
   const {messageEdit} = useSelector(({appSlice}) => appSlice);
   const forwardMessages = useSelector(({appSlice}) => appSlice.sheraMessages);
 
-  const closeTranslateYBottomSheet = -400;
   // STATES
   const [sheredMessages, setSheredMessages] = React.useState([]);
   const [message, setMessage] = React.useState({0: ''});
   const [visible, setVisible] = React.useState(false);
-  const [currentHeight, setСurrentHeight] = React.useState(
-    closeTranslateYBottomSheet,
-  );
 
   // VARIABLES
   const conversationId = route?.params?.id;
@@ -194,16 +187,9 @@ export default function MessageInput({
             handleSendMessage={handleSendMessage}
             refBottomSheet={refBottomSheet}
             forwardMessages={forwardMessages}
-            closeTranslateYBottomSheet={closeTranslateYBottomSheet}
           />
         </View>
       </View>
-      <BottomSheet
-        ref={refBottomSheet}
-        closeTranslateYBottomSheet={closeTranslateYBottomSheet}
-        setСurrentHeight={setСurrentHeight}>
-        <View style={{flex: 1, backgroundColor: 'orange'}} />
-      </BottomSheet>
       <Portal>
         <Dialog visible={visible} onDismiss={hideDialog}>
           <Dialog.Title>

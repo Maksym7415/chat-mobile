@@ -259,6 +259,112 @@ export const svgs = {
       />
     </Svg>
   ),
+  svgs_filled_file_attach: ({
+    width = 27,
+    height = 27,
+    fill = 'none',
+    strokeFill = '#868686',
+    fillRule = 'evenodd',
+    clipRule = 'evenodd',
+  }) => (
+    <Svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg">
+      <Path
+        d="M7.97087 4C6.98058 4 5 4.59478 5 6.97391V20.0261C5 22.4052 6.98058 23 7.97087 23H19.0291C20.0194 23 22 22.4052 22 20.0261V10.6856C22 10.5498 22 10.4435 21.835 10.2783L16.2233 4.66087C16.2233 4.66087 15.5631 4 15.233 4H7.97087ZM19.7108 10.465L15.7083 6.45837C15.2895 6.03911 14.5728 6.33574 14.5728 6.92835V10.935C14.5728 11.3023 14.8705 11.6 15.2378 11.6H19.2404C19.8327 11.6 20.1294 10.884 19.7108 10.465Z"
+        fill={strokeFill}
+        fillRule={fillRule}
+        clipRule={clipRule}
+      />
+    </Svg>
+  ),
+  svgs_filled_gallery_attach: ({
+    width = 27,
+    height = 27,
+    fill = 'none',
+    strokeFill = '#868686',
+    fillRule = 'evenodd',
+    clipRule = 'evenodd',
+  }) => (
+    <Svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg">
+      <Path
+        d="M20.7414 24C21.8879 24 24 23.2759 24 20.7414V6.25862C24 5.17241 23.3483 3 20.7414 3H6.25862C5.11207 3 3 3.72414 3 6.25862V20.7414C3 21.8276 3.65172 24 6.25862 24H20.7414ZM12.7759 18.2069C12.3414 18.6414 11.8707 18.3879 11.6897 18.2069L9.69828 15.4914C9.40862 15.2017 9.15517 15.3103 8.97414 15.4914L6.25862 19.2931C6.07759 19.5345 5.71552 20.3793 6.25862 20.3793H20.7414C21.2845 20.3793 20.9224 19.5345 20.7414 19.2931L16.7586 13.1379C16.469 12.8483 16.2155 12.9569 16.0345 13.1379C15.1293 14.5862 13.2103 17.6276 12.7759 18.2069Z"
+        fill={strokeFill}
+        fillRule={fillRule}
+        clipRule={clipRule}
+      />
+    </Svg>
+  ),
+  svgs_filled_user_attach: ({
+    width = 27,
+    height = 27,
+    fill = 'none',
+    strokeFill = '#868686',
+  }) => (
+    <Svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg">
+      <Path
+        d="M13.5 16.6363C17.1975 16.4969 24.4691 17.7236 23.9761 23.7454C23.8118 24.7491 23.086 25 22.7437 25H13.5L4.25634 25C3.91398 25 3.18818 24.7491 3.02385 23.7454C2.53086 17.7236 9.80252 16.4969 13.5 16.6363Z"
+        fill={strokeFill}
+      />
+      <Path
+        d="M19.2516 7.85456C19.2516 11.0879 16.6765 13.7091 13.5 13.7091C10.3235 13.7091 7.74837 11.0879 7.74837 7.85456C7.74837 4.62118 10.3235 2 13.5 2C16.6765 2 19.2516 4.62118 19.2516 7.85456Z"
+        fill={strokeFill}
+      />
+    </Svg>
+  ),
+  svgs_filled_map_point_attach: ({
+    width = 27,
+    height = 27,
+    fill = 'none',
+    strokeFill = '#868686',
+    fillRule = 'evenodd',
+    clipRule = 'evenodd',
+  }) => (
+    <Svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg">
+      <Path
+        d="M14.4808 24.5241C17.5865 21.5103 22 15.8 22 10.2483C22 7.55172 20.1692 2 13.5 2C6.83077 2 5 7.55172 5 10.2483C5 15.8 9.57692 21.669 12.5192 24.5241C12.6827 24.6828 12.9769 25 13.5 25C13.9904 25 14.3173 24.6828 14.4808 24.5241ZM16.4423 10.2483C16.4423 8.66207 15.1346 7.3931 13.5 7.3931C11.8654 7.3931 10.5577 8.66207 10.5577 10.2483C10.5577 11.8345 11.8654 13.1034 13.5 13.1034C15.1346 13.1034 16.4423 11.8345 16.4423 10.2483Z"
+        fill={strokeFill}
+        fillRule={fillRule}
+        clipRule={clipRule}
+      />
+    </Svg>
+  ),
+  svgs_filled_play_attach: ({
+    width = 27,
+    height = 27,
+    fill = 'none',
+    strokeFill = '#868686',
+  }) => (
+    <Svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg">
+      <Path
+        d="M5 5.62683C5 4.01474 6.8601 3.6587 7.87469 4.30355L20.219 12.2646C20.8954 12.7202 21.5718 13.8487 20.219 14.8592L7.87469 22.6818C6.8601 23.3266 5 23.0378 5 21.3881V13.5733V5.62683Z"
+        fill={strokeFill}
+      />
+    </Svg>
+  ),
 
   // Line
   svgs_line_check: ({
