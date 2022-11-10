@@ -1,6 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Text, View, Pressable} from 'react-native';
+import {v4 as uuidv4} from 'uuid';
+
 import {useSelector} from 'react-redux';
 import {Divider, useTheme} from 'react-native-paper';
 import makeStyles from './styles';
@@ -19,10 +21,7 @@ const ListMenu = ({title, list, onPress}) => {
   // FUNCTIONS
   const ListItem = ({item}) => {
     return (
-      <Pressable
-        key={item.id}
-        onPress={() => onPress(item)}
-        style={styles.wrapperListItem}>
+      <Pressable onPress={() => onPress(item)} style={styles.wrapperListItem}>
         {item.icon?.name && <SvgMaker name={item.icon?.name} />}
         <Text style={styles.listItemTitle}>{item.title}</Text>
       </Pressable>
@@ -38,12 +37,12 @@ const ListMenu = ({title, list, onPress}) => {
       <View style={styles.list}>
         {items.map((item, index) => {
           return items.length > index + 1 ? (
-            <React.Fragment key={item.id}>
-              <ListItem item={item} key={item.id} />
+            <React.Fragment key={uuidv4()}>
+              <ListItem item={item} />
               <Divider style={styles.divider} />
             </React.Fragment>
           ) : (
-            <ListItem item={item} key={item.id} />
+            <ListItem item={item} key={uuidv4()} />
           );
         })}
       </View>

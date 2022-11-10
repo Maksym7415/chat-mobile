@@ -179,7 +179,6 @@ export default function MessageInput({
             keyboardType="default"
             onChangeText={handleChangeMessage}
             placeholder={`${languages[lang].generals.typeMessage}...`}
-            keyboardkey={res => console.log(res, 'res')}
             dense={true}
           />
           <RightInputComponent

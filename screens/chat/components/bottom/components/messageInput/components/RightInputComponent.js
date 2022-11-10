@@ -43,7 +43,7 @@ export default function RightInputComponent({
             <Pressable
               onPress={() => {
                 console.log(refBottomSheet, 'refBottomSheet');
-                refBottomSheet.current?.snapToIndex(1);
+                refBottomSheet.current?.snapToIndex(0);
               }}>
               <SvgMaker name="svgs_line_attach" />
             </Pressable>

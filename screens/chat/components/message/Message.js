@@ -3,13 +3,13 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, {useLayoutEffect, useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Image} from 'react-native';
 import {useTheme, Divider} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import makeStyles from './styles';
 import {contextMenuConfig, contextMenuCallback} from '../../config';
 import languages from '../../../../config/translations';
-import {getCurrentDay} from '../../../../helpers';
+import {getCurrentDay, uuid} from '../../../../helpers';
 import UserAvatar from '../../../../components/avatar/userAvatar';
 import {conversationListActions} from '../../../../redux/conversations/actions';
 import {
@@ -24,6 +24,7 @@ import {
 } from '../../../../redux/app/actions';
 import store from '../../../../redux/store';
 import {TYPES_CONVERSATIONS} from '../../../../config/constants/general';
+import {REACT_APP_BASE_URL} from '../../../../config/constants/url';
 
 function Message({messageData, isShowAvatar, userId, typeConversation}) {
   // HOOKS
@@ -123,7 +124,7 @@ function Message({messageData, isShowAvatar, userId, typeConversation}) {
       onPress={handleOnPressChat}
       onLongPress={() => {
         !Object.keys(selectedMessages).length &&
-          messageData.message &&
+          (messageData.message || !!messageData.Files.length) &&
           store.dispatch(
             selectedMessagesActions(messageData, actionsTypeObjectSelected.add),
           );
@@ -137,66 +138,74 @@ function Message({messageData, isShowAvatar, userId, typeConversation}) {
           />
         )}
         <View style={styles.wrapper}>
-          {messageData.Files && !!messageData.Files.length && (
-            <View className="conversations__message-image-container">
-              {messageData.Files.map(file =>
-                ['png', 'jpg', 'jpeg'].includes(file.extension) ? (
-                  <img
-                    key={file.fileStorageName}
-                    className="conversations__message-image-item"
-                    src={`${process.env.REACT_APP_BASE_URL}/${file.fileStorageName}.${file.extension}`}
-                    alt={file.fileStorageName}
-                  />
-                ) : null,
+          <View style={{...settings.styles.rootPaper}}>
+            {messageData.isEdit && (
+              <Text className={styles.edited}>
+                {languages[lang].generals.edited}
+              </Text>
+            )}
+            {[TYPES_CONVERSATIONS.chat, TYPES_CONVERSATIONS.dialog].includes(
+              typeConversation,
+            ) &&
+              messageData.forwardedUser && (
+                <View style={styles.wrapperName}>
+                  <Text style={styles.name}>
+                    {messageData.forwardedUser
+                      ? languages[lang].generals.forwardedMessage
+                      : messageData.User.tagName ||
+                        `${messageData.User.firstName} ${messageData.User.lastName}`}
+                  </Text>
+                </View>
               )}
-            </View>
-          )}
-          {messageData.message && (
-            <View style={{...settings.styles.rootPaper}}>
-              {messageData.isEdit && (
-                <Text className={styles.edited}>
-                  {languages[lang].generals.edited}
-                </Text>
-              )}
-              {[TYPES_CONVERSATIONS.chat, TYPES_CONVERSATIONS.dialog].includes(
-                typeConversation,
-              ) &&
-                messageData.forwardedUser && (
-                  <View style={styles.wrapperName}>
-                    <Text style={styles.name}>
-                      {messageData.forwardedUser
-                        ? languages[lang].generals.forwardedMessage
-                        : messageData.User.tagName ||
-                          `${messageData.User.firstName} ${messageData.User.lastName}`}
-                    </Text>
+            <View
+              style={{
+                ...settings.styles.wrapperMessage,
+              }}>
+              {messageData.forwardedUser && <Divider style={styles.divider} />}
+              <View>
+                {messageData.forwardedUser && (
+                  <Text style={styles.wrapperMessageUserName}>
+                    {messageData.User.tagName ||
+                      `${messageData.User.firstName} ${messageData.User.lastName}`}
+                  </Text>
+                )}
+                {messageData.Files && !!messageData.Files.length && (
+                  <View
+                    style={{
+                      ...styles.wrapperFile,
+                      alignSelf:
+                        userInfo.id === messageData.User.id
+                          ? 'flex-end'
+                          : 'flex-start',
+                    }}>
+                    {messageData.Files.map(file =>
+                      ['png', 'jpg', 'jpeg'].includes(file.extension) ? (
+                        <Image
+                          key={uuid()}
+                          style={{
+                            ...styles.image,
+                          }}
+                          source={{
+                            uri: `${REACT_APP_BASE_URL}/${file.fileStorageName}.${file.extension}`,
+                          }}
+                        />
+                      ) : null,
+                    )}
                   </View>
                 )}
-              <View
-                style={{
-                  ...settings.styles.wrapperMessage,
-                }}>
-                {messageData.forwardedUser && (
-                  <Divider style={styles.divider} />
-                )}
-                <View>
-                  {messageData.forwardedUser && (
-                    <Text style={styles.wrapperMessageUserName}>
-                      {messageData.User.tagName ||
-                        `${messageData.User.firstName} ${messageData.User.lastName}`}
-                    </Text>
-                  )}
+                {messageData.message && (
                   <Text style={{...styles.messageText}}>
                     {messageData.message}
                   </Text>
-                </View>
-              </View>
-              <View style={styles.wrapperDate}>
-                <Text style={styles.messageSendTime}>
-                  {getCurrentDay(new Date(messageData.sendDate), true)}
-                </Text>
+                )}
               </View>
             </View>
-          )}
+            <View style={styles.wrapperDate}>
+              <Text style={styles.messageSendTime}>
+                {getCurrentDay(new Date(messageData.sendDate), true)}
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
     </TouchableOpacity>

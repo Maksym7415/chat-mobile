@@ -60,6 +60,52 @@ const ChatHeader = ({conversationData, conversationId}) => {
   // VARIABLES
   const selectedMessagesAmount = Object.keys(selectedMessages).length;
 
+  const renderTopRightComponent = () => {
+    return selectedMessagesAmount ? (
+      <View style={styles.wrapperActions}>
+        {headerSelectedСhatsAmount(lang).map(action => {
+          return selectedMessagesAmount > 1 &&
+            ['edit'].includes(action.value) ? null : (
+            <Pressable
+              key={uuid()}
+              style={styles.wrapperAction}
+              onPress={() => handleOptions(action.value)}>
+              <SvgMaker name={action.icon.name} />
+            </Pressable>
+          );
+        })}
+      </View>
+    ) : (
+      <>
+        <Pressable onPress={openOptions}>
+          <SvgMaker name="svgs_filled_phone" strokeFill={'#ffffff'} />
+        </Pressable>
+        <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
+          <MenuPaper
+            anchor={{strokeFill: '#ffffff'}}
+            setShowMenu={setVisibleOptions}
+            showMenu={visibleOptions}>
+            <Menu.Item icon="redo" onPress={() => {}} title="Redo" />
+            <Menu.Item icon="undo" onPress={() => {}} title="Undo" />
+            <Menu.Item
+              icon="content-cut"
+              onPress={() => {}}
+              title="Cut"
+              disabled
+            />
+            <Menu.Item
+              icon="content-copy"
+              onPress={() => {}}
+              title="Copy"
+              disabled
+            />
+            <Menu.Item icon="content-paste" onPress={() => {}} title="Paste" />
+          </MenuPaper>
+        </View>
+      </>
+    );
+  };
+
   return (
     <Header
       styles={
@@ -122,57 +168,9 @@ const ChatHeader = ({conversationData, conversationId}) => {
           </Pressable>
         )
       }
-      renderTopRightComponent={() =>
-        selectedMessagesAmount ? (
-          <View style={styles.wrapperActions}>
-            {headerSelectedСhatsAmount(lang).map(action => {
-              return selectedMessagesAmount > 1 &&
-                ['edit'].includes(action.value) ? null : (
-                <Pressable
-                  key={uuid()}
-                  style={styles.wrapperAction}
-                  onPress={() => handleOptions(action.value)}>
-                  <SvgMaker name={action.icon.name} />
-                </Pressable>
-              );
-            })}
-          </View>
-        ) : (
-          <>
-            <Pressable onPress={openOptions}>
-              <SvgMaker name="svgs_filled_phone" strokeFill={'#ffffff'} />
-            </Pressable>
-            <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
-              <MenuPaper
-                anchor={{strokeFill: '#ffffff'}}
-                setShowMenu={setVisibleOptions}
-                showMenu={visibleOptions}>
-                <Menu.Item icon="redo" onPress={() => {}} title="Redo" />
-                <Menu.Item icon="undo" onPress={() => {}} title="Undo" />
-                <Menu.Item
-                  icon="content-cut"
-                  onPress={() => {}}
-                  title="Cut"
-                  disabled
-                />
-                <Menu.Item
-                  icon="content-copy"
-                  onPress={() => {}}
-                  title="Copy"
-                  disabled
-                />
-                <Menu.Item
-                  icon="content-paste"
-                  onPress={() => {}}
-                  title="Paste"
-                />
-              </MenuPaper>
-            </View>
-          </>
-        )
-      }
+      renderTopRightComponent={renderTopRightComponent}
     />
   );
 };
 
-export default ChatHeader;
+export default React.memo(ChatHeader);

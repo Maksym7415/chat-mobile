@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
+import React, {Fragment} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -9,23 +9,31 @@ import {
   SectionList,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import styles from './styles';
+import {useTheme} from 'react-native-paper';
+import makeStyles from './styles';
 import Message from './components/message';
 import ChatHeader from './components/header';
 import ChatBottom from './components/bottom';
 import Loader from '../../components/loader';
 import ScrollToBottomButton from '../../components/scrolles/scrollToBottomButton';
 import languages from '../../config/translations';
-import {checkIsShowAvatar, setMessageDate, scrollTop} from '../../helpers';
+import {
+  checkIsShowAvatar,
+  setMessageDate,
+  scrollTop,
+  uuid,
+} from '../../helpers';
 import {getConversationUserHistoryRequest} from '../../redux/conversations/requests';
 import {setConversationIdAction} from '../../redux/conversations';
 import {setAllMessagesAction} from '../../redux/app/slice';
 import IMAGE from '../../assets/img';
 import SnackbarComponent from '../../components/snackbar';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const Chat = ({navigation, route}) => {
   // HOOKS
   const dispatch = useDispatch();
+  const theme = useTheme();
 
   // REFS
   const inputRef = React.useRef(null);
@@ -42,9 +50,15 @@ const Chat = ({navigation, route}) => {
   const {userId, firstName} = useSelector(
     ({authSlice}) => authSlice.tokenPayload,
   );
-  const {sheraMessages, messageEdit, allMessages} = useSelector(
-    ({appSlice}) => appSlice,
-  );
+  const {sheraMessages, messageEdit, allMessages, selectedMessages} =
+    useSelector(({appSlice}) => appSlice);
+
+  // STYLES
+  const styles = makeStyles(theme, {
+    selectedMessages,
+    messageEdit,
+    sheraMessages,
+  });
 
   // STATES
   const [localPagination, setLocalPagination] = React.useState({});
@@ -76,24 +90,24 @@ const Chat = ({navigation, route}) => {
   };
 
   const loadMoreMessages = () => {
-    dispatch(
-      getConversationUserHistoryRequest({
-        data: {
-          id: conversationId,
-          offset: pagination.currentPage + 1,
-        },
-        cb: response => {
-          dispatch(
-            setAllMessagesAction({
-              [conversationId]: [
-                ...response.data,
-                ...allMessages[conversationId],
-              ],
-            }),
-          );
-        },
-      }),
-    );
+    // dispatch(
+    //   getConversationUserHistoryRequest({
+    //     data: {
+    //       id: conversationId,
+    //       offset: pagination.currentPage + 1,
+    //     },
+    //     cb: response => {
+    //       dispatch(
+    //         setAllMessagesAction({
+    //           [conversationId]: [
+    //             ...response.data,
+    //             ...allMessages[conversationId],
+    //           ],
+    //         }),
+    //       );
+    //     },
+    //   }),
+    // );
   };
 
   const onEndReached = ({distanceFromEnd}) => {
@@ -124,7 +138,34 @@ const Chat = ({navigation, route}) => {
             id: conversationId,
             offset: 0,
           },
-          cb: () => {
+          cb: response => {
+            let currentDay = 0;
+            let newArr = [];
+            response.data.map(el => {
+              if (new Date(el.sendDate).getDate() !== currentDay) {
+                currentDay = new Date(el.sendDate).getDate();
+                newArr = [
+                  ...newArr,
+                  {component: 'div', sendDate: el.sendDate},
+                  el,
+                ];
+              } else {
+                currentDay = new Date(el.sendDate).getDate();
+                newArr = [...newArr, el];
+              }
+              return el;
+            });
+
+            setTimeDivCounter(newArr.filter(el => el.component).length);
+            setLocalPagination(value => ({
+              ...value,
+              [conversationId]: pagination.currentPage,
+            }));
+            dispatch(
+              setAllMessagesAction({
+                [conversationId]: newArr,
+              }),
+            );
             setIsFetching(false);
           },
         }),
@@ -134,31 +175,6 @@ const Chat = ({navigation, route}) => {
 
   React.useEffect(() => {
     ref && scrollTop(ref);
-    if (messageHistory.length && !allMessages[conversationId]) {
-      let currentDay = 0;
-      let newArr = [];
-      messageHistory.map(el => {
-        if (new Date(el.sendDate).getDate() !== currentDay) {
-          currentDay = new Date(el.sendDate).getDate();
-          newArr = [...newArr, {component: 'div', sendDate: el.sendDate}, el];
-        } else {
-          currentDay = new Date(el.sendDate).getDate();
-          newArr = [...newArr, el];
-        }
-        return el;
-      });
-
-      setTimeDivCounter(newArr.filter(el => el.component).length);
-      setLocalPagination(value => ({
-        ...value,
-        [conversationId]: pagination.currentPage,
-      }));
-      dispatch(
-        setAllMessagesAction({
-          [conversationId]: newArr,
-        }),
-      );
-    }
   }, [messageHistory]);
 
   React.useEffect(() => {
@@ -182,106 +198,107 @@ const Chat = ({navigation, route}) => {
   }, [isCreateChat]);
 
   // RENDERS
-  const renderMainContent = () => {
-    return (
-      <>
-        {(() => {
-          if (Number.isNaN(conversationId) && !opponentId) {
-            return <Text>{languages[lang].mainScreen.chooseAChat}</Text>;
-          } else {
-            if (opponentId && !conversationId) {
-              return (
-                <Text>
-                  {languages[lang].mainScreen.sendANewMessageToStartAChat}
-                </Text>
-              );
+  const renderMainContent = React.useMemo(() => {
+    if (allMessages[conversationId]) {
+      console.log(allMessages, 'render!!');
+      return (
+        <>
+          {(() => {
+            if (Number.isNaN(conversationId) && !opponentId) {
+              return <Text>{languages[lang].mainScreen.chooseAChat}</Text>;
             } else {
-              if (
-                allMessages[conversationId] &&
-                allMessages[conversationId].length === 0
-              ) {
+              if (opponentId && !conversationId) {
                 return (
                   <Text>
-                    {languages[lang].mainScreen.thereAreNoMessagesInChatYet}
+                    {languages[lang].mainScreen.sendANewMessageToStartAChat}
                   </Text>
                 );
               } else {
-                return (
-                  allMessages[conversationId] && (
-                    <SectionList
-                      keyboardShouldPersistTaps="never"
-                      scrollEventThrottle={16}
-                      onScroll={event => setCurrentReadOffset(event)}
-                      ref={ref => {
-                        SectionListReference = ref;
-                      }}
-                      inverted
-                      onEndReached={onEndReached}
-                      onEndReachedThreshold={0.1}
-                      onMomentumScrollBegin={() => {
-                        onEndReachedCalledDuringMomentum.current = false;
-                      }}
-                      style={{
-                        marginBottom:
-                          messageEdit.isEdit || sheraMessages.length ? 95 : 40,
-                      }}
-                      sections={
-                        [{data: [...allMessages[conversationId]].reverse()}] ||
-                        []
-                      }
-                      renderItem={({item: messageData, index}) => {
-                        let isShowAvatar = false;
-                        if (
-                          messageData.fkSenderId !== userId &&
-                          checkIsShowAvatar(
-                            allMessages[conversationId],
-                            userId,
-                            index,
-                          )
-                        ) {
-                          isShowAvatar = true;
+                if (
+                  allMessages[conversationId] &&
+                  allMessages[conversationId].length === 0
+                ) {
+                  return (
+                    <Text>
+                      {languages[lang].mainScreen.thereAreNoMessagesInChatYet}
+                    </Text>
+                  );
+                } else {
+                  return (
+                    allMessages[conversationId] && (
+                      <SectionList
+                        keyboardShouldPersistTaps="never"
+                        scrollEventThrottle={16}
+                        onScroll={event => setCurrentReadOffset(event)}
+                        ref={ref => {
+                          SectionListReference = ref;
+                        }}
+                        inverted
+                        onEndReached={onEndReached}
+                        onEndReachedThreshold={0.1}
+                        onMomentumScrollBegin={() => {
+                          onEndReachedCalledDuringMomentum.current = false;
+                        }}
+                        style={styles.sectionList}
+                        sections={
+                          [
+                            {data: [...allMessages[conversationId]].reverse()},
+                          ] || []
                         }
-                        if (messageData.component) {
+                        renderItem={({item: messageData, index}) => {
+                          let isShowAvatar = false;
+                          if (
+                            messageData.fkSenderId !== userId &&
+                            checkIsShowAvatar(
+                              allMessages[conversationId],
+                              userId,
+                              index,
+                            )
+                          ) {
+                            isShowAvatar = true;
+                          }
+                          if (messageData.component) {
+                            return (
+                              <View style={styles.wrapperSendData} key={uuid()}>
+                                <Text style={styles.sendDataText}>
+                                  {setMessageDate(
+                                    new Date(messageData.sendDate),
+                                  )}
+                                </Text>
+                              </View>
+                            );
+                          }
                           return (
-                            <View
-                              style={styles.wrapperSendData}
-                              key={messageData.sendDate}>
-                              <Text style={styles.sendDataText}>
-                                {setMessageDate(new Date(messageData.sendDate))}
-                              </Text>
-                            </View>
+                            <Message
+                              key={uuid()}
+                              isShowAvatar={isShowAvatar}
+                              messageData={messageData}
+                              userId={userId}
+                              typeConversation={typeConversation}
+                            />
                           );
-                        }
-                        return (
-                          <Message
-                            key={messageData.id}
-                            isShowAvatar={isShowAvatar}
-                            messageData={messageData}
-                            userId={userId}
-                            typeConversation={typeConversation}
-                          />
-                        );
-                      }}
-                    />
-                  )
-                );
+                        }}
+                      />
+                    )
+                  );
+                }
               }
             }
-          }
-        })()}
-        {showScrollToButton && (
-          <ScrollToBottomButton
-            scrollToBottom={scrollToBottom}
-            styles={{
-              button: {
-                bottom: messageEdit.isEdit || sheraMessages.length ? 100 : 50,
-              },
-            }}
-          />
-        )}
-      </>
-    );
-  };
+          })()}
+          {showScrollToButton && (
+            <ScrollToBottomButton
+              scrollToBottom={scrollToBottom}
+              styles={{
+                button: {
+                  bottom: messageEdit.isEdit || sheraMessages.length ? 100 : 50,
+                },
+              }}
+            />
+          )}
+        </>
+      );
+    }
+  }, [allMessages[conversationId]]);
 
   return (
     <>
@@ -307,7 +324,7 @@ const Chat = ({navigation, route}) => {
               />
             </View>
           ) : (
-            renderMainContent()
+            renderMainContent
           )}
         </ImageBackground>
         <ChatBottom
@@ -324,3 +341,61 @@ const Chat = ({navigation, route}) => {
 };
 
 export default Chat;
+
+{
+  /* <ScrollView
+                      keyboardShouldPersistTaps="never"
+                      scrollEventThrottle={16}
+                      onScroll={event => setCurrentReadOffset(event)}
+                      ref={ref => {
+                        SectionListReference = ref;
+                      }}
+                      inverted
+                      onEndReached={onEndReached}
+                      onEndReachedThreshold={0.1}
+                      onMomentumScrollBegin={() => {
+                        onEndReachedCalledDuringMomentum.current = false;
+                      }}
+                      style={{
+                        marginBottom:
+                          messageEdit.isEdit || sheraMessages.length ? 95 : 40,
+                      }}>
+                      {[...allMessages[conversationId]].map(
+                        (messageData, index) => {
+                          let isShowAvatar = false;
+                          if (
+                            messageData.fkSenderId !== userId &&
+                            checkIsShowAvatar(
+                              allMessages[conversationId],
+                              userId,
+                              index,
+                            )
+                          ) {
+                            isShowAvatar = true;
+                          }
+                          if (messageData.component) {
+                            return (
+                              <View
+                                style={styles.wrapperSendData}
+                                key={uuidv4()}>
+                                <Text style={styles.sendDataText}>
+                                  {setMessageDate(
+                                    new Date(messageData.sendDate),
+                                  )}
+                                </Text>
+                              </View>
+                            );
+                          }
+                          return (
+                            <Message
+                              key={uuidv4()}
+                              isShowAvatar={isShowAvatar}
+                              messageData={messageData}
+                              userId={userId}
+                              typeConversation={typeConversation}
+                            />
+                          );
+                        },
+                      )}
+                    </ScrollView> */
+}

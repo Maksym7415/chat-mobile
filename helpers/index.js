@@ -12,3 +12,5 @@ export {getNameShort} from './getNameShort';
 export {deepEqual} from './deepEqual';
 export {uuid} from './uuid';
 export {flatListFormatDataColumns} from './flatListFormatDataColumns';
+export {extractSourceFromFile} from './extractSourceFromFile';
+export {handleGetBufferFile} from './addFiles';

@@ -11,7 +11,6 @@ import makeStyles from './styles';
 import Header from './components/header';
 import ListMenu from './components/listMenu';
 import ProfileAccount from './components/profileAccount';
-import BottomSheet from './components/bottomSheet';
 import MainInfo from './components/mainInfo';
 import {getNameShort} from '../../helpers';
 import * as config from './config';
@@ -19,6 +18,9 @@ import SvgMaker from '../../components/svgMaker';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import FilesProfile from '../../components/sliders/filesProfile';
 import {TYPES_CONVERSATIONS} from '../../config/constants/general';
+import BottomSheet from '../../components/bottomSheet';
+import ImageAndDocumentPicker from '../../components/bottomSheet/components/imageAndDocumentPicker';
+import {typesActionBtn} from '../../components/bottomSheet/components/imageAndDocumentPicker/config';
 
 const openTranslateYBottomSheet = -400;
 
@@ -111,10 +113,7 @@ const Profile = ({route}) => {
                   <Pressable
                     style={styles.wrapperSetPhoto}
                     onPress={() =>
-                      config.handleInsertPhotoVideo(
-                        refBottomSheet,
-                        openTranslateYBottomSheet,
-                      )
+                      config.handleInsertPhotoVideo(refBottomSheet)
                     }>
                     <SvgMaker
                       name={'svgs_line_camera_add'}
@@ -159,13 +158,14 @@ const Profile = ({route}) => {
           </View>
         </GestureDetector>
       </ScrollView>
-
-      <BottomSheet
-        refBottomSheet={refBottomSheet}
-        closeTranslateYBottomSheet={openTranslateYBottomSheet}
-      />
+      <BottomSheet ref={refBottomSheet} snapPoints={[90]}>
+        <ImageAndDocumentPicker
+          ref={refBottomSheet}
+          exclud={[typesActionBtn.uploadFile]}
+        />
+      </BottomSheet>
     </SafeAreaView>
   );
 };
 
-export default Profile;
+export default React.memo(Profile);

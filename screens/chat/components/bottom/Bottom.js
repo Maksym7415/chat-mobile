@@ -8,7 +8,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import makeStyles from './styles';
 import MessageInput from './components/messageInput/MessageInput';
 import Selecteds from './components/selecteds';
-import BottomSheet from './components/bottomSheet';
+import BottomSheet from '../../../../components/bottomSheet';
+import ImageAndDocumentPicker from '../../../../components/bottomSheet/components/imageAndDocumentPicker';
 
 function Message({
   firstName,
@@ -53,9 +54,11 @@ function Message({
   return (
     <>
       {renderBottom()}
-      <BottomSheet ref={refBottomSheet} />
+      <BottomSheet ref={refBottomSheet} snapPoints={[120]}>
+        <ImageAndDocumentPicker ref={refBottomSheet} />
+      </BottomSheet>
     </>
   );
 }
 
-export default Message;
+export default React.memo(Message);

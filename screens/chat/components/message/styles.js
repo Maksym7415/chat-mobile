@@ -79,6 +79,7 @@ export default theme =>
       justifyContent: 'space-between',
     },
     wrapperDate: {
+      marginTop: 10,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
@@ -109,5 +110,14 @@ export default theme =>
       backgroundColor: 'green',
       width: 3,
       height: '100%',
+    },
+
+    wrapperFile: {
+      // backgroundColor: 'red',
+    },
+    image: {
+      height: 200,
+      width: 200,
+      resizeMode: 'contain',
     },
   });

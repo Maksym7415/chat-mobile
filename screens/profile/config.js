@@ -86,15 +86,6 @@ export const helpsList = lang => [
   },
 ];
 
-export const handleInsertPhotoVideo = (
-  refBottomSheet,
-  openTranslateY = -400,
-) => {
-  const isActive = refBottomSheet?.current?.isActive();
-
-  if (isActive) {
-    refBottomSheet?.current?.scrollTo(0);
-  } else {
-    refBottomSheet?.current?.scrollTo(openTranslateY);
-  }
+export const handleInsertPhotoVideo = refBottomSheet => {
+  refBottomSheet.current?.snapToIndex(0);
 };
