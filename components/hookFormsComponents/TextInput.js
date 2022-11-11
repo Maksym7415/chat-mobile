@@ -1,6 +1,7 @@
 import React from 'react';
-import {View, TextInput, Text} from 'react-native';
+import {View, Text} from 'react-native';
 import PropTypes from 'prop-types';
+import {TextInput} from 'react-native-paper';
 import stylesRoot from './styles';
 
 const propTypes = {
@@ -25,6 +26,7 @@ const TextInputField = ({
     autoComplete: false,
     autoCorrect: false,
   },
+  textInputProps = {},
 }) => {
   return (
     <View style={{...stylesRoot.container, ...styles.container}}>
@@ -36,6 +38,9 @@ const TextInputField = ({
         onChangeText={onChangeText}
         value={value}
         placeholder={placeholder}
+        dense={true}
+        activeUnderlineColor={'#517DA2'}
+        {...textInputProps}
         // autoCapitalize={settingAuto.autoCapitalize || 'none'}
         // autoComplete={settingAuto.autoComplete || false}
         // autoCorrect={settingAuto.autoCorrect || false}

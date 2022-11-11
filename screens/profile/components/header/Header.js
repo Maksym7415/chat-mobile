@@ -10,7 +10,12 @@ import SvgMaker from '../../../../components/svgMaker';
 import {PathsName} from '../../../../navigation/navigationConfig';
 import MenuPaper from '../../../../components/menu/menuPaper';
 import {REACT_APP_BASE_URL} from '../../../../config/constants/url';
-import {headerOptions, headerOptionsChat, headerOptionsGroup} from './config';
+import {
+  headerOptions,
+  headerOptionsChat,
+  headerOptionsGroup,
+  valuesOptions,
+} from './config';
 import {getUserAvatars} from '../../../../redux/user/requests';
 import {handleInsertPhotoVideo} from '../../config';
 import {TYPES_CONVERSATIONS} from '../../../../config/constants/general';
@@ -53,15 +58,18 @@ const Header = ({
   };
 
   const handleOptions = value => {
+    setVisibleOptions(false);
     switch (value) {
-      case 'insertPhotoVideo':
-        handleInsertPhotoVideo(refBottomSheet, openTranslateYBottomSheet);
-        break;
-
+      case valuesOptions.insertPhotoVideo:
+        return handleInsertPhotoVideo(
+          refBottomSheet,
+          openTranslateYBottomSheet,
+        );
+      case valuesOptions.edit:
+        return navigation.navigate(PathsName.editNameInSubProfile);
       default:
         break;
     }
-    setVisibleOptions(false);
   };
 
   const selectOptions = (typeProfile, isOwnerProfile) => {

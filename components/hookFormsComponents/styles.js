@@ -26,21 +26,10 @@ export default StyleSheet.create({
   inputStyle: {
     fontSize: theme.input_font_size,
     color: theme.text_basic_color,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderRadius: 4,
-    borderColor: theme.color_basic_border,
-    height: 48,
+    backgroundColor: 'transparent',
   },
   errorInputStyle: {
     fontSize: theme.input_font_size,
     color: theme.text_basic_color,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderRadius: 4,
-    borderColor: theme.color_danger_900,
-    height: 48,
   },
 });

@@ -8,10 +8,12 @@ import SavedScreen from '../screens/saved';
 import SettingsScreen from '../screens/settings';
 import InviteFriendsScreen from '../screens/inviteFriends';
 import FeaturesScreen from '../screens/features';
-
 import SignInScreen from '../screens/signIn';
 import SignUpScreen from '../screens/signUp';
 import verificationScreen from '../screens/verification';
+
+// subs ProfileScreen
+import EditNameInSubProfileScreen from '../screens/profile/subScreens/editName';
 
 export const PathsName = {
   main: 'main',
@@ -28,6 +30,7 @@ export const PathsName = {
   inviteFriends: 'inviteFriends',
   features: 'features',
   profile: 'profile',
+  editNameInSubProfile: 'editNameInSubProfile',
 };
 
 export const navigation = [
@@ -80,6 +83,11 @@ export const navigation = [
     id: 12,
     Component: ProfileScreen,
     pathName: PathsName.profile,
+  },
+  {
+    id: 13,
+    Component: EditNameInSubProfileScreen,
+    pathName: PathsName.editNameInSubProfile,
   },
 ];
 

@@ -365,6 +365,24 @@ export const svgs = {
       />
     </Svg>
   ),
+  svgs_filled_check_square: ({
+    width = 27,
+    height = 27,
+    fill = 'none',
+    strokeFill = '#868686',
+  }) => (
+    <Svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg">
+      <Path
+        d="M10.5 17.1379L6 12.7931L4 14.7241L10.5 21L23 8.93103L21 7L10.5 17.1379Z"
+        fill={strokeFill}
+      />
+    </Svg>
+  ),
 
   // Line
   svgs_line_check: ({

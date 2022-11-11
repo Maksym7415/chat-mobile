@@ -5,7 +5,7 @@ import {actionsTypeActionsChat} from '../../../../redux/app/actions';
 // 2 - when a photo is open
 // 3 - when no photo is open
 
-const valuesOptions = {
+export const valuesOptions = {
   edit: 'edit',
   insertPhotoVideo: 'insertPhotoVideo',
   saveToGallery: 'saveToGallery',

@@ -2,7 +2,8 @@ import React from 'react';
 import {Appbar, useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import makeStyles from './styles';
-import {View} from 'react-native';
+import {View, Pressable} from 'react-native';
+import SvgMaker from '../svgMaker';
 
 const Header = ({
   renderTopLeftComponent,
@@ -11,6 +12,7 @@ const Header = ({
   title = 'title',
   styles,
   children,
+  navigationAlternativeBack,
 }) => {
   // HOOKS
   const theme = useTheme();
@@ -25,7 +27,16 @@ const Header = ({
         {renderTopLeftComponent ? (
           renderTopLeftComponent()
         ) : (
-          <Appbar.BackAction onPress={navigation.goBack} />
+          <Pressable
+            onPress={() => {
+              if (navigation.canGoBack()) {
+                navigation.goBack();
+              } else {
+                navigationAlternativeBack && navigationAlternativeBack();
+              }
+            }}>
+            <SvgMaker name="svgs_filled_back_arrow" strokeFill={'#ffffff'} />
+          </Pressable>
         )}
         {renderTopCenterComponent ? (
           renderTopCenterComponent()

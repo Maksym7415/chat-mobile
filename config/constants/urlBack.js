@@ -12,4 +12,5 @@ export const pathBackConversations = {
 export const pathBackUser = {
   getUserProfileData: '/getUserProfileData',
   getAvatars: '/getAvatars',
+  updateProfile: '/updateProfile',
 };

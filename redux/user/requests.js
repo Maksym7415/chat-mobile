@@ -29,3 +29,21 @@ export const getUserAvatars = createAsyncThunk(
     }
   },
 );
+
+export const putUpdateProfileRequest = createAsyncThunk(
+  'user/putUpdateProfileRequest',
+  async (params, {dispatch}) => {
+    try {
+      console.log(params, 'params');
+      const response = await API.put(pathBackUser.updateProfile, {
+        ...params.data,
+      });
+      params?.cb && params.cb(response.data);
+      console.log(response, 'response');
+      return response.data;
+    } catch (error) {
+      params?.errorCb && params.errorCb();
+      return Promise.reject(error);
+    }
+  },
+);
