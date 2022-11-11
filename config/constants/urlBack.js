@@ -14,3 +14,8 @@ export const pathBackUser = {
   getAvatars: '/getAvatars',
   updateProfile: '/updateProfile',
 };
+
+export const pathBackSearch = {
+  searchContact: '/searchContact',
+  getOpponentsIdWhereConversTypeDialog: '/getOpponentsIdWhereConversTypeDialog',
+};

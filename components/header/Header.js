@@ -13,6 +13,9 @@ const Header = ({
   styles,
   children,
   navigationAlternativeBack,
+  svgMakerOptions = {
+    strokeFill: '#ffffff',
+  },
 }) => {
   // HOOKS
   const theme = useTheme();
@@ -35,7 +38,10 @@ const Header = ({
                 navigationAlternativeBack && navigationAlternativeBack();
               }
             }}>
-            <SvgMaker name="svgs_filled_back_arrow" strokeFill={'#ffffff'} />
+            <SvgMaker
+              name="svgs_filled_back_arrow"
+              strokeFill={svgMakerOptions.strokeFill}
+            />
           </Pressable>
         )}
         {renderTopCenterComponent ? (

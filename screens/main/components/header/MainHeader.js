@@ -126,13 +126,19 @@ const MainHeader = ({routeParams}) => {
         </View>
       </View>
     ) : (
-      <View style={styles.wrapperSearch}>
+      <Pressable
+        style={styles.wrapperSearch}
+        onPress={() =>
+          navigation.navigate(PathsName.search, {
+            from: 'main',
+          })
+        }>
         <SvgMaker
           name={'svgs_line_search'}
           strokeFill={'#ffffff'}
           strokeWidth={'2'}
         />
-      </View>
+      </Pressable>
     );
   };
 
