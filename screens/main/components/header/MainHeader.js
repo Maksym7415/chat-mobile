@@ -13,6 +13,7 @@ import {
 } from '../../../../redux/app/actions';
 import store from '../../../../redux/store';
 import {PathsName} from '../../../../navigation/navigationConfig';
+import {TYPES_FROM_TO_SEARCH_SCREEN} from '../../../../config/constants/general';
 
 const MainHeader = ({routeParams}) => {
   const navigation = useNavigation();
@@ -130,7 +131,7 @@ const MainHeader = ({routeParams}) => {
         style={styles.wrapperSearch}
         onPress={() =>
           navigation.navigate(PathsName.search, {
-            from: 'main',
+            from: TYPES_FROM_TO_SEARCH_SCREEN.main,
           })
         }>
         <SvgMaker

@@ -18,7 +18,10 @@ import {
 } from './config';
 import {getUserAvatars} from '../../../../redux/user/requests';
 import {handleInsertPhotoVideo} from '../../config';
-import {TYPES_CONVERSATIONS} from '../../../../config/constants/general';
+import {
+  TYPES_CONVERSATIONS,
+  TYPES_FROM_TO_SEARCH_SCREEN,
+} from '../../../../config/constants/general';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -70,6 +73,12 @@ const Header = ({
       default:
         break;
     }
+  };
+
+  const onToSearch = () => {
+    navigation.navigate(PathsName.search, {
+      from: TYPES_FROM_TO_SEARCH_SCREEN.profile,
+    });
   };
 
   const selectOptions = (typeProfile, isOwnerProfile) => {
@@ -174,9 +183,9 @@ const Header = ({
                 <View style={styles.wrapperAction}>
                   <SvgMaker name={'svgs_line_qr_code'} strokeFill={'#ffffff'} />
                 </View>
-                <View style={styles.wrapperAction}>
+                <Pressable style={styles.wrapperAction} onPress={onToSearch}>
                   <SvgMaker name={'svgs_line_search'} strokeFill={'#ffffff'} />
-                </View>
+                </Pressable>
               </>
             ) : [TYPES_CONVERSATIONS.chat].includes(setting.typeProfile) ? (
               <View style={styles.wrapperAction}>

@@ -3,8 +3,6 @@ import {StyleSheet} from 'react-native';
 export default theme =>
   StyleSheet.create({
     container: {
-      // flexDirection: 'row',
-      // alignItems: 'center',
       backgroundColor: '#ffffff',
     },
     wrapperContacts: {
@@ -23,14 +21,5 @@ export default theme =>
     login: {
       marginTop: 3,
       fontSize: 12,
-    },
-    boxCenter: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      flex: 1,
-    },
-    noResults: {
-      fontSize: 20,
-      fontWeight: '600',
     },
   });

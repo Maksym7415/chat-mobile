@@ -8,7 +8,13 @@ import HeaderLayout from '../../../../components/header';
 import SvgMaker from '../../../../components/svgMaker';
 import {useDebounce} from '../../../../hooks';
 
-const Header = ({placeholder, textInputProps = {}, getRequest}) => {
+const Header = ({
+  placeholder,
+  textInputProps = {},
+  getRequest,
+  styles,
+  svgFill = '#868686',
+}) => {
   // HOOKS
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -17,10 +23,10 @@ const Header = ({placeholder, textInputProps = {}, getRequest}) => {
   const [search, setSearch] = React.useState('');
 
   // CUSTOM HOOKS
-  const debouncedSearchValue = useDebounce(search, 500);
+  const debouncedSearchValue = useDebounce(search, 300);
 
   // STYLES
-  const styles = makeStyles(theme);
+  const stylesRoot = makeStyles(theme);
 
   const clearSearch = () => {
     setSearch('');
@@ -43,16 +49,17 @@ const Header = ({placeholder, textInputProps = {}, getRequest}) => {
   return (
     <HeaderLayout
       styles={{
-        container: styles.container,
-        top: styles.containerTop,
+        container: stylesRoot.container,
+        top: stylesRoot.containerTop,
+        ...styles?.headerLayout,
       }}
       svgMakerOptions={{
-        strokeFill: '#868686',
+        strokeFill: svgFill,
       }}
       renderTopCenterComponent={() => (
-        <View style={styles.wrpperSelectedAmount}>
+        <View style={stylesRoot.wrpperSelectedAmount}>
           <TextInput
-            style={styles.input}
+            style={{...stylesRoot.input, ...styles?.input}}
             secureTextEntry={false}
             onChangeText={onChangeText}
             value={search}
@@ -66,7 +73,7 @@ const Header = ({placeholder, textInputProps = {}, getRequest}) => {
       renderTopRightComponent={() =>
         search ? (
           <Pressable onPress={clearSearch}>
-            <SvgMaker name="svgs_filled_cross" />
+            <SvgMaker name="svgs_filled_cross" strokeFill={svgFill} />
           </Pressable>
         ) : null
       }

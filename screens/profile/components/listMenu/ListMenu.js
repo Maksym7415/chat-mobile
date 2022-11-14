@@ -1,12 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Text, View, Pressable} from 'react-native';
-import {v4 as uuidv4} from 'uuid';
-
 import {useSelector} from 'react-redux';
 import {Divider, useTheme} from 'react-native-paper';
 import makeStyles from './styles';
 import SvgMaker from '../../../../components/svgMaker';
+import {uuid} from '../../../../helpers';
 
 const ListMenu = ({title, list, onPress}) => {
   // HOOKS
@@ -37,12 +36,12 @@ const ListMenu = ({title, list, onPress}) => {
       <View style={styles.list}>
         {items.map((item, index) => {
           return items.length > index + 1 ? (
-            <React.Fragment key={uuidv4()}>
+            <React.Fragment key={uuid()}>
               <ListItem item={item} />
               <Divider style={styles.divider} />
             </React.Fragment>
           ) : (
-            <ListItem item={item} key={uuidv4()} />
+            <ListItem item={item} key={uuid()} />
           );
         })}
       </View>

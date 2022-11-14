@@ -3,6 +3,7 @@ import * as requests from './requests';
 
 const initialState = {
   searchContacts: {response: []},
+  searchSettingsQuestions: {response: []},
   isLoading: false,
 };
 
