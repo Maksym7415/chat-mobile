@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, Pressable} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useTheme} from 'react-native-paper';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import makeStyles from './styles';
 import {bottomActionsSelecteds} from '../../../../config';
 import SvgMaker from '../../../../../../components/svgMaker';

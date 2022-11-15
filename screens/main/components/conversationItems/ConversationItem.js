@@ -6,7 +6,6 @@ import {useTheme, Badge} from 'react-native-paper';
 import {stylesConversationItem as makeStyles} from './styles';
 import {getCurrentDay} from '../../../../helpers';
 import languages from '../../../../config/translations';
-
 import SvgMaker from '../../../../components/svgMaker';
 import {PathsName} from '../../../../navigation/navigationConfig';
 import UserAvatar from '../../../../components/avatar/userAvatar';

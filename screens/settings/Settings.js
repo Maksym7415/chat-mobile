@@ -2,11 +2,10 @@
 import React from 'react';
 import {SafeAreaView, Text} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {useDispatch, useSelector} from 'react-redux';
 import makeStyles from './styles';
 import Header from './components/header';
 
-const Settings = ({navigation, route}) => {
+const Settings = ({}) => {
   // HOOKS
   const theme = useTheme();
 

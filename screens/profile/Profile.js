@@ -7,22 +7,20 @@ import {runOnJS} from 'react-native-reanimated';
 import {useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import makeStyles from './styles';
+import * as config from './config';
 import Header from './components/header';
 import ListMenu from './components/listMenu';
 import ProfileAccount from './components/profileAccount';
 import MainInfo from './components/mainInfo';
-import {getNameShort} from '../../helpers';
-import * as config from './config';
 import SvgMaker from '../../components/svgMaker';
-import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import FilesProfile from '../../components/sliders/filesProfile';
-import {TYPES_CONVERSATIONS} from '../../config/constants/general';
 import BottomSheet from '../../components/bottomSheet';
 import ImageAndDocumentPicker from '../../components/bottomSheet/components/imageAndDocumentPicker';
 import {typesActionBtn} from '../../components/bottomSheet/components/imageAndDocumentPicker/config';
-
-const openTranslateYBottomSheet = -400;
+import {TYPES_CONVERSATIONS} from '../../config/constants/general';
+import {getNameShort} from '../../helpers';
 
 const Profile = ({route}) => {
   // HOOKS
@@ -100,10 +98,8 @@ const Profile = ({route}) => {
         setShowBiggerImg={setShowBiggerImg}
         showBiggerImg={showBiggerImg}
         refBottomSheet={refBottomSheet}
-        openTranslateYBottomSheet={openTranslateYBottomSheet}
         setting={setting}
       />
-
       <ScrollView style={styles.scrollView}>
         <GestureDetector gesture={Gesture.Exclusive(singleTap)}>
           <View style={{flex: 1}}>

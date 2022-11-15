@@ -16,7 +16,6 @@ const SearchProfile = () => {
   const {searchSettingsQuestions, isLoading} = useSelector(
     ({searchSlice}) => searchSlice,
   );
-  // FUNCTIONS
 
   return (
     <>

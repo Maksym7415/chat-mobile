@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import React, {useLayoutEffect, useState} from 'react';
+import React from 'react';
 import {useTheme} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import makeStyles from './styles';

@@ -48,7 +48,6 @@ const Search = ({route}) => {
             getRequest: null,
             styles: {
               headerLayout: {container: {backgroundColor: '#517DA2'}},
-              // input: {color: '#ffffff'},
             },
             svgFill: '#ffffff',
             textInputProps: {

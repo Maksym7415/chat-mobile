@@ -141,6 +141,7 @@ const Header = ({
     );
   };
 
+  // RENDERS
   const renderIconAction = () => {
     if (
       [TYPES_CONVERSATIONS.group, TYPES_CONVERSATIONS.chat].includes(
@@ -154,7 +155,7 @@ const Header = ({
         style={styles.wrapperSetPhoto}
         onPress={() => {
           setting.isOwnerProfile
-            ? handleInsertPhotoVideo(refBottomSheet, openTranslateYBottomSheet)
+            ? handleInsertPhotoVideo(refBottomSheet)
             : navigation.goBack();
         }}>
         {setting.isOwnerProfile ? (

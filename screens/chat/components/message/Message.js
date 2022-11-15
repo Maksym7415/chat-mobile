@@ -7,17 +7,9 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import {useTheme, Divider} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import makeStyles from './styles';
-import {contextMenuConfig, contextMenuCallback} from '../../config';
 import languages from '../../../../config/translations';
 import {getCurrentDay, uuid} from '../../../../helpers';
 import UserAvatar from '../../../../components/avatar/userAvatar';
-import {conversationListActions} from '../../../../redux/conversations/actions';
-import {
-  editMessageAction,
-  deleteMessageAction,
-  contextMenuAction,
-  showDialogAction,
-} from '../../../../redux/app';
 import {
   actionsTypeObjectSelected,
   selectedMessagesActions,
@@ -67,6 +59,7 @@ function Message({messageData, isShowAvatar, userId, typeConversation}) {
     }
   };
 
+  // USEEFFECTS
   useLayoutEffect(() => {
     // shared message
     if (messageData.forwardedUser) {

@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {Fragment} from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   Text,
@@ -28,9 +28,8 @@ import {setConversationIdAction} from '../../redux/conversations';
 import {setAllMessagesAction} from '../../redux/app/slice';
 import IMAGE from '../../assets/img';
 import SnackbarComponent from '../../components/snackbar';
-import {ScrollView} from 'react-native-gesture-handler';
 
-const Chat = ({navigation, route}) => {
+const Chat = ({route}) => {
   // HOOKS
   const dispatch = useDispatch();
   const theme = useTheme();

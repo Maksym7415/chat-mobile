@@ -28,6 +28,7 @@ const Header = ({
   // STYLES
   const stylesRoot = makeStyles(theme);
 
+  // FUNCTIONS
   const clearSearch = () => {
     setSearch('');
   };
@@ -35,6 +36,7 @@ const Header = ({
     setSearch(value);
   };
 
+  // USEEFFECTS
   React.useEffect(() => {
     getRequest &&
       dispatch(

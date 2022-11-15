@@ -4,6 +4,7 @@ import {SafeAreaView} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from 'react-native-paper';
+import Config from 'react-native-config';
 import makeStyles from './styles';
 import {socket} from '../../config/socket';
 import {
@@ -58,6 +59,7 @@ const MainScreen = ({route}) => {
     }
   }, [navigation]);
 
+  console.log(Config.API_URL, 'Config')
   React.useEffect(() => {
     socket.removeAllListeners();
 
