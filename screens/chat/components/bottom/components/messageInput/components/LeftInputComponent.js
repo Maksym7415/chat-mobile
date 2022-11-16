@@ -1,15 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import {View} from 'react-native';
+import {Pressable, Alert} from 'react-native';
 import {stylesMessageInput as styles} from '../styles';
 import SvgMaker from '../../../../../../../components/svgMaker';
 
 export default function LeftInputComponent({}) {
   return (
     <>
-      <View style={styles.emojies}>
+      <Pressable
+        style={styles.emojies}
+        onPress={() => Alert.alert('Цього функціоналу наразі немає')}>
         <SvgMaker name="svgs_line_emoji" />
-      </View>
+      </Pressable>
     </>
   );
 }

@@ -14,3 +14,4 @@ export {uuid} from './uuid';
 export {flatListFormatDataColumns} from './flatListFormatDataColumns';
 export {extractSourceFromFile} from './extractSourceFromFile';
 export {handleGetBufferFile} from './addFiles';
+export {findValueKeyInNestedArr} from './findValueKeyInNestedArr';

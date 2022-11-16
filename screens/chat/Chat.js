@@ -305,6 +305,7 @@ const Chat = ({route}) => {
         <ChatHeader
           conversationData={conversationData}
           conversationId={conversationId}
+          typeConversation={typeConversation}
         />
         <ImageBackground
           source={IMAGE.wallPaper}

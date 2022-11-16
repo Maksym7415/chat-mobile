@@ -1,7 +1,7 @@
 import React from 'react';
 import {svgs} from './svgs';
 
-function SvgMaker({name, fill, width, height, strokeFill, strokeWidth}) {
+function SvgMaker({name, fill, width, height, strokeFill, strokeWidth, style}) {
   const SVG = svgs[name];
 
   return (
@@ -11,6 +11,7 @@ function SvgMaker({name, fill, width, height, strokeFill, strokeWidth}) {
       height={height}
       strokeFill={strokeFill}
       strokeWidth={strokeWidth}
+      style={style}
     />
   );
 }

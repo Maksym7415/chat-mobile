@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Text, View, Pressable, Dimensions, ImageBackground} from 'react-native';
+import {
+  Alert,
+  Text,
+  View,
+  Pressable,
+  Dimensions,
+  ImageBackground,
+} from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {useDispatch, useSelector} from 'react-redux';
@@ -14,6 +21,7 @@ import {
   headerOptions,
   headerOptionsChat,
   headerOptionsGroup,
+  headerOptionsDialog,
   valuesOptions,
 } from './config';
 import {getUserAvatars} from '../../../../redux/user/requests';
@@ -60,8 +68,11 @@ const Header = ({
     setIndexSelected(indexSelected);
   };
 
-  const handleOptions = value => {
+  const handleOptions = (value, noFunctional) => {
     setVisibleOptions(false);
+
+    noFunctional && Alert.alert('Цього функціоналу наразі немає');
+
     switch (value) {
       case valuesOptions.insertPhotoVideo:
         return handleInsertPhotoVideo(
@@ -87,6 +98,8 @@ const Header = ({
     }
 
     switch (typeProfile) {
+      case TYPES_CONVERSATIONS.dialog:
+        return headerOptionsDialog(lang);
       case TYPES_CONVERSATIONS.chat:
         return headerOptionsChat(lang);
       case TYPES_CONVERSATIONS.group:
@@ -167,33 +180,80 @@ const Header = ({
     ) : null;
   };
 
+  const renderTopHeaderIconAction = (typeProfile, isOwnerProfile) => {
+    if (isOwnerProfile) {
+      return (
+        <>
+          <Pressable
+            style={styles.wrapperAction}
+            onPress={() => Alert.alert('Цього функціоналу наразі немає')}>
+            <SvgMaker name={'svgs_line_qr_code'} strokeFill={'#ffffff'} />
+          </Pressable>
+          <Pressable style={styles.wrapperAction} onPress={onToSearch}>
+            <SvgMaker name={'svgs_line_search'} strokeFill={'#ffffff'} />
+          </Pressable>
+        </>
+      );
+    }
+
+    switch (typeProfile) {
+      case TYPES_CONVERSATIONS.dialog:
+        return (
+          <>
+            <Pressable
+              style={styles.wrapperAction}
+              onPress={() => Alert.alert('Цього функціоналу наразі немає')}>
+              <SvgMaker
+                name={'svgs_filled_video_call'}
+                strokeFill={'#ffffff'}
+              />
+            </Pressable>
+            <Pressable
+              style={styles.wrapperAction}
+              onPress={() => Alert.alert('Цього функціоналу наразі немає')}>
+              <SvgMaker name={'svgs_filled_phone'} strokeFill={'#ffffff'} />
+            </Pressable>
+          </>
+        );
+      case TYPES_CONVERSATIONS.chat:
+        return (
+          <Pressable
+            style={styles.wrapperAction}
+            onPress={() => Alert.alert('Цього функціоналу наразі немає')}>
+            <SvgMaker name={'svgs_filled_pencil'} strokeFill={'#ffffff'} />
+          </Pressable>
+        );
+      case TYPES_CONVERSATIONS.group:
+        return <></>;
+      default:
+        return <></>;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
         <View style={styles.containerTop}>
           <Pressable
             onPress={() => {
-              navigation.navigate(PathsName.main);
+              if (setting.isOwnerProfile) {
+                navigation.navigate(PathsName.main);
+              } else {
+                navigation.navigate(PathsName.chat, {
+                  id: setting.conversationData.conversationId,
+                  conversationData: setting.conversationData,
+                });
+              }
+
+              setting;
             }}>
             <SvgMaker name="svgs_filled_back_arrow" strokeFill={'#ffffff'} />
           </Pressable>
           <View style={styles.wrapperTopCenterComponent} />
           <>
-            {setting.isOwnerProfile ? (
-              <>
-                <View style={styles.wrapperAction}>
-                  <SvgMaker name={'svgs_line_qr_code'} strokeFill={'#ffffff'} />
-                </View>
-                <Pressable style={styles.wrapperAction} onPress={onToSearch}>
-                  <SvgMaker name={'svgs_line_search'} strokeFill={'#ffffff'} />
-                </Pressable>
-              </>
-            ) : [TYPES_CONVERSATIONS.chat].includes(setting.typeProfile) ? (
-              <View style={styles.wrapperAction}>
-                <SvgMaker name={'svgs_filled_pencil'} strokeFill={'#ffffff'} />
-              </View>
-            ) : (
-              <></>
+            {renderTopHeaderIconAction(
+              setting.typeProfile,
+              setting.isOwnerProfile,
             )}
             <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
               <MenuPaper
@@ -212,7 +272,9 @@ const Header = ({
                       <Pressable
                         key={action.id}
                         style={styles.dotsOption}
-                        onPress={() => handleOptions(action.value)}>
+                        onPress={() =>
+                          handleOptions(action.value, action.noFunctional)
+                        }>
                         {action.icon.name && (
                           <View style={styles.wrapperIconOption}>
                             <SvgMaker name={action.icon.name} />

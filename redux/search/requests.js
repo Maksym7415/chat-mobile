@@ -12,7 +12,7 @@ export const getSearchContactRequest = createAsyncThunk(
     if (options?.params?.search) {
       params.searchRequest = options?.params?.search;
     }
-    console.log(params, 'params');
+
     try {
       const response = await API.get(pathBackSearch.searchContact, {
         params,
@@ -40,7 +40,7 @@ export const getOpponentsIdWhereConversTypeDialogRequest = createAsyncThunk(
         },
       );
       options?.cb && options.cb(response.data);
-      console.log(response.data, 'response.data');
+
       return response.data;
     } catch (error) {
       options?.errorCb && options.errorCb();

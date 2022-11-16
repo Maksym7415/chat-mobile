@@ -1,5 +1,3 @@
-import {actionsTypeActionsChat} from '../../../../redux/app/actions';
-
 // show:
 // 1 - general actionsж
 // 2 - when a photo is open
@@ -14,6 +12,11 @@ export const valuesOptions = {
   searchForParticipants: 'searchForParticipants',
   deleteLeaveGroup: 'deleteLeaveGroup',
   addToHomeScreen: 'addToHomeScreen',
+  shareContact: 'shareContact',
+  toBlock: 'toBlock',
+  editContact: 'editContact',
+  deleteAContact: 'deleteAContact',
+  startASecretChat: 'startASecretChat',
 };
 
 const saveToGallery = lang => ({
@@ -23,6 +26,7 @@ const saveToGallery = lang => ({
   icon: {
     name: 'svgs_line_download',
   },
+  noFunctional: true,
 });
 
 const addToHomeScreen = lang => ({
@@ -32,6 +36,7 @@ const addToHomeScreen = lang => ({
   icon: {
     name: 'svgs_line_create_shortcut',
   },
+  noFunctional: true,
 });
 
 const deleteLeaveGroup = lang => ({
@@ -41,6 +46,7 @@ const deleteLeaveGroup = lang => ({
   icon: {
     name: 'svgs_line_logOut',
   },
+  noFunctional: true,
 });
 
 export const headerOptions = lang => [
@@ -74,6 +80,7 @@ export const headerOptions = lang => [
     icon: {
       name: 'svgs_line_trash_bin_alt',
     },
+    noFunctional: true,
   },
   {
     id: 5,
@@ -95,6 +102,7 @@ export const headerOptionsChat = lang => [
     icon: {
       name: 'svgs_line_search',
     },
+    noFunctional: true,
   },
   {
     ...deleteLeaveGroup(lang),
@@ -122,5 +130,66 @@ export const headerOptionsGroup = lang => [
   {
     ...saveToGallery(lang),
     id: 4,
+  },
+];
+
+export const headerOptionsDialog = lang => [
+  {
+    id: 1,
+    title: 'Share contact',
+    value: valuesOptions.shareContact,
+    show: 1,
+    icon: {
+      name: 'svgs_line_share',
+    },
+    noFunctional: true,
+  },
+  {
+    id: 2,
+    title: 'To block',
+    value: valuesOptions.toBlock,
+    show: 1,
+    icon: {
+      name: 'svgs_line_block',
+    },
+    noFunctional: true,
+  },
+  {
+    id: 3,
+    title: 'Edit contact',
+    value: valuesOptions.editContact,
+    show: 1,
+    icon: {
+      name: 'svgs_line_pencil',
+    },
+    noFunctional: true,
+  },
+  {
+    id: 4,
+    title: 'Delete a contact',
+    value: valuesOptions.deleteAContact,
+    show: 1,
+    icon: {
+      name: 'svgs_line_trash_bin_alt',
+    },
+    noFunctional: true,
+  },
+  {
+    id: 5,
+    title: 'Start a secret chat',
+    value: valuesOptions.startASecretChat,
+    show: 1,
+    icon: {
+      name: 'svgs_line_lock',
+    },
+    noFunctional: true,
+  },
+  {
+    ...addToHomeScreen(lang),
+    id: 6,
+  },
+  {
+    ...saveToGallery(lang),
+    id: 7,
   },
 ];

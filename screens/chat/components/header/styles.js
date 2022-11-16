@@ -49,4 +49,29 @@ export default theme =>
     wrapperOptions: {
       marginRight: 0,
     },
+    dotsOption: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 10,
+      paddingVertical: 7,
+      // flex: 1,
+      width: '100%',
+      position: 'relative',
+    },
+    wrapperIconOption: {
+      marginRight: 10,
+    },
+    options: {
+      // position: 'absolute',
+      right: 0,
+    },
+    wrapperArrowRight: {
+      position: 'absolute',
+      right: 10,
+    },
+    arrowRight: {
+      // position: 'absolute',
+      // top: 0,
+      // right: 0,
+    },
   });

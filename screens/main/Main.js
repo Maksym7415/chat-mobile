@@ -59,7 +59,6 @@ const MainScreen = ({route}) => {
     }
   }, [navigation]);
 
-  console.log(Config.API_URL, 'Config')
   React.useEffect(() => {
     socket.removeAllListeners();
 

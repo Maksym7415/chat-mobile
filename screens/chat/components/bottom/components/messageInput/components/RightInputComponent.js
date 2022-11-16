@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import {View, Pressable} from 'react-native';
+import {View, Pressable, Alert} from 'react-native';
 import {stylesMessageInput as styles} from '../styles';
 import SvgMaker from '../../../../../../../components/svgMaker';
 
@@ -9,7 +9,6 @@ export default function RightInputComponent({
   handleSendMessage,
   refBottomSheet,
   forwardMessages,
-  closeTranslateYBottomSheet,
 }) {
   // STATES
   const [toggleTypeMessage, setToggleTypeMessage] = React.useState('voice');
@@ -48,11 +47,12 @@ export default function RightInputComponent({
               <SvgMaker name="svgs_line_attach" />
             </Pressable>
             <Pressable
-              onPress={() =>
+              onPress={() => {
                 setToggleTypeMessage(prev =>
                   prev === 'voice' ? 'video' : 'voice',
-                )
-              }>
+                );
+                Alert.alert('Цього функціоналу наразі немає');
+              }}>
               {toggleTypeMessage === 'voice' ? (
                 <SvgMaker name="svgs_line_voice" />
               ) : (

@@ -1,10 +1,15 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Text, View, Pressable} from 'react-native';
+import {Text, View, Pressable, Alert} from 'react-native';
 import {useSelector} from 'react-redux';
-import {Menu, useTheme} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/AntDesign';
 import makeStyles from './styles';
-import {headerSelectedСhatsAmount} from './config';
+import {
+  headerSelectedСhatsAmount,
+  headerСhatDotsOptionsChat,
+  headerСhatDotsOptionsDialog,
+} from './config';
 import {PathsName} from '../../../../navigation/navigationConfig';
 import UserAvatar from '../../../../components/avatar/userAvatar';
 import SvgMaker from '../../../../components/svgMaker';
@@ -16,9 +21,10 @@ import {
   actionsMessagesChat,
 } from '../../../../redux/app/actions';
 import store from '../../../../redux/store';
-import {uuid} from '../../../../helpers';
+import {uuid, findValueKeyInNestedArr} from '../../../../helpers';
+import {TYPES_CONVERSATIONS} from '../../../../config/constants/general';
 
-const ChatHeader = ({conversationData, conversationId}) => {
+const ChatHeader = ({conversationData, conversationId, typeConversation}) => {
   //HOOKS
   const navigation = useNavigation();
   const theme = useTheme();
@@ -32,11 +38,24 @@ const ChatHeader = ({conversationData, conversationId}) => {
 
   // STATES
   const [visibleOptions, setVisibleOptions] = React.useState(false);
+  const [levelNameChatDotsOptions, setLevelNameChatDotsOptions] =
+    React.useState('');
 
   // FUNCTIONS
   const openOptions = () => setVisibleOptions(true);
-  const closeOptions = () => setVisibleOptions(false);
-  const handleOptions = typeAction => {
+  const closeOptions = () => {
+    setVisibleOptions(false);
+    setTimeout(() => {
+      setLevelNameChatDotsOptions('');
+    }, 500);
+  };
+  const handleOptions = (typeAction, levelNames, noFunctional) => {
+    if (levelNames) {
+      return setLevelNameChatDotsOptions(levelNames);
+    }
+
+    noFunctional && Alert.alert('Цього функціоналу наразі немає');
+
     store.dispatch(
       actionsMessagesChat(
         {
@@ -60,6 +79,35 @@ const ChatHeader = ({conversationData, conversationId}) => {
   // VARIABLES
   const selectedMessagesAmount = Object.keys(selectedMessages).length;
 
+  const headerСhatDotsOptions = React.useMemo(() => {
+    switch (typeConversation) {
+      case TYPES_CONVERSATIONS.dialog:
+        return levelNameChatDotsOptions
+          ? findValueKeyInNestedArr(
+              headerСhatDotsOptionsDialog(lang),
+              'levelNames',
+              levelNameChatDotsOptions,
+              'subMenu',
+              'subMenu',
+            )
+          : headerСhatDotsOptionsDialog(lang);
+      case TYPES_CONVERSATIONS.chat:
+        return levelNameChatDotsOptions
+          ? findValueKeyInNestedArr(
+              headerСhatDotsOptionsChat(lang),
+              'levelNames',
+              levelNameChatDotsOptions,
+              'subMenu',
+              'subMenu',
+            )
+          : headerСhatDotsOptionsChat(lang);
+      default:
+        return [];
+    }
+  }, [typeConversation, levelNameChatDotsOptions]);
+
+  console.log(typeConversation, 'typeConversation');
+  // RENDERS
   const renderTopRightComponent = () => {
     return selectedMessagesAmount ? (
       <View style={styles.wrapperActions}>
@@ -77,29 +125,75 @@ const ChatHeader = ({conversationData, conversationId}) => {
       </View>
     ) : (
       <>
-        <Pressable onPress={openOptions}>
+        <Pressable
+          onPress={() => {
+            Alert.alert('Цього функціоналу наразі немає');
+          }}>
           <SvgMaker name="svgs_filled_phone" strokeFill={'#ffffff'} />
         </Pressable>
         <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
           <MenuPaper
             anchor={{strokeFill: '#ffffff'}}
-            setShowMenu={setVisibleOptions}
+            setShowMenu={bool => {
+              bool ? openOptions() : closeOptions();
+            }}
             showMenu={visibleOptions}>
-            <Menu.Item icon="redo" onPress={() => {}} title="Redo" />
-            <Menu.Item icon="undo" onPress={() => {}} title="Undo" />
-            <Menu.Item
-              icon="content-cut"
-              onPress={() => {}}
-              title="Cut"
-              disabled
-            />
-            <Menu.Item
-              icon="content-copy"
-              onPress={() => {}}
-              title="Copy"
-              disabled
-            />
-            <Menu.Item icon="content-paste" onPress={() => {}} title="Paste" />
+            <View style={styles.options}>
+              {levelNameChatDotsOptions ? (
+                <Pressable
+                  style={styles.dotsOption}
+                  onPress={() => {
+                    setLevelNameChatDotsOptions(prev =>
+                      prev.split('_').slice(0, -1).join('_'),
+                    );
+                  }}>
+                  <View style={styles.wrapperIconOption}>
+                    <Icon
+                      name="arrowleft"
+                      size={20}
+                      color="#868686"
+                      style={{paddingHorizontal: 3.5}}
+                    />
+                  </View>
+                  <Text>Back</Text>
+                </Pressable>
+              ) : null}
+              {headerСhatDotsOptions.map(action => {
+                const isSubMenu = action?.subMenu?.length && action.levelNames;
+                return (
+                  <Pressable
+                    key={action.id}
+                    style={{
+                      ...styles.dotsOption,
+                      marginRight: isSubMenu ? 26 : 0,
+                    }}
+                    onPress={() =>
+                      handleOptions(
+                        action.value,
+                        action.levelNames,
+                        action.noFunctional,
+                      )
+                    }>
+                    {action.icon.name && (
+                      <View style={styles.wrapperIconOption}>
+                        <SvgMaker name={action.icon.name} />
+                      </View>
+                    )}
+                    <Text>{action.title}</Text>
+                    {isSubMenu ? (
+                      <View style={styles.wrapperArrowRight}>
+                        <Icon
+                          name="right"
+                          size={14}
+                          color="#868686"
+                          style={styles.arrowRight}
+                        />
+                      </View>
+                    ) : null}
+                  </Pressable>
+                );
+              })}
+            </View>
           </MenuPaper>
         </View>
       </>
