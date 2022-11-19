@@ -19,4 +19,7 @@ export default theme =>
     title: {
       paddingLeft: 5,
     },
+    hide: {
+      opacity: 0,
+    },
   });

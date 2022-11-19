@@ -1,7 +1,9 @@
 import store from '../../../redux';
 import {socket} from '../index';
-
-import {conversationListActions} from '../../../redux/conversations/actions';
+import {
+  conversationListActions,
+  conversationAddNewLastMessageAction,
+} from '../../../redux/conversations/actions';
 import {setAllMessagesAction} from '../../../redux/app/slice';
 
 // User Id Chat
@@ -9,13 +11,11 @@ export const socketOnUserIdChat = chat => {
   return socket.on(`userIdChat${chat.conversationId}`, message => {
     const allMessages = store.getState().appSlice.allMessages;
     const conversationsList =
-      store.getState().conversationsSlice.conversationsList;
+      store.getState().conversationsSlice.conversationsList.data;
 
-    const conversationFindStore = conversationsList.find(
-      item => item.conversationId == chat.conversationId,
-    );
+    const conversationFindStore = conversationsList[chat.conversationId];
 
-    const updateMessageConversation = () =>
+    const updateMessageConversation = () => {
       store.dispatch(
         conversationListActions({
           mode: 'updateMessageConversation',
@@ -32,7 +32,23 @@ export const socketOnUserIdChat = chat => {
           conversationsList,
         }),
       );
+    };
+    //
+    let findComponentDate = null;
+    const reverseAllMessages = [...allMessages[chat.conversationId]].reverse();
+    for (let i = 0; !findComponentDate && i < reverseAllMessages.length; i++) {
+      if (reverseAllMessages[i].component) {
+        findComponentDate = reverseAllMessages[i];
+      }
+    }
 
+    let componentDateNew = null;
+    if (
+      message.sendDate.slice(0, 10) !== findComponentDate.sendDate.slice(0, 10)
+    )
+      componentDateNew = {component: 'div', sendDate: message.sendDate};
+
+    //
     const chatAllMessages = allMessages?.[chat.conversationId];
 
     if (chatAllMessages) {
@@ -40,6 +56,7 @@ export const socketOnUserIdChat = chat => {
       let updateMessages = [...prevMessages];
 
       if (!message?.isEdit) {
+        componentDateNew && updateMessages.push(componentDateNew);
         updateMessages.push(message);
       } else {
         updateMessages = updateMessages.map(item => {
@@ -143,22 +160,20 @@ export const socketOnTypingStateId = (chat, setUsersTyping) => {
 
 // Delete Message not working
 export const socketOnDeleteMessage = () => {
-  const getRemoveMessages = (conversationId, messageId) => {
-    console.log(messageId, 'messageId!!');
-    const allMessages = store.getState().appSlice.allMessages;
-    console.log(allMessages, 'allMessages');
-    store.dispatch(
-      setAllMessagesAction({
-        [conversationId]: allMessages[conversationId.toString()]?.filter(
-          message =>
-            ![messageId?.toString()]?.includes(message?.id?.toString()),
-        ),
-      }),
-    );
-  };
-
-  return socket.on('deleteMessage', ({conversationId, messageId}) => {
-    console.log(conversationId, messageId, 'eeee');
-    getRemoveMessages(conversationId, messageId);
-  });
+  // const getRemoveMessages = (conversationId, messageId) => {
+  //   console.log(messageId, 'messageId!!');
+  //   const allMessages = store.getState().appSlice.allMessages;
+  //   store.dispatch(
+  //     setAllMessagesAction({
+  //       [conversationId]: allMessages[conversationId.toString()]?.filter(
+  //         message =>
+  //           ![messageId?.toString()]?.includes(message?.id?.toString()),
+  //       ),
+  //     }),
+  //   );
+  // };
+  // return socket.on('deleteMessage', ({conversationId, messageId}) => {
+  //   console.log(conversationId, messageId, 'eeee');
+  //   getRemoveMessages(conversationId, messageId);
+  // });
 };

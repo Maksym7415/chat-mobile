@@ -3,6 +3,7 @@ import {
   authTokenAction,
   setLoginSingInAction,
   setAuthHedersAction,
+  setIsLogoutAction,
 } from './slice';
 import API from '../../config/axios';
 import {pathBackAuth} from '../../config/constants/urlBack';
@@ -41,7 +42,8 @@ export const postVerificationRequest = createAsyncThunk(
 
       setTokenStorage(response.data.accessToken);
 
-      await dispatch(setAuthHedersAction(response.data.accessToken));
+      await dispatch(setAuthHedersAction(response.data));
+      dispatch(setIsLogoutAction(false));
       params.cb && params.cb();
       return response.data;
     } catch (error) {

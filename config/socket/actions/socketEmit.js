@@ -59,3 +59,21 @@ export const socketEmitSendFiles = (
     );
   }
 };
+
+export const socketEmitChatsDeleteMessage = (
+  data = {
+    conversationId: '',
+    isDeleteMessage: false,
+    messageId: '',
+  },
+  cb,
+) => {
+  socket.emit('chats', data, success => {
+    // why success is false?
+    cb();
+  });
+};
+
+export const socketEmitChatsTypingState = (user, conversationId) => {
+  socket.emit('typingState', user, conversationId);
+};

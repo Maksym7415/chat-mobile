@@ -1,17 +1,5 @@
 import {StyleSheet} from 'react-native';
 export default (theme, data) => {
-  const getStyleSectionList = () => {
-    if (data.messageEdit.messageId || !!data.sheraMessages.length) {
-      console.log('1');
-      return {
-        marginBottom: 95,
-      };
-    }
-    return {
-      marginBottom: 40,
-    };
-  };
-
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -41,8 +29,16 @@ export default (theme, data) => {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    sectionList: {
-      ...getStyleSectionList(),
+    wrapperInfoCenter: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    infoCenterText: {
+      fontSize: 20,
+      paddingHorizontal: '15%',
+      textAlign: 'center',
+      fontWeight: '600',
     },
   });
 };

@@ -7,8 +7,8 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import makeStyles from './styles';
 import {
   headerSelectedСhatsAmount,
-  headerСhatDotsOptionsChat,
-  headerСhatDotsOptionsDialog,
+  // headerСhatDotsOptionsChat,
+  // headerСhatDotsOptionsDialog,
 } from './config';
 import {PathsName} from '../../../../navigation/navigationConfig';
 import UserAvatar from '../../../../components/avatar/userAvatar';
@@ -19,10 +19,11 @@ import {
   actionsTypeObjectSelected,
   selectedMessagesActions,
   actionsMessagesChat,
+  actionsTypeActionsChat,
 } from '../../../../redux/app/actions';
 import store from '../../../../redux/store';
 import {uuid, findValueKeyInNestedArr} from '../../../../helpers';
-import {TYPES_CONVERSATIONS} from '../../../../config/constants/general';
+// import {TYPES_CONVERSATIONS} from '../../../../config/constants/general';
 
 const ChatHeader = ({conversationData, conversationId, typeConversation}) => {
   //HOOKS
@@ -35,6 +36,7 @@ const ChatHeader = ({conversationData, conversationId, typeConversation}) => {
   // SELECTORS
   const {selectedMessages} = useSelector(({appSlice}) => appSlice);
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
+  const {userInfo} = useSelector(({userSlice}) => userSlice);
 
   // STATES
   const [visibleOptions, setVisibleOptions] = React.useState(false);
@@ -81,39 +83,46 @@ const ChatHeader = ({conversationData, conversationId, typeConversation}) => {
 
   const headerСhatDotsOptions = React.useMemo(() => {
     switch (typeConversation) {
-      case TYPES_CONVERSATIONS.dialog:
-        return levelNameChatDotsOptions
-          ? findValueKeyInNestedArr(
-              headerСhatDotsOptionsDialog(lang),
-              'levelNames',
-              levelNameChatDotsOptions,
-              'subMenu',
-              'subMenu',
-            )
-          : headerСhatDotsOptionsDialog(lang);
-      case TYPES_CONVERSATIONS.chat:
-        return levelNameChatDotsOptions
-          ? findValueKeyInNestedArr(
-              headerСhatDotsOptionsChat(lang),
-              'levelNames',
-              levelNameChatDotsOptions,
-              'subMenu',
-              'subMenu',
-            )
-          : headerСhatDotsOptionsChat(lang);
+      // case TYPES_CONVERSATIONS.dialog:
+      //   return levelNameChatDotsOptions
+      //     ? findValueKeyInNestedArr(
+      //         headerСhatDotsOptionsDialog(lang),
+      //         'levelNames',
+      //         levelNameChatDotsOptions,
+      //         'subMenu',
+      //         'subMenu',
+      //       )
+      //     : headerСhatDotsOptionsDialog(lang);
+      // case TYPES_CONVERSATIONS.chat:
+      //   return levelNameChatDotsOptions
+      //     ? findValueKeyInNestedArr(
+      //         headerСhatDotsOptionsChat(lang),
+      //         'levelNames',
+      //         levelNameChatDotsOptions,
+      //         'subMenu',
+      //         'subMenu',
+      //       )
+      //     : headerСhatDotsOptionsChat(lang);
       default:
         return [];
     }
   }, [typeConversation, levelNameChatDotsOptions]);
 
-  console.log(typeConversation, 'typeConversation');
   // RENDERS
   const renderTopRightComponent = () => {
     return selectedMessagesAmount ? (
       <View style={styles.wrapperActions}>
         {headerSelectedСhatsAmount(lang).map(action => {
-          return selectedMessagesAmount > 1 &&
-            ['edit'].includes(action.value) ? null : (
+          //check for edit action
+          if ([actionsTypeActionsChat.editMessage].includes(action.value)) {
+            if (
+              selectedMessagesAmount > 1 ||
+              Object.values(selectedMessages)?.[0]?.User?.id !== userInfo.id
+            ) {
+              return;
+            }
+          }
+          return (
             <Pressable
               key={uuid()}
               style={styles.wrapperAction}
@@ -128,7 +137,8 @@ const ChatHeader = ({conversationData, conversationId, typeConversation}) => {
         <Pressable
           onPress={() => {
             Alert.alert('Цього функціоналу наразі немає');
-          }}>
+          }}
+          disabled={true}>
           <SvgMaker name="svgs_filled_phone" strokeFill={'#ffffff'} />
         </Pressable>
         <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>

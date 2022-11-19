@@ -69,11 +69,13 @@ const Profile = ({route}) => {
     const conversationData = route.params?.conversationData;
 
     if (route.params?.isOwnerProfile) {
+      const fullName =
+        userInfo.fullName || `${userInfo.firstName} ${userInfo.lastName}`;
       settingLocal = {
         ...settingLocal,
-        nameShort: getNameShort(userInfo?.fullName),
+        nameShort: getNameShort(fullName),
         avatar: userInfo.userAvatar || '',
-        conversationName: userInfo?.fullName,
+        conversationName: fullName,
         isOwnerProfile: true,
       };
     } else {
@@ -118,7 +120,7 @@ const Profile = ({route}) => {
                     <Text style={styles.setPhotoTitle}>Insert photo</Text>
                   </Pressable>
                 ) : null}
-                <ProfileAccount avatar={setting.avatar} />
+                <ProfileAccount avatar={setting.avatar} userInfo={userInfo} />
                 <ListMenu
                   title={'Settings'}
                   list={config.settingsList}

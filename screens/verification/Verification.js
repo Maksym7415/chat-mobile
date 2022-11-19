@@ -51,7 +51,7 @@ const Verification = () => {
 
   useEffect(() => {
     // set defaultValues form from back
-    if (!getValues('verificationCode') && verificationCode) {
+    if (verificationCode) {
       setValue('verificationCode', `${verificationCode}`);
     }
   }, [verificationCode]);

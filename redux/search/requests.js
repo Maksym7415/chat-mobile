@@ -18,7 +18,6 @@ export const getSearchContactRequest = createAsyncThunk(
         params,
       });
       options?.cb && options.cb();
-      console.log(response.data, 'response.data');
       return response.data;
     } catch (error) {
       options?.errorCb && options.errorCb();

@@ -22,6 +22,7 @@ import {
   setMessageDate,
   scrollTop,
   uuid,
+  fullDate,
 } from '../../helpers';
 import {getConversationUserHistoryRequest} from '../../redux/conversations/requests';
 import {setConversationIdAction} from '../../redux/conversations';
@@ -73,13 +74,6 @@ const Chat = ({route}) => {
   let SectionListReference = null;
 
   // FUNCTIONS
-  const openFileDialog = () => {
-    const element = inputRef.current;
-    if (element) {
-      element.click();
-    }
-  };
-
   const scrollToBottom = () => {
     SectionListReference.scrollToLocation({
       animated: true,
@@ -196,31 +190,47 @@ const Chat = ({route}) => {
     }
   }, [isCreateChat]);
 
+  const getStyleSectionList = React.useMemo(() => {
+    if (messageEdit.messageId || sheraMessages.length) {
+      return {
+        marginBottom: 95,
+      };
+    }
+    return {
+      marginBottom: 40,
+    };
+  }, [sheraMessages, messageEdit]);
+
   // RENDERS
   const renderMainContent = React.useMemo(() => {
+    const renderInfoCenterScreen = text => {
+      return (
+        <View style={styles.wrapperInfoCenter}>
+          <Text style={[styles.infoCenterText]}>{text}</Text>
+        </View>
+      );
+    };
+
     if (allMessages[conversationId]) {
-      console.log(allMessages, 'render!!');
       return (
         <>
           {(() => {
             if (Number.isNaN(conversationId) && !opponentId) {
-              return <Text>{languages[lang].mainScreen.chooseAChat}</Text>;
+              return renderInfoCenterScreen(
+                languages[lang].mainScreen.chooseAChat,
+              );
             } else {
               if (opponentId && !conversationId) {
-                return (
-                  <Text>
-                    {languages[lang].mainScreen.sendANewMessageToStartAChat}
-                  </Text>
+                return renderInfoCenterScreen(
+                  languages[lang].mainScreen.sendANewMessageToStartAChat,
                 );
               } else {
                 if (
                   allMessages[conversationId] &&
                   allMessages[conversationId].length === 0
                 ) {
-                  return (
-                    <Text>
-                      {languages[lang].mainScreen.thereAreNoMessagesInChatYet}
-                    </Text>
+                  return renderInfoCenterScreen(
+                    languages[lang].mainScreen.thereAreNoMessagesInChatYet,
                   );
                 } else {
                   return (
@@ -238,7 +248,7 @@ const Chat = ({route}) => {
                         onMomentumScrollBegin={() => {
                           onEndReachedCalledDuringMomentum.current = false;
                         }}
-                        style={styles.sectionList}
+                        style={getStyleSectionList}
                         sections={
                           [
                             {data: [...allMessages[conversationId]].reverse()},
@@ -297,7 +307,7 @@ const Chat = ({route}) => {
         </>
       );
     }
-  }, [allMessages[conversationId]]);
+  }, [allMessages[conversationId], sheraMessages, messageEdit]);
 
   return (
     <>

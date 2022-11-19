@@ -41,7 +41,6 @@ export default function RightInputComponent({
           <>
             <Pressable
               onPress={() => {
-                console.log(refBottomSheet, 'refBottomSheet');
                 refBottomSheet.current?.snapToIndex(0);
               }}>
               <SvgMaker name="svgs_line_attach" />
@@ -52,7 +51,8 @@ export default function RightInputComponent({
                   prev === 'voice' ? 'video' : 'voice',
                 );
                 Alert.alert('Цього функціоналу наразі немає');
-              }}>
+              }}
+              disabled={true}>
               {toggleTypeMessage === 'voice' ? (
                 <SvgMaker name="svgs_line_voice" />
               ) : (

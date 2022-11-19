@@ -31,8 +31,11 @@ function Root() {
   return (
     <Drawer.Navigator
       drawerContent={DrawerNavigator}
+      detachInactiveScreens={false}
       screenOptions={{
         drawerType: 'front',
+        // overlayColor:
+        detachInactiveScreens: false,
       }}>
       <Drawer.Screen
         name="main"
@@ -77,7 +80,7 @@ function MyStack() {
   };
 
   // USEEFFECTS
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     checkIsToken();
   }, []);
 

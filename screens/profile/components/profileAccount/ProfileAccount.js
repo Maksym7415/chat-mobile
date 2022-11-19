@@ -7,7 +7,7 @@ import makeStyles from './styles';
 import makeStylesListMenu from '../listMenu/styles';
 import RITitleWithSubtitleAndRightComponent from '../../../../components/rendersItem/RITitleWithSubtitleAndRightComponent';
 
-const ProfileAccount = ({avatar}) => {
+const ProfileAccount = ({avatar, userInfo}) => {
   // HOOKS
   const theme = useTheme();
 
@@ -33,7 +33,7 @@ const ProfileAccount = ({avatar}) => {
         />
         <Divider style={styles.divider} />
         <RITitleWithSubtitleAndRightComponent
-          title={'@voidvoidvoidvoidvoid*'}
+          title={userInfo?.tagName || ''}
           subTitle={'Username'}
           styles={{
             wrapperItem: {

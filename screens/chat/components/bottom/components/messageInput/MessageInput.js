@@ -9,6 +9,7 @@ import {TextInput} from 'react-native-paper';
 import {Button, Paragraph, Dialog, Portal} from 'react-native-paper';
 import {stylesMessageInput as styles} from './styles';
 import {socket} from '../../../../../../config/socket';
+import {socketEmitChatsTypingState} from '../../../../../../config/socket/actions/socketEmit';
 import languages from '../../../../../../config/translations';
 import {fullDate} from '../../../../../../helpers';
 import {
@@ -26,7 +27,6 @@ export default function MessageInput({
   firstName,
   opponentId,
   refBottomSheet,
-  openFileDialog,
 }) {
   // HOOKS
   const dispatch = useDispatch();
@@ -62,9 +62,9 @@ export default function MessageInput({
       isTyping: false,
     };
     if (!typing[conversationId]) {
-      socket.emit('typingState', user, conversationId);
+      socketEmitChatsTypingState(user, conversationId);
     } else {
-      socket.emit('typingState', user);
+      socketEmitChatsTypingState(user);
     }
   };
 
@@ -98,7 +98,6 @@ export default function MessageInput({
       sheredMessages.map(message => {
         const messageObj = {
           ...message,
-          // sendDate: fullDate(new Date()),
         };
         socketSendMessageCommonFun(conversationId, messageObj, message.User.id);
         return message;

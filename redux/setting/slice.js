@@ -18,5 +18,5 @@ const settingSlice = createSlice({
   },
 });
 
-export default settingSlice.reducer;
 export const {setLangAction} = settingSlice.actions;
+export default settingSlice.reducer;

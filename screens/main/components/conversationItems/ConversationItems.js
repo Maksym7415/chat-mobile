@@ -12,7 +12,8 @@ const ConversationItems = ({data = [], usersTyping}) => {
   const dataSortDate =
     [...data]?.sort(
       (a, b) =>
-        new Date(b?.Messages[0].sendDate) - new Date(a?.Messages[0].sendDate),
+        new Date(b?.Messages?.[0]?.sendDate) -
+        new Date(a?.Messages?.[0]?.sendDate),
     ) || [];
 
   return (

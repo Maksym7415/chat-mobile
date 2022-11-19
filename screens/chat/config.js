@@ -12,10 +12,11 @@ const forwardAction = lang => ({
 const replyAction = lang => ({
   id: 10,
   title: 'Reply',
-  value: 'reply',
+  value: actionsTypeActionsChat.replyMessage,
   icon: {
     name: 'svgs_line_reply',
   },
+  disable: true,
 });
 
 export const bottomActionsSelecteds = lang => [

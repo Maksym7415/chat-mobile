@@ -4,7 +4,6 @@ import {SafeAreaView} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from 'react-native-paper';
-import Config from 'react-native-config';
 import makeStyles from './styles';
 import {socket} from '../../config/socket';
 import {
@@ -62,8 +61,8 @@ const MainScreen = ({route}) => {
   React.useEffect(() => {
     socket.removeAllListeners();
 
-    if (conversationsList?.length) {
-      conversationsList.forEach(chat => {
+    if (Object.values(conversationsList.data)?.length) {
+      Object.values(conversationsList.data).forEach(chat => {
         socketOnUserIdChat(chat);
         socketOnTypingStateId(chat, setUsersTyping);
       });
@@ -83,7 +82,10 @@ const MainScreen = ({route}) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header routeParams={routeParams} />
-      <ConversationItems data={conversationsList} usersTyping={usersTyping} />
+      <ConversationItems
+        data={Object.values(conversationsList.data) || []}
+        usersTyping={usersTyping}
+      />
     </SafeAreaView>
   );
 };

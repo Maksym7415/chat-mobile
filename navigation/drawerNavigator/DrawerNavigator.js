@@ -37,7 +37,9 @@ function CustomContentComponent(props) {
   };
 
   const source = userInfo.userAvatar;
-  const nameShort = userInfo.fullName ? getNameShort(userInfo.fullName) : null;
+  const fullName =
+    userInfo.fullName || `${userInfo.firstName} ${userInfo.lastName}`;
+  const nameShort = fullName ? getNameShort(fullName) : null;
   const sizeAvatar = 59;
 
   // const spinValue = new Animated.Value(0);
@@ -97,7 +99,7 @@ function CustomContentComponent(props) {
         </View>
         <View style={{...stylesRoot.wrapperNameNumberArrow}}>
           <View style={{...stylesRoot.wrapperNameNumber}}>
-            <Text style={stylesRoot.topName}>{userInfo.fullName}</Text>
+            <Text style={stylesRoot.topName}>{fullName}</Text>
             <Text style={stylesRoot.topNumber}>+1 (234) 567 89 01</Text>
             {/* mock */}
           </View>
@@ -117,7 +119,7 @@ function CustomContentComponent(props) {
             {/* <View> */}
             <UserAvatar
               source={userInfo.avatar}
-              name={userInfo.fullName}
+              name={fullName}
               sizeAvatar={27}
               // status={'selected'}
               // sizeBadge={10}

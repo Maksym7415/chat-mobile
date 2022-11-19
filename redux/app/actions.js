@@ -15,9 +15,10 @@ import {
 } from '../../helpers/actionsForType';
 import {deepEqual} from '../../helpers';
 import {getSnackBar} from '../../components/snackbar/slice';
-import {socket} from '../../config/socket';
+import {socketEmitChatsDeleteMessage} from '../../config/socket/actions/socketEmit';
 import TemplatesContent from '../../components/snackbar/components/templatesContent/TemplatesContent';
 import {PathsName} from '../../navigation/navigationConfig';
+import {conversationListActions} from '../conversations/actions';
 
 export const actionsTypeObjectSelected = actionsTypeObject;
 
@@ -94,6 +95,7 @@ export const actionsTypeActionsChat = {
   editMessage: 'editMessage',
   copyMessage: 'copyMessage',
   forwardMessage: 'forwardMessage',
+  replyMessage: 'replyMessage',
 };
 
 export const actionsMessagesChat =
@@ -104,30 +106,51 @@ export const actionsMessagesChat =
       case actionsTypeActionsChat.deleteMessages:
         const getRemoveMessages = (conversationId, messageId) => {
           const allMessages = getState().appSlice.allMessages;
+          const conversationsList =
+            getState().conversationsSlice.conversationsList.data;
+
+          // deleting a message from the message array
+          let allMessagesWithoutDeleteMessage = allMessages[
+            conversationId.toString()
+          ]?.filter(
+            message =>
+              ![messageId?.toString()]?.includes(message?.id?.toString()),
+          );
+
+          // check for the last element in the message array, if it is a date object, then delete it as well
+          const updateAllMessages = allMessagesWithoutDeleteMessage[
+            allMessagesWithoutDeleteMessage?.length - 1
+          ]?.component
+            ? allMessagesWithoutDeleteMessage.slice(0, -1)
+            : allMessagesWithoutDeleteMessage;
+
+          if (conversationsList[conversationId].Messages[0].id == messageId) {
+            dispatch(
+              conversationListActions({
+                mode: 'updateMessageConversation',
+                conversationId,
+                messages: [updateAllMessages[updateAllMessages.length - 1]],
+                conversationsList,
+              }),
+            );
+          }
 
           dispatch(
             setAllMessagesAction({
-              [conversationId]: allMessages[conversationId.toString()]?.filter(
-                message =>
-                  ![messageId?.toString()]?.includes(message?.id?.toString()),
-              ),
+              [conversationId]: updateAllMessages,
             }),
           );
         };
 
+        // sorting through the selected messages and sending them through the socket and, if successful, delete them locally through the function - getRemoveMessages
         Object.keys(data.selectedMessages).map(messageId => {
-          console.log(data.conversationId, 'data.conversationId');
-          console.log(messageId, 'messageId');
-          socket.emit(
-            'chats',
+          socketEmitChatsDeleteMessage(
             {
               conversationId: data.conversationId,
               isDeleteMessage: true,
               messageId: +messageId,
             },
-            success => {
-              // why success is false?
-
+            () => {
               getRemoveMessages(data.conversationId, messageId);
             },
           );

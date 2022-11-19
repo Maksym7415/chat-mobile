@@ -44,7 +44,6 @@ export default function SheredMessages({
               return [...acc, item.User.firstName];
             }, []);
 
-            console.log(usersSheredMessages, 'usersSheredMessages');
             if (forwardMessages.length > 2) {
               return `from ${usersSheredMessages[0]} and ${
                 usersSheredMessages.length - 1

@@ -9,7 +9,8 @@ export default function LeftInputComponent({}) {
     <>
       <Pressable
         style={styles.emojies}
-        onPress={() => Alert.alert('Цього функціоналу наразі немає')}>
+        onPress={() => Alert.alert('Цього функціоналу наразі немає')}
+        disabled={true}>
         <SvgMaker name="svgs_line_emoji" />
       </Pressable>
     </>

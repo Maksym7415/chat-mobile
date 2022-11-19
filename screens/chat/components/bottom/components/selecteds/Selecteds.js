@@ -11,6 +11,7 @@ import {
   actionsTypeObjectSelected,
   selectedMessagesActions,
   actionsMessagesChat,
+  actionsTypeActionsChat,
 } from '../../../../../../redux/app/actions';
 import store from '../../../../../../redux/store';
 
@@ -28,6 +29,7 @@ function Selecteds() {
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
 
   // VARIABLES
+  const selectedMessagesAmount = Object.keys(selectedMessages).length;
   const conversationId = route?.params?.id;
   const conversationData = route?.params?.conversationData;
 
@@ -55,11 +57,18 @@ function Selecteds() {
   return (
     <View style={styles.wrapper}>
       {bottomActionsSelecteds(lang).map(action => {
+        let hide = false;
+        if ([actionsTypeActionsChat.replyMessage].includes(action.value)) {
+          if (selectedMessagesAmount > 1) {
+            hide = true;
+          }
+        }
         return (
           <Pressable
             key={uuid()}
-            style={styles.wrapperAction}
-            onPress={() => handleOptions(action.value)}>
+            style={[styles.wrapperAction, hide ? styles.hide : {}]}
+            onPress={() => !hide && handleOptions(action.value)}
+            disabled={hide || action.disable}>
             <Text style={styles.title}>{action.title}</Text>
             <SvgMaker name={action.icon.name} />
           </Pressable>

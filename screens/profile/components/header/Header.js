@@ -19,12 +19,13 @@ import MenuPaper from '../../../../components/menu/menuPaper';
 import {REACT_APP_BASE_URL} from '../../../../config/constants/url';
 import {
   headerOptions,
-  headerOptionsChat,
-  headerOptionsGroup,
-  headerOptionsDialog,
+  // headerOptionsChat,
+  // headerOptionsGroup,
+  // headerOptionsDialog,
   valuesOptions,
 } from './config';
 import {getUserAvatars} from '../../../../redux/user/requests';
+import {onLogOut} from '../../../../redux/auth/actions';
 import {handleInsertPhotoVideo} from '../../config';
 import {
   TYPES_CONVERSATIONS,
@@ -81,6 +82,8 @@ const Header = ({
         );
       case valuesOptions.edit:
         return navigation.navigate(PathsName.editNameInSubProfile);
+      case valuesOptions.logout:
+        return dispatch(onLogOut());
       default:
         break;
     }
@@ -98,12 +101,12 @@ const Header = ({
     }
 
     switch (typeProfile) {
-      case TYPES_CONVERSATIONS.dialog:
-        return headerOptionsDialog(lang);
-      case TYPES_CONVERSATIONS.chat:
-        return headerOptionsChat(lang);
-      case TYPES_CONVERSATIONS.group:
-        return headerOptionsGroup(lang);
+      // case TYPES_CONVERSATIONS.dialog:
+      //   return headerOptionsDialog(lang);
+      // case TYPES_CONVERSATIONS.chat:
+      //   return headerOptionsChat(lang);
+      // case TYPES_CONVERSATIONS.group:
+      //   return headerOptionsGroup(lang);
       default:
         return [];
     }
@@ -154,7 +157,6 @@ const Header = ({
     );
   };
 
-  // RENDERS
   const renderIconAction = () => {
     if (
       [TYPES_CONVERSATIONS.group, TYPES_CONVERSATIONS.chat].includes(
@@ -186,7 +188,8 @@ const Header = ({
         <>
           <Pressable
             style={styles.wrapperAction}
-            onPress={() => Alert.alert('Цього функціоналу наразі немає')}>
+            onPress={() => Alert.alert('Цього функціоналу наразі немає')}
+            disabled={true}>
             <SvgMaker name={'svgs_line_qr_code'} strokeFill={'#ffffff'} />
           </Pressable>
           <Pressable style={styles.wrapperAction} onPress={onToSearch}>
@@ -202,7 +205,8 @@ const Header = ({
           <>
             <Pressable
               style={styles.wrapperAction}
-              onPress={() => Alert.alert('Цього функціоналу наразі немає')}>
+              onPress={() => Alert.alert('Цього функціоналу наразі немає')}
+              disabled={true}>
               <SvgMaker
                 name={'svgs_filled_video_call'}
                 strokeFill={'#ffffff'}
@@ -210,7 +214,8 @@ const Header = ({
             </Pressable>
             <Pressable
               style={styles.wrapperAction}
-              onPress={() => Alert.alert('Цього функціоналу наразі немає')}>
+              onPress={() => Alert.alert('Цього функціоналу наразі немає')}
+              disabled={true}>
               <SvgMaker name={'svgs_filled_phone'} strokeFill={'#ffffff'} />
             </Pressable>
           </>
@@ -219,7 +224,8 @@ const Header = ({
         return (
           <Pressable
             style={styles.wrapperAction}
-            onPress={() => Alert.alert('Цього функціоналу наразі немає')}>
+            onPress={() => Alert.alert('Цього функціоналу наразі немає')}
+            disabled={true}>
             <SvgMaker name={'svgs_filled_pencil'} strokeFill={'#ffffff'} />
           </Pressable>
         );

@@ -9,7 +9,9 @@ const initialState = {
       currentPage: 0,
     },
   },
-  conversationsList: [],
+  conversationsList: {
+    data: {},
+  },
   conversations: {
     message: '',
     id: 0,
@@ -60,10 +62,7 @@ const conversationsSlice = createSlice({
         id: payload.id,
       };
     },
-    lastConversationMessageAction(state, {payload}) {
-      state.searchChats = null;
-    },
-    conversationAddNewMessageAction(state, {payload}) {
+    conversationAddNewLastMessageAction(state, {payload}) {
       // console.log(payload, "payload");
       state.lastMessages = {
         [payload.id]: payload.message,
@@ -82,7 +81,10 @@ const conversationsSlice = createSlice({
       };
     },
     updateConversationListAction(state, {payload}) {
-      state.conversationsList = payload;
+      state.conversationsList.data = {
+        ...state.conversationsList.data,
+        ...payload,
+      };
     },
     createNewChatAction(state, {payload}) {
       state.opponentId = {
@@ -100,7 +102,7 @@ const conversationsSlice = createSlice({
     builder.addCase(
       requests.getUserConversationsRequest.fulfilled,
       (state, action) => {
-        state.conversationsList = action.payload;
+        state.conversationsList.data = action.payload.data;
       },
     );
     builder.addCase(
@@ -129,7 +131,7 @@ export const {
   conversationActionFail,
   conversationUserHistoryActionRequest,
   lastConversationMessageAction,
-  conversationAddNewMessageAction,
+  conversationAddNewLastMessageAction,
   clearLastMessage,
   conversationTypeStateAction,
   createNewChatAction,
