@@ -28,6 +28,7 @@
     "react-hook-form": "^7.36.0",
     "react-native": "0.70.3",
     "react-native-config": "^1.4.11",
+    "react-native-contacts": "^7.0.5",
     "react-native-document-picker": "^8.1.2",
     "react-native-dotenv": "^3.4.2",
     "react-native-gesture-handler": "^2.6.2",

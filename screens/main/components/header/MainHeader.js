@@ -3,7 +3,10 @@ import {useSelector} from 'react-redux';
 import {Text, View, Pressable} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {mainHeader as styles} from './styles';
-import {headerSelectedСhatsAmountDotsOptions} from './config';
+import {
+  headerSelectedСhatsAmountDotsOptions,
+  headerActionIcons,
+} from './config';
 import Header from '../../../../components/header';
 import SvgMaker from '../../../../components/svgMaker';
 import MenuPaper from '../../../../components/menu/menuPaper';
@@ -16,6 +19,7 @@ import {PathsName} from '../../../../navigation/navigationConfig';
 import {TYPES_FROM_TO_SEARCH_SCREEN} from '../../../../config/constants/general';
 
 const MainHeader = ({routeParams}) => {
+  // HOOKS
   const navigation = useNavigation();
 
   // SELECTORS
@@ -32,6 +36,10 @@ const MainHeader = ({routeParams}) => {
   const handleOptions = value => {
     setVisibleOptions(false);
     // store.dispatch(selectedСhatsActions(null, actionsTypeObjectSelected.clear));
+  };
+
+  const handleActionsConversations = value => {
+    console.log(value, 'value');
   };
 
   // RENDERS
@@ -94,21 +102,19 @@ const MainHeader = ({routeParams}) => {
   const renderTopRightComponent = () => {
     return selectedСhatsAmount ? (
       <View style={styles.wrapperActions}>
-        <Pressable
-          style={styles.wrapperAction}
-          // onPress={() => setVisibleOptions(true)}
-        >
-          <SvgMaker name="svgs_line_mute" width={27} height={27} />
-        </Pressable>
-        <View style={styles.wrapperAction}>
-          <SvgMaker name="svgs_line_archive" width={27} height={27} />
-        </View>
-        <View style={styles.wrapperAction}>
-          <SvgMaker name="svgs_line_trash_bin_alt" width={27} height={27} />
-        </View>
+        {headerActionIcons(lang).map(action => {
+          return (
+            <Pressable
+              style={styles.wrapperAction}
+              onPress={() => handleActionsConversations(action.value)}
+              disabled={action.disabled}>
+              <SvgMaker name={action.icon.name} width={27} height={27} />
+            </Pressable>
+          );
+        })}
         <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
           <MenuPaper setShowMenu={setVisibleOptions} showMenu={visibleOptions}>
-            {headerSelectedСhatsAmountDotsOptions(lang).map(action => {
+            {/* {headerSelectedСhatsAmountDotsOptions(lang).map(action => {
               return (
                 <Pressable
                   key={action.id}
@@ -122,7 +128,7 @@ const MainHeader = ({routeParams}) => {
                   <Text>{action.title}</Text>
                 </Pressable>
               );
-            })}
+            })} */}
           </MenuPaper>
         </View>
       </View>

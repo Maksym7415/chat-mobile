@@ -47,7 +47,9 @@ const BottomSheetRoot = React.forwardRef(
           onChange={handleSheetChanges}
           enablePanDownToClose={true}
           backdropComponent={renderBackdrop}
-          BottomSheetHandle={true}
+          // BottomSheetHandle={true}
+          // keyboardBehavior="interactive"
+          // animateOnMount={true}
           style={{zIndex: 100}}>
           {children}
         </BottomSheet>

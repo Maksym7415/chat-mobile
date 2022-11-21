@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, Text, Animated, Easing, Pressable} from 'react-native';
+import {View, Text, Pressable} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import {useNavigation} from '@react-navigation/native';
-import {Drawer, Avatar, useTheme, Divider} from 'react-native-paper';
+import {Avatar, useTheme, Divider} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import IconEntypo from 'react-native-vector-icons/Entypo';
 import makeStyles from './styles';
@@ -33,6 +33,7 @@ function CustomContentComponent(props) {
   );
   const {userInfo} = useSelector(({userSlice}) => userSlice);
 
+  // STATES
   const [isOpenAccounts, setIsOpenAccounts] = React.useState(false);
 
   // FUNCTIONS
@@ -52,6 +53,7 @@ function CustomContentComponent(props) {
     );
   };
 
+  // VARIABLES
   const source = userInfo.userAvatar;
   const fullName =
     userInfo.fullName || `${userInfo.firstName} ${userInfo.lastName}`;
@@ -77,7 +79,8 @@ function CustomContentComponent(props) {
       <Pressable
         key={item.id}
         onPress={() => handleMenuAction(item.navigatePathName)}
-        style={stylesRoot.wrapperMenuItem}>
+        style={stylesRoot.wrapperMenuItem}
+        disabled={item.disabled}>
         <SvgMaker name={item.icon.name} />
         <Text style={stylesRoot.menuItemTitle}>{item.title}</Text>
       </Pressable>
@@ -120,8 +123,7 @@ function CustomContentComponent(props) {
         <View style={{...stylesRoot.wrapperNameNumberArrow}}>
           <View style={{...stylesRoot.wrapperNameNumber}}>
             <Text style={stylesRoot.topName}>{fullName}</Text>
-            <Text style={stylesRoot.topNumber}>+1 (234) 567 89 01</Text>
-            {/* mock */}
+            <Text style={stylesRoot.topNumber}>+1 (234) 567 89 01*</Text>
           </View>
           {/* <Animated.View style={{transform: [{rotate: spin}]}}> */}
           <Icon

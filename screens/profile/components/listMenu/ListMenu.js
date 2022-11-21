@@ -20,7 +20,10 @@ const ListMenu = ({title, list, onPress}) => {
   // FUNCTIONS
   const ListItem = ({item}) => {
     return (
-      <Pressable onPress={() => onPress(item)} style={styles.wrapperListItem}>
+      <Pressable
+        onPress={() => onPress(item)}
+        style={styles.wrapperListItem}
+        disabled={item.disabled}>
         {item.icon?.name && <SvgMaker name={item.icon?.name} />}
         <Text style={styles.listItemTitle}>{item.title}</Text>
       </Pressable>

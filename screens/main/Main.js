@@ -9,7 +9,7 @@ import {socket} from '../../config/socket';
 import {
   socketOnUserIdChat,
   socketOnTypingStateId,
-  // socketOnDeleteMessage,
+  socketOnDeleteMessage,
 } from '../../config/socket/actions/socketOn';
 import ConversationItems from './components/conversationItems';
 import Header from './components/header';
@@ -75,9 +75,9 @@ const MainScreen = ({route}) => {
   }, [conversationsList, typing]);
 
   // not working socketOnDeleteMessage
-  // React.useEffect(() => {
-  //   socketOnDeleteMessage();
-  // }, []);
+  React.useEffect(() => {
+    socketOnDeleteMessage();
+  }, [conversationsList]);
 
   return (
     <SafeAreaView style={styles.container}>

@@ -1,3 +1,29 @@
+export const headerActionIcons = lang => [
+  // {
+  //   id: 1,
+  //   value: 'mute',
+  //   icon: {
+  //     name: 'svgs_line_mute',
+  //   },
+  // },
+  // {
+  //   id: 2,
+  //   title: 'Add to folder',
+  //   value: 'arhiveConversations',
+  //   icon: {
+  //     name: 'svgs_line_archive',
+  //   },
+  // },
+  {
+    id: 3,
+    value: 'deleteConversations',
+    icon: {
+      name: 'svgs_line_trash_bin_alt',
+    },
+    disabled: true,
+  },
+];
+
 export const headerSelectedСhatsAmountDotsOptions = lang => [
   {
     id: 1,

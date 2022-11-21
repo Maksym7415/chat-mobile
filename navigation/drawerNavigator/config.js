@@ -8,6 +8,7 @@ export const mainMenuRouts = lang => [
     },
     title: 'New Group',
     navigatePathName: PathsName.newGroup,
+    disabled: true,
   },
   {
     id: 2,
@@ -16,6 +17,7 @@ export const mainMenuRouts = lang => [
     },
     title: 'Contacts',
     navigatePathName: PathsName.contacts,
+    disabled: true,
   },
   {
     id: 3,
@@ -24,6 +26,7 @@ export const mainMenuRouts = lang => [
     },
     title: 'Calls',
     navigatePathName: PathsName.calls,
+    disabled: true,
   },
   {
     id: 4,
@@ -32,6 +35,7 @@ export const mainMenuRouts = lang => [
     },
     title: 'People Nearby',
     navigatePathName: PathsName.peopleNearby,
+    disabled: true,
   },
   {
     id: 5,
@@ -40,6 +44,7 @@ export const mainMenuRouts = lang => [
     },
     title: 'Saved Message',
     navigatePathName: PathsName.saved,
+    disabled: true,
   },
   {
     id: 6,
@@ -48,6 +53,7 @@ export const mainMenuRouts = lang => [
     },
     title: 'Settings',
     navigatePathName: PathsName.profile,
+    disabled: true,
   },
 ];
 
@@ -59,6 +65,7 @@ export const otherMenuRouts = lang => [
     },
     title: 'Invite Friends',
     navigatePathName: PathsName.inviteFriends,
+    disabled: true,
   },
   {
     id: 2,
@@ -67,5 +74,6 @@ export const otherMenuRouts = lang => [
     },
     title: 'Telegram Features',
     navigatePathName: PathsName.features,
+    disabled: true,
   },
 ];

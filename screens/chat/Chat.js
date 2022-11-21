@@ -7,6 +7,8 @@ import {
   View,
   ImageBackground,
   SectionList,
+  Pressable,
+  Keyboard,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTheme} from 'react-native-paper';
@@ -312,6 +314,7 @@ const Chat = ({route}) => {
   return (
     <>
       <SafeAreaView style={styles.container}>
+        {/* <Pressable onPress={Keyboard.dismiss} style={{flex: 1}}> */}
         <ChatHeader
           conversationData={conversationData}
           conversationId={conversationId}
@@ -344,6 +347,7 @@ const Chat = ({route}) => {
           conversationId={conversationId}
           conversationData={conversationData}
         />
+        {/* </Pressable> */}
         <SnackbarComponent />
       </SafeAreaView>
     </>

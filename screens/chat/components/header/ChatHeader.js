@@ -267,7 +267,7 @@ const ChatHeader = ({conversationData, conversationId, typeConversation}) => {
               <Text style={styles.title}>
                 {conversationData?.conversationName}
               </Text>
-              <Text style={styles.subtitle}>{'Online'}</Text>
+              <Text style={styles.subtitle}>{'Online*'}</Text>
             </View>
           </Pressable>
         )

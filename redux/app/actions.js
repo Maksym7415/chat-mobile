@@ -124,7 +124,11 @@ export const actionsMessagesChat =
             ? allMessagesWithoutDeleteMessage.slice(0, -1)
             : allMessagesWithoutDeleteMessage;
 
-          if (conversationsList[conversationId].Messages[0].id == messageId) {
+          console.log(
+            conversationsList[conversationId],
+            'conversationsList[conversationId]',
+          );
+          if (conversationsList[conversationId].Messages[0]?.id == messageId) {
             dispatch(
               conversationListActions({
                 mode: 'updateMessageConversation',

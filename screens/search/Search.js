@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useLayoutEffect, useState} from 'react';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, Keyboard, Pressable} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import makeStyles from './styles';
 import Header from './components/header';
@@ -70,16 +70,18 @@ const Search = ({route}) => {
         styles={settings.header.styles}
         svgFill={settings.header?.svgFill || '#868686'}
       />
-      {(() => {
-        switch (routeParams?.from) {
-          case TYPES_FROM_TO_SEARCH_SCREEN.main:
-            return <SearchMain />;
-          case TYPES_FROM_TO_SEARCH_SCREEN.profile:
-            return <SearchProfile />;
-          default:
-            return <></>;
-        }
-      })()}
+      <Pressable onPress={Keyboard.dismiss}>
+        {(() => {
+          switch (routeParams?.from) {
+            case TYPES_FROM_TO_SEARCH_SCREEN.main:
+              return <SearchMain />;
+            case TYPES_FROM_TO_SEARCH_SCREEN.profile:
+              return <SearchProfile />;
+            default:
+              return <></>;
+          }
+        })()}
+      </Pressable>
     </SafeAreaView>
   );
 };

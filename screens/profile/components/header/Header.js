@@ -186,12 +186,12 @@ const Header = ({
     if (isOwnerProfile) {
       return (
         <>
-          <Pressable
+          {/* <Pressable
             style={styles.wrapperAction}
             onPress={() => Alert.alert('Цього функціоналу наразі немає')}
             disabled={true}>
             <SvgMaker name={'svgs_line_qr_code'} strokeFill={'#ffffff'} />
-          </Pressable>
+          </Pressable> */}
           <Pressable style={styles.wrapperAction} onPress={onToSearch}>
             <SvgMaker name={'svgs_line_search'} strokeFill={'#ffffff'} />
           </Pressable>
@@ -250,8 +250,6 @@ const Header = ({
                   conversationData: setting.conversationData,
                 });
               }
-
-              setting;
             }}>
             <SvgMaker name="svgs_filled_back_arrow" strokeFill={'#ffffff'} />
           </Pressable>

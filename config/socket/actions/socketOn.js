@@ -13,8 +13,7 @@ export const socketOnUserIdChat = chat => {
     const conversationsList =
       store.getState().conversationsSlice.conversationsList.data;
 
-    const conversationFindStore = conversationsList[chat.conversationId];
-
+    const conversationFindStore = conversationsList?.[chat.conversationId];
     const updateMessageConversation = () => {
       store.dispatch(
         conversationListActions({
@@ -23,7 +22,7 @@ export const socketOnUserIdChat = chat => {
           messages: message?.isEdit
             ? [
                 {
-                  ...conversationFindStore.Messages[0],
+                  ...conversationFindStore?.Messages?.[0],
                   message: message.message,
                   isEdit: true,
                 },
@@ -35,22 +34,30 @@ export const socketOnUserIdChat = chat => {
     };
     //
     let findComponentDate = null;
-    const reverseAllMessages = [...allMessages[chat.conversationId]].reverse();
-    for (let i = 0; !findComponentDate && i < reverseAllMessages.length; i++) {
-      if (reverseAllMessages[i].component) {
-        findComponentDate = reverseAllMessages[i];
+    if (allMessages[chat.conversationId]) {
+      const reverseAllMessages = [
+        ...allMessages[chat.conversationId],
+      ].reverse();
+      for (
+        let i = 0;
+        !findComponentDate && i < reverseAllMessages.length;
+        i++
+      ) {
+        if (reverseAllMessages[i].component) {
+          findComponentDate = reverseAllMessages[i];
+        }
       }
     }
 
     let componentDateNew = null;
     if (
-      message.sendDate.slice(0, 10) !== findComponentDate.sendDate.slice(0, 10)
+      message.sendDate.slice(0, 10) !==
+      findComponentDate?.sendDate?.slice(0, 10)
     )
       componentDateNew = {component: 'div', sendDate: message.sendDate};
 
     //
     const chatAllMessages = allMessages?.[chat.conversationId];
-
     if (chatAllMessages) {
       const prevMessages = chatAllMessages || null;
       let updateMessages = [...prevMessages];
@@ -158,22 +165,53 @@ export const socketOnTypingStateId = (chat, setUsersTyping) => {
   });
 };
 
-// Delete Message not working
 export const socketOnDeleteMessage = () => {
-  // const getRemoveMessages = (conversationId, messageId) => {
-  //   console.log(messageId, 'messageId!!');
-  //   const allMessages = store.getState().appSlice.allMessages;
-  //   store.dispatch(
-  //     setAllMessagesAction({
-  //       [conversationId]: allMessages[conversationId.toString()]?.filter(
-  //         message =>
-  //           ![messageId?.toString()]?.includes(message?.id?.toString()),
-  //       ),
-  //     }),
-  //   );
-  // };
-  // return socket.on('deleteMessage', ({conversationId, messageId}) => {
-  //   console.log(conversationId, messageId, 'eeee');
-  //   getRemoveMessages(conversationId, messageId);
-  // });
+  const getRemoveMessages = (conversationId, messageId) => {
+    const allMessages = store.getState().appSlice.allMessages;
+    const conversationsList =
+      store.getState().conversationsSlice.conversationsList.data;
+    const conversationFindStore = conversationsList?.[conversationId];
+
+    console.log(messageId, 'messageId!!');
+    console.log(conversationFindStore, 'conversationFindStore');
+    console.log(allMessages, 'allMessages');
+
+    store.dispatch(
+      setAllMessagesAction({
+        [conversationId]: allMessages[conversationId.toString()]?.filter(
+          message =>
+            ![messageId?.toString()]?.includes(message?.id?.toString()),
+        ),
+      }),
+    );
+    if (messageId === conversationFindStore?.Messages?.[0].id) {
+      let findLastMessage = null;
+      if (allMessages[conversationId]) {
+        const reverseAllMessages = [...allMessages[conversationId]].reverse();
+        for (
+          let i = 0;
+          !findLastMessage && i < reverseAllMessages.length;
+          i++
+        ) {
+          if (reverseAllMessages[i].User) {
+            findLastMessage = reverseAllMessages[i];
+          }
+        }
+      }
+
+      store.dispatch(
+        conversationListActions({
+          mode: 'updateMessageConversation',
+          conversationId: conversationId,
+          messages: [findLastMessage],
+          conversationsList,
+        }),
+      );
+    }
+  };
+
+  return socket.on('deleteMessage', ({conversationId, messageId}) => {
+    console.log(conversationId, messageId, 'eeee');
+    getRemoveMessages(conversationId, messageId);
+  });
 };

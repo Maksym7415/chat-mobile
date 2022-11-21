@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import {Pressable, View} from 'react-native';
+import {Pressable, View, Keyboard} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {useTheme, TextInput} from 'react-native-paper';
 import makeStyles from './styles';
@@ -68,6 +68,8 @@ const Header = ({
             placeholder={placeholder}
             dense={true}
             underlineColor="transparent"
+            onBlur={() => console.log('onBlur')}
+            autoFocus={true}
             {...textInputProps}
           />
         </View>

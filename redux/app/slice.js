@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {themeLight} from '../../config/theme';
+
 export const settingStatusBarInitial = {
   backgroundColor: themeLight.colors.main,
   barStyle: 'light-content',
@@ -78,7 +79,6 @@ const appSlice = createSlice({
       state.selectedMessages = payload;
     },
     setSettingStatusBarAction(state, {payload}) {
-      console.log(payload, 'payload');
       state.settingStatusBar = {...state.settingStatusBar, ...payload};
     },
   },

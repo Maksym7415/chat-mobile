@@ -8,6 +8,7 @@ export const settingsList = lang => [
     icon: {
       name: 'svgs_line_bell',
     },
+    disabled: true,
   },
   {
     id: 2,
@@ -16,6 +17,7 @@ export const settingsList = lang => [
     icon: {
       name: 'svgs_line_lock',
     },
+    disabled: true,
   },
   {
     id: 3,
@@ -24,6 +26,7 @@ export const settingsList = lang => [
     icon: {
       name: 'svgs_line_data',
     },
+    disabled: true,
   },
   {
     id: 4,
@@ -32,6 +35,7 @@ export const settingsList = lang => [
     icon: {
       name: 'svgs_line_chat',
     },
+    disabled: true,
   },
   {
     id: 5,
@@ -40,6 +44,7 @@ export const settingsList = lang => [
     icon: {
       name: 'svgs_line_folder',
     },
+    disabled: true,
   },
   {
     id: 6,
@@ -48,6 +53,7 @@ export const settingsList = lang => [
     icon: {
       name: 'svgs_line_devices',
     },
+    disabled: true,
   },
   {
     id: 7,
@@ -56,6 +62,7 @@ export const settingsList = lang => [
     icon: {
       name: 'svgs_line_language',
     },
+    disabled: true,
   },
 ];
 
@@ -67,6 +74,7 @@ export const helpsList = lang => [
     icon: {
       name: 'svgs_line_chat',
     },
+    disabled: true,
   },
   {
     id: 2,
@@ -75,6 +83,7 @@ export const helpsList = lang => [
     icon: {
       name: 'svgs_line_faq',
     },
+    disabled: true,
   },
   {
     id: 3,
@@ -83,6 +92,7 @@ export const helpsList = lang => [
     icon: {
       name: 'svgs_line_sheild',
     },
+    disabled: true,
   },
 ];
 
