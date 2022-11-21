@@ -21,7 +21,7 @@ export default theme =>
       paddingLeft: 10,
     },
     title: {
-      color: '#517DA2',
+      color: theme.colors.main,
       fontWeight: '500',
       fontSize: 16,
     },

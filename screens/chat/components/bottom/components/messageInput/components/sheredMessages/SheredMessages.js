@@ -23,7 +23,10 @@ export default function SheredMessages({
   return (
     <View style={styles.root}>
       <View style={styles.wrapperLeft}>
-        <SvgMaker name="svgs_filled_send_arrow" strokeFill={'#517DA2'} />
+        <SvgMaker
+          name="svgs_filled_send_arrow"
+          strokeFill={theme.colors.main}
+        />
       </View>
       <View style={styles.wrapperCenter}>
         <Text style={styles.title}>

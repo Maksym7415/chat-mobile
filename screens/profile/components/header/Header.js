@@ -299,7 +299,7 @@ const Header = ({
             ...styles.content,
             paddingHorizontal: showBiggerImg ? 0 : 16,
             height: showBiggerImg ? screenWidth : 100,
-            backgroundColor: showBiggerImg ? 'transparent' : '#517DA2',
+            backgroundColor: showBiggerImg ? 'transparent' : theme.colors.main,
           }}>
           {showBiggerImg ? (
             <>
@@ -316,7 +316,7 @@ const Header = ({
               />
               <Pagination
                 inactiveDotColor="#3f0f08"
-                dotColor={'#517DA2'}
+                dotColor={theme.colors.main}
                 activeDotIndex={indexSelected}
                 dotsLength={images.length}
                 animatedDuration={150}

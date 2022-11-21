@@ -15,8 +15,11 @@ const settingSlice = createSlice({
       state.lang = payload;
       state.isLangSet = true;
     },
+    setThemeAction(state, {payload}) {
+      state.theme = {...state.theme, ...payload};
+    },
   },
 });
 
-export const {setLangAction} = settingSlice.actions;
+export const {setLangAction, setThemeAction} = settingSlice.actions;
 export default settingSlice.reducer;

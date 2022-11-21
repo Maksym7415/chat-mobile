@@ -329,7 +329,7 @@ const Chat = ({route}) => {
                     color: 'red',
                   },
                 }}
-                color={'#517DA2'}
+                color={theme.colors.main}
                 size={50}
               />
             </View>

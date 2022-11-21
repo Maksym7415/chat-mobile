@@ -1,4 +1,10 @@
 export const colors = {
+  light: {
+    main: '#517DA2',
+  },
+  dark: {
+    main: '#333333',
+  },
   gray_dark: {
     gray_1: '#B7B7B7',
     gray_2: '#A8A8A8',

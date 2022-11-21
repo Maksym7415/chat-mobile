@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import PropTypes from 'prop-types';
-import {TextInput} from 'react-native-paper';
+import {TextInput, useTheme} from 'react-native-paper';
 import stylesRoot from './styles';
 
 const propTypes = {
@@ -28,6 +28,9 @@ const TextInputField = ({
   },
   textInputProps = {},
 }) => {
+  // HOOKS
+  const theme = useTheme();
+
   return (
     <View style={{...stylesRoot.container, ...styles.container}}>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -39,7 +42,7 @@ const TextInputField = ({
         value={value}
         placeholder={placeholder}
         dense={true}
-        activeUnderlineColor={'#517DA2'}
+        activeUnderlineColor={theme.colors.main}
         {...textInputProps}
         // autoCapitalize={settingAuto.autoCapitalize || 'none'}
         // autoComplete={settingAuto.autoComplete || false}

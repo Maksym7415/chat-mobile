@@ -7,7 +7,7 @@ export default theme => {
     },
     containerTop: {
       flex: 1,
-      backgroundColor: '#517DA2',
+      backgroundColor: theme.colors.main,
       paddingHorizontal: 15,
       paddingTop: 45,
       paddingBottom: 8,

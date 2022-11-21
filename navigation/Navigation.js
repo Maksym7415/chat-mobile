@@ -19,7 +19,7 @@ import {getTokenStorage} from '../config/asyncStorageActions';
 import SplashScreen from '../screens/splash';
 import {authTokenAction, setAuthHedersAction} from '../redux/auth/slice';
 import {getUserProfileDataRequest} from '../redux/user/requests';
-import {themeLight} from '../config/theme';
+import {themeLight, themeDark} from '../config/theme';
 import CustomStatusBar from '../components/customBar';
 import DrawerNavigator from './drawerNavigator';
 import MainScreen from '../screens/main';
@@ -52,6 +52,9 @@ function MyStack() {
 
   // SELECTORS
   const tokenPayload = useSelector(({authSlice}) => authSlice.tokenPayload);
+  const {theme: themeObjState, lang} = useSelector(
+    ({settingSlice}) => settingSlice,
+  );
 
   // STATES
   const [isLoading, setIsLoading] = React.useState(true);
@@ -90,8 +93,13 @@ function MyStack() {
     }
   }, [tokenPayload]);
 
+  const themeSelected = React.useMemo(
+    () => (themeObjState.core === 'light' ? themeLight : themeDark),
+    [themeObjState.core],
+  );
+
   return (
-    <PaperProvider theme={themeLight}>
+    <PaperProvider theme={themeSelected}>
       <SafeAreaProvider>
         <GestureHandlerRootView style={{flex: 1}}>
           <KeyboardAvoidingView

@@ -13,10 +13,14 @@ import SvgMaker from '../../components/svgMaker';
 import UserAvatar from '../../components/avatar/userAvatar';
 import {getNameShort} from '../../helpers';
 import {REACT_APP_BASE_URL} from '../../config/constants/url';
+import {themeLight, themeDark} from '../../config/theme';
 import {PathsName} from '../navigationConfig';
+import {setThemeAction} from '../../redux/setting/slice';
+import {setSettingStatusBarAction} from '../../redux/app/slice';
 
 function CustomContentComponent(props) {
   // HOOKS
+  const dispatch = useDispatch();
   const theme = useTheme();
   const navigation = useNavigation();
 
@@ -34,6 +38,18 @@ function CustomContentComponent(props) {
   // FUNCTIONS
   const handleMenuAction = navigatePathName => {
     navigatePathName && navigation.navigate(navigatePathName);
+  };
+  const changeThemeCore = (value, themeSelected) => {
+    dispatch(
+      setThemeAction({
+        core: value,
+      }),
+    );
+    dispatch(
+      setSettingStatusBarAction({
+        backgroundColor: themeSelected.colors.main,
+      }),
+    );
   };
 
   const source = userInfo.userAvatar;
@@ -92,9 +108,13 @@ function CustomContentComponent(props) {
             )}
           </Pressable>
           {themeObjState.core === 'light' ? (
-            <SvgMaker name="svgs_filled_theme_moon" strokeFill={'#ffffff'} />
+            <Pressable onPress={() => changeThemeCore('dark', themeDark)}>
+              <SvgMaker name="svgs_filled_theme_moon" strokeFill={'#ffffff'} />
+            </Pressable>
           ) : (
-            <SvgMaker name="svgs_filled_theme_sun" strokeFill={'#ffffff'} />
+            <Pressable onPress={() => changeThemeCore('light', themeLight)}>
+              <SvgMaker name="svgs_filled_theme_sun" strokeFill={'#ffffff'} />
+            </Pressable>
           )}
         </View>
         <View style={{...stylesRoot.wrapperNameNumberArrow}}>
@@ -125,7 +145,7 @@ function CustomContentComponent(props) {
               // sizeBadge={10}
             />
             {/* </View> */}
-            <Text style={stylesRoot.menuItemTitle}>{userInfo.fullName}</Text>
+            <Text style={stylesRoot.menuItemTitle}>{fullName}</Text>
           </View>
           <Pressable onPress={() => {}} style={stylesRoot.wrapperMenuItem}>
             <IconEntypo name={'plus'} color={'#868686'} size={27} />

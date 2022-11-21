@@ -18,7 +18,7 @@ export default theme =>
       alignItems: 'center',
       paddingHorizontal: 16,
       paddingBottom: 10,
-      backgroundColor: '#517DA2',
+      backgroundColor: theme.colors.main,
     },
     wrapperTopCenterComponent: {
       flex: 1,

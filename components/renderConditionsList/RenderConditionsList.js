@@ -24,7 +24,7 @@ const RenderConditionsList = ({
   if (isLoading) {
     return (
       <View style={{...stylesRoot.boxCenter, ...styles?.boxCenter}}>
-        <Loader color={'#517DA2'} size={50} {...seettingLoader} />
+        <Loader color={theme.colors.main} size={50} {...seettingLoader} />
       </View>
     );
   }

@@ -47,7 +47,7 @@ const Search = ({route}) => {
             placeholder: 'Search settings and questions',
             getRequest: null,
             styles: {
-              headerLayout: {container: {backgroundColor: '#517DA2'}},
+              headerLayout: {container: {backgroundColor: theme.colors.main}},
             },
             svgFill: '#ffffff',
             textInputProps: {
