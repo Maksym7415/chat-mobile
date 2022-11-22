@@ -37,17 +37,15 @@ function Message({
     if (Object.keys(selectedMessages).length) {
       return <Selecteds />;
     } else {
-      if (!!conversationId || !!opponentId) {
-        return (
-          <MessageInput
-            userId={userId}
-            firstName={firstName}
-            opponentId={opponentId}
-            openFileDialog={openFileDialog}
-            refBottomSheet={refBottomSheet}
-          />
-        );
-      }
+      return (
+        <MessageInput
+          userId={userId}
+          firstName={firstName}
+          opponentId={opponentId}
+          openFileDialog={openFileDialog}
+          refBottomSheet={refBottomSheet}
+        />
+      );
     }
   };
 

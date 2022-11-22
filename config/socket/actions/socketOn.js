@@ -1,9 +1,8 @@
 import store from '../../../redux';
 import {socket} from '../index';
-import {
-  conversationListActions,
-  conversationAddNewLastMessageAction,
-} from '../../../redux/conversations/actions';
+import {conversationListActions} from '../../../redux/conversations/actions';
+import {getUserConversationsRequest} from '../../../redux/conversations/requests';
+import {PathsName} from '../../../navigation/navigationConfig';
 import {setAllMessagesAction} from '../../../redux/app/slice';
 
 // User Id Chat
@@ -213,5 +212,20 @@ export const socketOnDeleteMessage = () => {
   return socket.on('deleteMessage', ({conversationId, messageId}) => {
     console.log(conversationId, messageId, 'eeee');
     getRemoveMessages(conversationId, messageId);
+  });
+};
+
+export const socketOnUserIdNewChat = (userId, navigation) => {
+  return socket.on(`userIdNewChat${userId}`, (message, conversationId) => {
+    store.dispatch(
+      getUserConversationsRequest({
+        cb: data => {
+          navigation.navigate(PathsName.chat, {
+            id: conversationId,
+            conversationData: data[conversationId],
+          });
+        },
+      }),
+    );
   });
 };

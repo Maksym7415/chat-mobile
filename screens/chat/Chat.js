@@ -46,7 +46,7 @@ const Chat = ({route}) => {
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
   const {
     userHistoryConversation: {data: messageHistory, pagination},
-    opponentId: {id: opponentId},
+
     createConversation: isCreateChat,
   } = useSelector(({conversationsSlice}) => conversationsSlice);
   const {userId, firstName} = useSelector(
@@ -70,6 +70,7 @@ const Chat = ({route}) => {
 
   // VARIABLES
   const conversationId = route?.params?.id;
+  const opponentId = route?.params?.opponentId;
   const conversationData = route?.params?.conversationData;
   const typeConversation =
     conversationData?.conversationType.toLowerCase() || '';
@@ -172,26 +173,6 @@ const Chat = ({route}) => {
     ref && scrollTop(ref);
   }, [messageHistory]);
 
-  React.useEffect(() => {
-    if (opponentId) {
-      if (isCreateChat.length) {
-        dispatch(
-          setConversationIdAction({
-            id: isCreateChat[0].id,
-            type: 'dialog',
-          }),
-        );
-      } else {
-        dispatch(
-          setConversationIdAction({
-            id: 0,
-            type: '',
-          }),
-        );
-      }
-    }
-  }, [isCreateChat]);
-
   const getStyleSectionList = React.useMemo(() => {
     if (messageEdit.messageId || sheraMessages.length) {
       return {
@@ -213,102 +194,97 @@ const Chat = ({route}) => {
       );
     };
 
-    if (allMessages[conversationId]) {
-      return (
-        <>
-          {(() => {
-            if (Number.isNaN(conversationId) && !opponentId) {
+    return (
+      <>
+        {(() => {
+          if (Number.isNaN(conversationId) && !opponentId) {
+            return renderInfoCenterScreen(
+              languages[lang].mainScreen.chooseAChat,
+            );
+          } else {
+            if (!conversationId) {
               return renderInfoCenterScreen(
-                languages[lang].mainScreen.chooseAChat,
+                languages[lang].mainScreen.sendANewMessageToStartAChat,
               );
             } else {
-              if (opponentId && !conversationId) {
+              if (
+                allMessages[conversationId] &&
+                allMessages[conversationId].length === 0
+              ) {
                 return renderInfoCenterScreen(
-                  languages[lang].mainScreen.sendANewMessageToStartAChat,
+                  languages[lang].mainScreen.thereAreNoMessagesInChatYet,
                 );
               } else {
-                if (
-                  allMessages[conversationId] &&
-                  allMessages[conversationId].length === 0
-                ) {
-                  return renderInfoCenterScreen(
-                    languages[lang].mainScreen.thereAreNoMessagesInChatYet,
-                  );
-                } else {
-                  return (
-                    allMessages[conversationId] && (
-                      <SectionList
-                        keyboardShouldPersistTaps="never"
-                        scrollEventThrottle={16}
-                        onScroll={event => setCurrentReadOffset(event)}
-                        ref={ref => {
-                          SectionListReference = ref;
-                        }}
-                        inverted
-                        onEndReached={onEndReached}
-                        onEndReachedThreshold={0.1}
-                        onMomentumScrollBegin={() => {
-                          onEndReachedCalledDuringMomentum.current = false;
-                        }}
-                        style={getStyleSectionList}
-                        sections={
-                          [
-                            {data: [...allMessages[conversationId]].reverse()},
-                          ] || []
+                return (
+                  allMessages[conversationId] && (
+                    <SectionList
+                      keyboardShouldPersistTaps="never"
+                      scrollEventThrottle={16}
+                      onScroll={event => setCurrentReadOffset(event)}
+                      ref={ref => {
+                        SectionListReference = ref;
+                      }}
+                      inverted
+                      onEndReached={onEndReached}
+                      onEndReachedThreshold={0.1}
+                      onMomentumScrollBegin={() => {
+                        onEndReachedCalledDuringMomentum.current = false;
+                      }}
+                      style={getStyleSectionList}
+                      sections={
+                        [{data: [...allMessages[conversationId]].reverse()}] ||
+                        []
+                      }
+                      renderItem={({item: messageData, index}) => {
+                        let isShowAvatar = false;
+                        if (
+                          messageData.fkSenderId !== userId &&
+                          checkIsShowAvatar(
+                            allMessages[conversationId],
+                            userId,
+                            index,
+                          )
+                        ) {
+                          isShowAvatar = true;
                         }
-                        renderItem={({item: messageData, index}) => {
-                          let isShowAvatar = false;
-                          if (
-                            messageData.fkSenderId !== userId &&
-                            checkIsShowAvatar(
-                              allMessages[conversationId],
-                              userId,
-                              index,
-                            )
-                          ) {
-                            isShowAvatar = true;
-                          }
-                          if (messageData.component) {
-                            return (
-                              <View style={styles.wrapperSendData} key={uuid()}>
-                                <Text style={styles.sendDataText}>
-                                  {setMessageDate(
-                                    new Date(messageData.sendDate),
-                                  )}
-                                </Text>
-                              </View>
-                            );
-                          }
+                        if (messageData.component) {
                           return (
-                            <Message
-                              key={uuid()}
-                              isShowAvatar={isShowAvatar}
-                              messageData={messageData}
-                              userId={userId}
-                              typeConversation={typeConversation}
-                            />
+                            <View style={styles.wrapperSendData} key={uuid()}>
+                              <Text style={styles.sendDataText}>
+                                {setMessageDate(new Date(messageData.sendDate))}
+                              </Text>
+                            </View>
                           );
-                        }}
-                      />
-                    )
-                  );
-                }
+                        }
+                        return (
+                          <Message
+                            key={uuid()}
+                            isShowAvatar={isShowAvatar}
+                            messageData={messageData}
+                            userId={userId}
+                            typeConversation={typeConversation}
+                          />
+                        );
+                      }}
+                    />
+                  )
+                );
               }
             }
-          })()}
-          {showScrollToButton && (
-            <ScrollToBottomButton
-              scrollToBottom={scrollToBottom}
-              styles={{
-                button: {
-                  bottom: messageEdit.isEdit || sheraMessages.length ? 100 : 50,
-                },
-              }}
-            />
-          )}
-        </>
-      );
-    }
+          }
+        })()}
+        {showScrollToButton && (
+          <ScrollToBottomButton
+            scrollToBottom={scrollToBottom}
+            styles={{
+              button: {
+                bottom: messageEdit.isEdit || sheraMessages.length ? 100 : 50,
+              },
+            }}
+          />
+        )}
+      </>
+    );
   }, [allMessages[conversationId], sheraMessages, messageEdit]);
 
   return (

@@ -10,6 +10,7 @@ import {
   socketOnUserIdChat,
   socketOnTypingStateId,
   socketOnDeleteMessage,
+  socketOnUserIdNewChat,
 } from '../../config/socket/actions/socketOn';
 import ConversationItems from './components/conversationItems';
 import Header from './components/header';
@@ -67,16 +68,12 @@ const MainScreen = ({route}) => {
         socketOnTypingStateId(chat, setUsersTyping);
       });
     }
-
-    socket.on(`userIdNewChat${userId}`, (message, conversationId) => {
-      // dispatch(getConversationIdAction(conversationId, 'Chat'));
-      // history.push(`${Paths.chat}/${conversationId}`);
-    });
   }, [conversationsList, typing]);
 
   // not working socketOnDeleteMessage
   React.useEffect(() => {
     socketOnDeleteMessage();
+    socketOnUserIdNewChat(userId, navigation);
   }, [conversationsList]);
 
   return (

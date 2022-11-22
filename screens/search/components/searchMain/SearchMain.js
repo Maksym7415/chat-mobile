@@ -28,21 +28,30 @@ const SearchMain = () => {
   const {userId} = useSelector(({authSlice}) => authSlice.tokenPayload);
 
   // FUNCTIONS
-  const createNewChat = (id, fullName) => {
+  const createNewChat = item => {
     dispatch(
       getOpponentsIdWhereConversTypeDialogRequest({
-        params: {userId, opponentId: id},
+        params: {userId, opponentId: item.id},
       }),
     );
-    const chat = conversationsList.find(el => el.conversationName === fullName);
+    console.log(item, 'item');
+    const chat = Object.values(conversationsList.data).find(
+      el => el.conversationName === item.fullName,
+    );
     if (chat) {
       return navigation.navigate(PathsName.chat, {
         id: chat.conversationId,
         conversationData: chat,
       });
     }
-    console.log('не знайдено');
-    // props.history.push(Paths.newchat);
+    return navigation.navigate(PathsName.chat, {
+      conversationData: {
+        conversationAvatar: item.userAvatar,
+        conversationName: item.fullName,
+        conversationType: 'dialog',
+      },
+      opponentId: item.id,
+    });
   };
 
   return (
@@ -60,7 +69,7 @@ const SearchMain = () => {
                 activeOpacity={0.5}
                 style={styles.wrapperContact}
                 onPress={() => {
-                  createNewChat(item.id, item.fullName);
+                  createNewChat(item);
                 }}>
                 <View style={styles.avatarView}>
                   <UserAvatar

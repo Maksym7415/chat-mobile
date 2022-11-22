@@ -91,9 +91,11 @@ export default function MessageInput({
       fkSenderId: message?.User?.id || userId,
       messageType: 'Text',
     };
+
     if (!conversationId) {
-      return socketSendMessageCommonFun(undefined);
+      return socketSendMessageCommonFun(null, messageSend);
     }
+
     if (sheredMessages.length) {
       sheredMessages.map(message => {
         const messageObj = {

@@ -62,15 +62,6 @@ const conversationsSlice = createSlice({
         id: payload.id,
       };
     },
-    conversationAddNewLastMessageAction(state, {payload}) {
-      // console.log(payload, "payload");
-      state.lastMessages = {
-        [payload.id]: payload.message,
-      };
-      state.currentConversationIdObject = {
-        currentConversationId: payload.id,
-      };
-    },
     clearLastMessage(state, {payload}) {
       state.lastMessages = {};
     },
@@ -131,7 +122,6 @@ export const {
   conversationActionFail,
   conversationUserHistoryActionRequest,
   lastConversationMessageAction,
-  conversationAddNewLastMessageAction,
   clearLastMessage,
   conversationTypeStateAction,
   createNewChatAction,

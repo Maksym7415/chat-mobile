@@ -9,13 +9,16 @@ export const getUserConversationsRequest = createAsyncThunk(
       const response = await API.get(
         pathBackConversations.getUserConversations,
       );
-      params?.cb && params.cb();
+
+      const data = response.data.data.reduce((acc, item) => {
+        acc[item.conversationId] = item;
+        return acc;
+      }, {});
+
+      params?.cb && params.cb(data);
 
       return {
-        data: response.data.data.reduce((acc, item) => {
-          acc[item.conversationId] = item;
-          return acc;
-        }, {}),
+        data,
       };
     } catch (error) {
       params?.errorCb && params.errorCb();
