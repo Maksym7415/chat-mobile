@@ -32,6 +32,7 @@ function Root() {
     <Drawer.Navigator
       drawerContent={DrawerNavigator}
       detachInactiveScreens={false}
+      freezeOnBlur={true}
       screenOptions={{
         drawerType: 'front',
         // overlayColor:

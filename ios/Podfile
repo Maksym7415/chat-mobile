@@ -27,7 +27,8 @@ target 'chat_mobile_app' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-
+  pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
+  
   target 'chat_mobile_appTests' do
     inherit! :complete
     # Pods for testing
@@ -42,4 +43,5 @@ target 'chat_mobile_app' do
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
+  
 end

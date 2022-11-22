@@ -5,4 +5,8 @@ export default theme =>
     container: {
       flex: 1,
     },
+    wrapperContacts: {
+      paddingHorizontal: 10,
+      marginTop: 20,
+    },
   });

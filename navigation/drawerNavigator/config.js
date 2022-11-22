@@ -17,7 +17,7 @@ export const mainMenuRouts = lang => [
     },
     title: 'Contacts',
     navigatePathName: PathsName.contacts,
-    disabled: true,
+    // disabled: true,
   },
   {
     id: 3,

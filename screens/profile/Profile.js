@@ -15,7 +15,7 @@ import ListMenu from './components/listMenu';
 import ProfileAccount from './components/profileAccount';
 import MainInfo from './components/mainInfo';
 import SvgMaker from '../../components/svgMaker';
-import FilesProfile from '../../components/sliders/filesProfile';
+// import FilesProfile from '../../components/sliders/filesProfile';
 import BottomSheet from '../../components/bottomSheet';
 import ImageAndDocumentPicker from '../../components/bottomSheet/components/imageAndDocumentPicker';
 import {typesActionBtn} from '../../components/bottomSheet/components/imageAndDocumentPicker/config';
@@ -138,7 +138,7 @@ const Profile = ({route}) => {
             ) : (
               <>
                 <MainInfo typeProfile={setting.typeProfile} />
-                <FilesProfile
+                {/* <FilesProfile
                   files={{
                     media: [{id: 1, src: 'sss'}],
                     files: [{id: 1, src: 'sss'}],
@@ -150,7 +150,7 @@ const Profile = ({route}) => {
                   styles={{
                     container: {marginTop: 10},
                   }}
-                />
+                /> */}
               </>
             )}
           </View>

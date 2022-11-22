@@ -32,6 +32,8 @@
     <string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>$(PRODUCT_NAME) would like to use your microphone (for videos)</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Explanation why you need to access contacts</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
