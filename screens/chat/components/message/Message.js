@@ -28,9 +28,6 @@ function Message({messageData, isShowAvatar, userId, typeConversation}) {
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
-  const {
-    conversationId: {type: activeConversationType},
-  } = useSelector(({conversationsSlice}) => conversationsSlice);
   const {selectedMessages} = useSelector(({appSlice}) => appSlice);
   const {userInfo} = useSelector(({userSlice}) => userSlice);
 
@@ -123,13 +120,14 @@ function Message({messageData, isShowAvatar, userId, typeConversation}) {
           );
       }}>
       <View style={{...styles.wrapperUp}}>
-        {activeConversationType === 'Chat' && isShowAvatar && (
-          <UserAvatar
-            source={messageData.User.userAvatar}
-            name={`${messageData.User.firstName} ${messageData.User.lastName}`}
-            sizeAvatar={38}
-          />
-        )}
+        {/* {[TYPES_CONVERSATIONS.chat].includes(typeConversation) &&
+          isShowAvatar && (
+            <UserAvatar
+              source={messageData.User.userAvatar}
+              name={`${messageData.User.firstName} ${messageData.User.lastName}`}
+              sizeAvatar={38}
+            />
+          )} */}
         <View style={styles.wrapper}>
           <View style={{...settings.styles.rootPaper}}>
             {messageData.isEdit && (

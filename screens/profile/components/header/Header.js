@@ -24,7 +24,7 @@ import {
   // headerOptionsDialog,
   valuesOptions,
 } from './config';
-import {getUserAvatars} from '../../../../redux/user/requests';
+import {getUserAvatars, deleteAvatar} from '../../../../redux/user/requests';
 import {onLogOut} from '../../../../redux/auth/actions';
 import {handleInsertPhotoVideo} from '../../config';
 import {
@@ -82,6 +82,16 @@ const Header = ({
         );
       case valuesOptions.edit:
         return navigation.navigate(PathsName.editNameInSubProfile);
+      case valuesOptions.removePhoto:
+        dispatch(
+          deleteAvatar({
+            params: {
+              id: images[indexSelected].id,
+            },
+            cb: () => dispatch(getUserAvatars()),
+          }),
+        );
+        return;
       case valuesOptions.logout:
         return dispatch(onLogOut());
       default:

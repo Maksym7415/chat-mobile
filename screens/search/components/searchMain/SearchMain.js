@@ -6,13 +6,11 @@ import {useTheme} from 'react-native-paper';
 import makeStyles from './styles';
 import UserAvatar from '../../../../components/avatar/userAvatar';
 import RenderConditionsList from '../../../../components/renderConditionsList';
-import {PathsName} from '../../../../navigation/navigationConfig';
-import {getOpponentsIdWhereConversTypeDialogRequest} from '../../../../redux/search/requests';
+import {createNewChat} from '../../../../actions/general/chat';
 
 const SearchMain = () => {
   // HOOKS
   const theme = useTheme();
-  const dispatch = useDispatch();
   const navigation = useNavigation();
 
   // STYLES
@@ -22,37 +20,6 @@ const SearchMain = () => {
   const {searchContacts, isLoading} = useSelector(
     ({searchSlice}) => searchSlice,
   );
-  const {conversationsList} = useSelector(
-    ({conversationsSlice}) => conversationsSlice,
-  );
-  const {userId} = useSelector(({authSlice}) => authSlice.tokenPayload);
-
-  // FUNCTIONS
-  const createNewChat = item => {
-    dispatch(
-      getOpponentsIdWhereConversTypeDialogRequest({
-        params: {userId, opponentId: item.id},
-      }),
-    );
-    console.log(item, 'item');
-    const chat = Object.values(conversationsList.data).find(
-      el => el.conversationName === item.fullName,
-    );
-    if (chat) {
-      return navigation.navigate(PathsName.chat, {
-        id: chat.conversationId,
-        conversationData: chat,
-      });
-    }
-    return navigation.navigate(PathsName.chat, {
-      conversationData: {
-        conversationAvatar: item.userAvatar,
-        conversationName: item.fullName,
-        conversationType: 'dialog',
-      },
-      opponentId: item.id,
-    });
-  };
 
   return (
     <>
@@ -69,7 +36,7 @@ const SearchMain = () => {
                 activeOpacity={0.5}
                 style={styles.wrapperContact}
                 onPress={() => {
-                  createNewChat(item);
+                  createNewChat(navigation, item);
                 }}>
                 <View style={styles.avatarView}>
                   <UserAvatar

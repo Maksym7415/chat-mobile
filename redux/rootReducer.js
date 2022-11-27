@@ -6,6 +6,7 @@ import conversationsSlice from './conversations';
 import userSlice from './user';
 import snackBarSlice from '../components/snackbar/slice';
 import searchSlice from './search';
+import contactsSlice from './contacts';
 
 export default combineReducers({
   appSlice,
@@ -15,4 +16,5 @@ export default combineReducers({
   userSlice,
   snackBarSlice,
   searchSlice,
+  contactsSlice,
 });

@@ -1,6 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import API from '../../config/axios';
 import {pathBackConversations} from '../../config/constants/urlBack';
+import {updateUserHistoryConversation} from './slice';
 
 export const getUserConversationsRequest = createAsyncThunk(
   'conversations/getUserConversationsRequest',
@@ -27,14 +28,22 @@ export const getUserConversationsRequest = createAsyncThunk(
   },
 );
 
-export const getConversationUserHistoryRequest = createAsyncThunk(
-  'conversations/getConversationUserHistoryRequest',
+export const getConversationMessagesRequest = createAsyncThunk(
+  'conversations/getConversationMessagesRequest',
   async (params, {dispatch}) => {
     try {
       const response = await API.get(
         `${pathBackConversations.conversationHistory}/${params.data.id}?offset=${params.data.offset}`,
       );
       params?.cb && params.cb(response.data);
+
+      dispatch(
+        updateUserHistoryConversation({
+          conversationId: params.data.id,
+          data: {pagination: response.data.pagination},
+        }),
+      );
+
       return {data: response.data.data, pagination: response.data.pagination};
     } catch (error) {
       params?.errorCb && params.errorCb();

@@ -77,3 +77,25 @@ export const socketEmitChatsDeleteMessage = (
 export const socketEmitChatsTypingState = (user, conversationId) => {
   socket.emit('typingState', user, conversationId);
 };
+
+export const socketEmitDeleteConversation = (
+  data = {
+    id: 0,
+  },
+  cb,
+) => {
+  socket.emit('deleteChat', data, success => {
+    cb();
+  });
+};
+
+export const socketEmitClearConversation = (
+  data = {
+    id: 0,
+  },
+  cb,
+) => {
+  socket.emit('clearChat', data, success => {
+    cb();
+  });
+};

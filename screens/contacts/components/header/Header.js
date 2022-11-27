@@ -18,24 +18,24 @@ const Header = ({}) => {
 
   // STATES
   const [openSearchInput, setOpenSearchInput] = React.useState(false);
-  const [search, setSearch] = React.useState('');
+  // const [search, setSearch] = React.useState('');
 
-  // FUNCTIONS
-  const clearSearch = () => {
-    setSearch('');
-  };
-  const onChangeText = value => {
-    setSearch(value);
-  };
+  // // FUNCTIONS
+  // const clearSearch = () => {
+  //   setSearch('');
+  // };
+  // const onChangeText = value => {
+  //   setSearch(value);
+  // };
 
   // RENDERS
   const renderTopLeftComponent = () => {
     return (
       <Pressable
         onPress={() => {
-          if (openSearchInput) {
-            return setOpenSearchInput(false);
-          }
+          // if (openSearchInput) {
+          //   return setOpenSearchInput(false);
+          // }
           if (navigation.canGoBack()) {
             navigation.goBack();
           } else {
@@ -50,7 +50,7 @@ const Header = ({}) => {
   const renderTopCenterComponent = () => {
     return openSearchInput ? (
       <View style={styles.wrapperTitle}>
-        <TextInput
+        {/* <TextInput
           style={{...styles?.input}}
           secureTextEntry={false}
           onChangeText={onChangeText}
@@ -61,7 +61,7 @@ const Header = ({}) => {
           onBlur={() => console.log('onBlur')}
           autoFocus={true}
           placeholderTextColor="#ffffff"
-        />
+        /> */}
       </View>
     ) : (
       <View style={styles.wrapperTitle}>
@@ -73,7 +73,7 @@ const Header = ({}) => {
   const renderTopRightComponent = () => {
     return openSearchInput ? null : (
       <>
-        <Pressable
+        {/* <Pressable
           style={styles.wrapperSearch}
           onPress={() => {
             setOpenSearchInput(true);
@@ -83,7 +83,7 @@ const Header = ({}) => {
             strokeFill={'#ffffff'}
             strokeWidth={'2'}
           />
-        </Pressable>
+        </Pressable> */}
       </>
     );
   };

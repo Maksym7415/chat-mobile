@@ -1,5 +1,5 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Text, View, Pressable} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {mainHeader as styles} from './styles';
@@ -13,6 +13,7 @@ import MenuPaper from '../../../../components/menu/menuPaper';
 import {
   selectedСhatsActions,
   actionsTypeObjectSelected,
+  actionsSelectedConversation,
 } from '../../../../redux/app/actions';
 import store from '../../../../redux/store';
 import {PathsName} from '../../../../navigation/navigationConfig';
@@ -21,6 +22,7 @@ import {TYPES_FROM_TO_SEARCH_SCREEN} from '../../../../config/constants/general'
 const MainHeader = ({routeParams}) => {
   // HOOKS
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
@@ -38,8 +40,10 @@ const MainHeader = ({routeParams}) => {
     // store.dispatch(selectedСhatsActions(null, actionsTypeObjectSelected.clear));
   };
 
-  const handleActionsConversations = value => {
-    console.log(value, 'value');
+  const handleActionsConversations = async data => {
+    await dispatch(actionsSelectedConversation(null, data.value));
+    visibleOptions && setVisibleOptions(false);
+    store.dispatch(selectedСhatsActions(null, actionsTypeObjectSelected.clear));
   };
 
   // RENDERS
@@ -106,20 +110,21 @@ const MainHeader = ({routeParams}) => {
           return (
             <Pressable
               style={styles.wrapperAction}
-              onPress={() => handleActionsConversations(action.value)}
-              disabled={action.disabled}>
+              onPress={() => handleActionsConversations(action)}
+              disabled={action.disabled}
+              key={action.id}>
               <SvgMaker name={action.icon.name} width={27} height={27} />
             </Pressable>
           );
         })}
         <View style={{...styles.wrapperAction, ...styles.wrapperOptions}}>
           <MenuPaper setShowMenu={setVisibleOptions} showMenu={visibleOptions}>
-            {/* {headerSelectedСhatsAmountDotsOptions(lang).map(action => {
+            {headerSelectedСhatsAmountDotsOptions(lang).map(action => {
               return (
                 <Pressable
                   key={action.id}
                   style={styles.dotsOption}
-                  onPress={() => handleOptions(action.value)}>
+                  onPress={() => handleActionsConversations(action)}>
                   {action.icon.name && (
                     <View style={styles.wrapperIconOption}>
                       <SvgMaker name={action.icon.name} />
@@ -128,7 +133,7 @@ const MainHeader = ({routeParams}) => {
                   <Text>{action.title}</Text>
                 </Pressable>
               );
-            })} */}
+            })}
           </MenuPaper>
         </View>
       </View>

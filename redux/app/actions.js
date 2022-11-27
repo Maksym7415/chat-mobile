@@ -8,6 +8,7 @@ import {
   editMessageAction,
   shareMessageAction,
 } from './slice';
+import {setConversationListAction} from '../conversations/slice';
 import Clipboard from '@react-native-community/clipboard';
 import {
   actionsForTypeWithObjKey,
@@ -15,7 +16,11 @@ import {
 } from '../../helpers/actionsForType';
 import {deepEqual} from '../../helpers';
 import {getSnackBar} from '../../components/snackbar/slice';
-import {socketEmitChatsDeleteMessage} from '../../config/socket/actions/socketEmit';
+import {
+  socketEmitChatsDeleteMessage,
+  socketEmitDeleteConversation,
+  socketEmitClearConversation,
+} from '../../config/socket/actions/socketEmit';
 import TemplatesContent from '../../components/snackbar/components/templatesContent/TemplatesContent';
 import {PathsName} from '../../navigation/navigationConfig';
 import {conversationListActions} from '../conversations/actions';
@@ -88,6 +93,99 @@ export const selectedMessagesActions =
         },
       ),
     );
+  };
+
+export const actionsTypeActionsConversation = {
+  deleteChat: 'deleteChat',
+  clearChat: 'clearChat',
+};
+
+export const actionsSelectedConversation =
+  (data, typeAction, navigation, additionalData) => (dispatch, getState) => {
+    const selectedСhats = getState().appSlice.selectedСhats;
+    // for id
+    const allMessages = getState().appSlice.allMessages;
+    const conversationsList =
+      getState().conversationsSlice.conversationsList.data;
+
+    let copyConversationsList = {...conversationsList};
+    const copyAllMessages = {...allMessages};
+    //
+    console.log(selectedСhats, 'selectedСhats');
+
+    switch (typeAction) {
+      case actionsTypeActionsConversation.deleteChat:
+        // for ids
+        // socketEmitDeleteConversation(
+        //   {
+        //     ids: Object.keys(selectedСhats),
+        //   },
+        //   res => {
+        //     console.log(res, 'res');
+        //   },
+        // );
+        // for id
+        Object.keys(selectedСhats).map(id => {
+          delete copyConversationsList[id];
+          socketEmitDeleteConversation(
+            {
+              id,
+            },
+            res => {
+              console.log(res, 'res');
+            },
+          );
+        });
+        dispatch(setConversationListAction(copyConversationsList));
+        return;
+      case actionsTypeActionsConversation.clearChat:
+        // for ids
+        // socketEmitClearConversation(
+        //   {
+        //     ids: Object.keys(selectedСhats),
+        //   },
+        //   res => {
+        //     console.log(res, 'res');
+        //   },
+        // );
+        // for id
+        Object.keys(selectedСhats).map(id => {
+          copyAllMessages[id] = [];
+          console.log(
+            copyConversationsList[id].Messages,
+            'copyConversationsList[id].Messages',
+          );
+
+          // глянути чи є якийсь кращий метор зміни ключа в обекті
+          copyConversationsList = {
+            ...copyConversationsList,
+            [id]: {
+              ...copyConversationsList[id],
+              Messages: [],
+            },
+          };
+
+          socketEmitClearConversation(
+            {
+              id,
+            },
+            res => {
+              console.log(res, 'res socketEmitClearConversation');
+            },
+          );
+        });
+
+        dispatch(
+          setAllMessagesAction({
+            ...copyAllMessages,
+          }),
+        );
+        dispatch(setConversationListAction(copyConversationsList));
+        //
+        return;
+      default:
+        return;
+    }
   };
 
 export const actionsTypeActionsChat = {

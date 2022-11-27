@@ -2,31 +2,23 @@ import {createSlice} from '@reduxjs/toolkit';
 import * as requests from './requests';
 
 const initialState = {
-  userHistoryConversation: {
+  conversationMessages: {
     data: [],
     pagination: {
       allItems: 0,
       currentPage: 0,
     },
   },
+  userHistoryConversations: {
+    // [0]: {
+    //   pagination: {
+    //     allItems: 0,
+    //     currentPage: 0,
+    //   },
+    // },
+  },
   conversationsList: {
     data: {},
-  },
-  conversations: {
-    message: '',
-    id: 0,
-    sendDate: '',
-  },
-  currentChat: {
-    id: 0,
-  },
-  lastMessages: {},
-  currentConversationIdObject: {
-    currentConversationId: 0,
-  },
-  conversationId: {
-    id: 0,
-    type: '',
   },
   conversationTypeState: {
     0: {
@@ -41,30 +33,12 @@ const initialState = {
       ],
     },
   },
-  createConversation: [],
-  opponentId: {
-    id: 0,
-  },
 };
 
 const conversationsSlice = createSlice({
   name: 'conversationsSlice',
   initialState,
   reducers: {
-    conversationActionSuccess(state, {payload}) {
-      [payload.name] = {
-        success: payload.data,
-        error: null,
-      };
-    },
-    conversationUserHistoryActionRequest(state, {payload}) {
-      state.currentChat = {
-        id: payload.id,
-      };
-    },
-    clearLastMessage(state, {payload}) {
-      state.lastMessages = {};
-    },
     conversationTypeStateAction(state, {payload}) {
       state.conversationTypeState = {
         ...state.conversationTypeState,
@@ -77,16 +51,19 @@ const conversationsSlice = createSlice({
         ...payload,
       };
     },
-    createNewChatAction(state, {payload}) {
-      state.opponentId = {
-        id: payload.opponentId,
+    setConversationListAction(state, {payload}) {
+      state.conversationsList.data = {
+        ...payload,
       };
     },
-    clearConversationData(state, {payload}) {
-      state.searchChats = null;
-    },
-    setConversationIdAction(state, {payload}) {
-      state.conversationId = {...state.conversationId, ...payload};
+    updateUserHistoryConversation(state, {payload}) {
+      state.userHistoryConversations = {
+        ...state.userHistoryConversations,
+        [payload.conversationId]: {
+          ...state.userHistoryConversations?.[payload.conversationId],
+          ...payload.data,
+        },
+      };
     },
   },
   extraReducers: builder => {
@@ -106,9 +83,9 @@ const conversationsSlice = createSlice({
       },
     );
     builder.addCase(
-      requests.getConversationUserHistoryRequest.fulfilled,
+      requests.getConversationMessagesRequest.fulfilled,
       (state, action) => {
-        state.userHistoryConversation = {
+        state.conversationMessages = {
           data: action.payload?.data,
           pagination: action.payload?.pagination,
         };
@@ -118,16 +95,12 @@ const conversationsSlice = createSlice({
 });
 
 export const {
-  conversationActionSuccess,
   conversationActionFail,
-  conversationUserHistoryActionRequest,
   lastConversationMessageAction,
-  clearLastMessage,
   conversationTypeStateAction,
-  createNewChatAction,
-  clearConversationData,
   updateConversationListAction,
-  setConversationIdAction,
+  updateUserHistoryConversation,
+  setConversationListAction,
 } = conversationsSlice.actions;
 
 export default conversationsSlice.reducer;

@@ -11,6 +11,8 @@ import {
   socketOnTypingStateId,
   socketOnDeleteMessage,
   socketOnUserIdNewChat,
+  socketOnDeleteConversation,
+  socketOnClearConversation,
 } from '../../config/socket/actions/socketOn';
 import ConversationItems from './components/conversationItems';
 import Header from './components/header';
@@ -74,6 +76,8 @@ const MainScreen = ({route}) => {
   React.useEffect(() => {
     socketOnDeleteMessage();
     socketOnUserIdNewChat(userId, navigation);
+    socketOnDeleteConversation();
+    socketOnClearConversation();
   }, [conversationsList]);
 
   return (

@@ -1,3 +1,5 @@
+import {actionsTypeActionsConversation} from '../../../../redux/app/actions';
+
 export const headerActionIcons = lang => [
   // {
   //   id: 1,
@@ -16,11 +18,10 @@ export const headerActionIcons = lang => [
   // },
   {
     id: 3,
-    value: 'deleteConversations',
+    value: actionsTypeActionsConversation.deleteChat,
     icon: {
       name: 'svgs_line_trash_bin_alt',
     },
-    disabled: true,
   },
 ];
 
@@ -52,7 +53,7 @@ export const headerSelectedСhatsAmountDotsOptions = lang => [
   {
     id: 4,
     title: 'Remove from cache',
-    value: 'removeFromCache',
+    value: actionsTypeActionsConversation.clearChat,
     icon: {
       name: 'svgs_line_clear',
     },

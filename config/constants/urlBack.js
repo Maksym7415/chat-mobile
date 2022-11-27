@@ -13,9 +13,11 @@ export const pathBackUser = {
   getUserProfileData: '/getUserProfileData',
   getAvatars: '/getAvatars',
   updateProfile: '/updateProfile',
+  deleteAvatar: '/delete-avatar',
 };
 
 export const pathBackSearch = {
   searchContact: '/searchContact',
   getOpponentsIdWhereConversTypeDialog: '/getOpponentsIdWhereConversTypeDialog',
+  checkEmails: '/check-emails',
 };

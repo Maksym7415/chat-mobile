@@ -2,30 +2,38 @@
 import React from 'react';
 import {SafeAreaView, Text, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import {useSelector, useDispatch} from 'react-redux';
 import Contacts from 'react-native-contacts';
 import makeStyles from './styles';
 import Header from './components/header';
+import ContactsItems from './components/contactsItems';
+import {postCheckEmailsRequest} from '../../redux/contacts/requests';
 
 const ContactsScreen = ({}) => {
   // HOOKS
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   // STYLES
   const styles = makeStyles(theme);
 
-  // STATES
-  const [emailsContacts, setEmailsContacts] = React.useState([]);
+  // SELECTORS
+  const {contacts} = useSelector(({contactsSlice}) => contactsSlice);
 
   React.useLayoutEffect(() => {
-    Contacts?.getAll().then(contacts => {
-      setEmailsContacts(
-        contacts.reduce((acc, contact) => {
-          const emails = contact.emailAddresses?.map(item => item.email);
-          if (emails) {
-            return [...acc, ...emails];
-          }
-          return acc;
-        }, []),
+    Contacts?.getAll().then(contactsLibery => {
+      dispatch(
+        postCheckEmailsRequest({
+          data: {
+            emails: contactsLibery.reduce((acc, contact) => {
+              const emails = contact.emailAddresses?.map(item => item.email);
+              if (emails) {
+                return [...acc, ...emails];
+              }
+              return acc;
+            }, []),
+          },
+        }),
       );
     });
   }, []);
@@ -34,9 +42,7 @@ const ContactsScreen = ({}) => {
     <SafeAreaView style={styles.container}>
       <Header />
       <View style={styles.wrapperContacts}>
-        {emailsContacts?.map(email => (
-          <Text>{email}</Text>
-        ))}
+        <ContactsItems data={contacts} />
       </View>
     </SafeAreaView>
   );

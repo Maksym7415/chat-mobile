@@ -7,8 +7,6 @@ import {
   View,
   ImageBackground,
   SectionList,
-  Pressable,
-  Keyboard,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTheme} from 'react-native-paper';
@@ -24,13 +22,13 @@ import {
   setMessageDate,
   scrollTop,
   uuid,
-  fullDate,
 } from '../../helpers';
-import {getConversationUserHistoryRequest} from '../../redux/conversations/requests';
-import {setConversationIdAction} from '../../redux/conversations';
+import {getConversationMessagesRequest} from '../../redux/conversations/requests';
 import {setAllMessagesAction} from '../../redux/app/slice';
 import IMAGE from '../../assets/img';
 import SnackbarComponent from '../../components/snackbar';
+
+const loadMessageOffset = 15;
 
 const Chat = ({route}) => {
   // HOOKS
@@ -38,16 +36,14 @@ const Chat = ({route}) => {
   const theme = useTheme();
 
   // REFS
-  const inputRef = React.useRef(null);
   const ref = React.useRef(null);
   const onEndReachedCalledDuringMomentum = React.useRef(false);
 
   // SELECTORS
   const lang = useSelector(({settingSlice}) => settingSlice.lang);
   const {
-    userHistoryConversation: {data: messageHistory, pagination},
-
-    createConversation: isCreateChat,
+    conversationMessages: {data: messageHistory},
+    userHistoryConversations,
   } = useSelector(({conversationsSlice}) => conversationsSlice);
   const {userId, firstName} = useSelector(
     ({authSlice}) => authSlice.tokenPayload,
@@ -63,8 +59,6 @@ const Chat = ({route}) => {
   });
 
   // STATES
-  const [localPagination, setLocalPagination] = React.useState({});
-  const [timeDivCounter, setTimeDivCounter] = React.useState(0);
   const [isFetching, setIsFetching] = React.useState(false);
   const [showScrollToButton, setShowScrollToButton] = React.useState(false);
 
@@ -75,6 +69,8 @@ const Chat = ({route}) => {
   const typeConversation =
     conversationData?.conversationType.toLowerCase() || '';
   let SectionListReference = null;
+  const pagination =
+    userHistoryConversations?.[conversationId]?.pagination || {};
 
   // FUNCTIONS
   const scrollToBottom = () => {
@@ -86,24 +82,30 @@ const Chat = ({route}) => {
   };
 
   const loadMoreMessages = () => {
-    // dispatch(
-    //   getConversationUserHistoryRequest({
-    //     data: {
-    //       id: conversationId,
-    //       offset: pagination.currentPage + 1,
-    //     },
-    //     cb: response => {
-    //       dispatch(
-    //         setAllMessagesAction({
-    //           [conversationId]: [
-    //             ...response.data,
-    //             ...allMessages[conversationId],
-    //           ],
-    //         }),
-    //       );
-    //     },
-    //   }),
-    // );
+    if (
+      pagination.allItems > pagination.currentPage &&
+      allMessages[conversationId].length >= loadMessageOffset
+    ) {
+      console.log(pagination, 'pagination');
+      dispatch(
+        getConversationMessagesRequest({
+          data: {
+            id: conversationId,
+            offset: pagination.currentPage + loadMessageOffset,
+          },
+          cb: response => {
+            dispatch(
+              setAllMessagesAction({
+                [conversationId]: [
+                  ...response.data,
+                  ...allMessages[conversationId],
+                ],
+              }),
+            );
+          },
+        }),
+      );
+    }
   };
 
   const onEndReached = ({distanceFromEnd}) => {
@@ -129,7 +131,7 @@ const Chat = ({route}) => {
       console.log('!render!');
       setIsFetching(true);
       dispatch(
-        getConversationUserHistoryRequest({
+        getConversationMessagesRequest({
           data: {
             id: conversationId,
             offset: 0,
@@ -151,12 +153,6 @@ const Chat = ({route}) => {
               }
               return el;
             });
-
-            setTimeDivCounter(newArr.filter(el => el.component).length);
-            setLocalPagination(value => ({
-              ...value,
-              [conversationId]: pagination.currentPage,
-            }));
             dispatch(
               setAllMessagesAction({
                 [conversationId]: newArr,
@@ -226,7 +222,7 @@ const Chat = ({route}) => {
                       }}
                       inverted
                       onEndReached={onEndReached}
-                      onEndReachedThreshold={0.1}
+                      onEndReachedThreshold={0.5}
                       onMomentumScrollBegin={() => {
                         onEndReachedCalledDuringMomentum.current = false;
                       }}
@@ -273,19 +269,15 @@ const Chat = ({route}) => {
             }
           }
         })()}
-        {showScrollToButton && (
-          <ScrollToBottomButton
-            scrollToBottom={scrollToBottom}
-            styles={{
-              button: {
-                bottom: messageEdit.isEdit || sheraMessages.length ? 100 : 50,
-              },
-            }}
-          />
-        )}
       </>
     );
-  }, [allMessages[conversationId], sheraMessages, messageEdit]);
+  }, [
+    allMessages[conversationId],
+    sheraMessages,
+    messageEdit,
+    pagination,
+    showScrollToButton,
+  ]);
 
   return (
     <>
@@ -314,6 +306,16 @@ const Chat = ({route}) => {
             </View>
           ) : (
             renderMainContent
+          )}
+          {showScrollToButton && (
+            <ScrollToBottomButton
+              scrollToBottom={scrollToBottom}
+              styles={{
+                button: {
+                  bottom: messageEdit.isEdit || sheraMessages.length ? 100 : 50,
+                },
+              }}
+            />
           )}
         </ImageBackground>
         <ChatBottom

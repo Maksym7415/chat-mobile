@@ -7,7 +7,7 @@ export const valuesOptions = {
   edit: 'edit',
   insertPhotoVideo: 'insertPhotoVideo',
   saveToGallery: 'saveToGallery',
-  remove: 'remove',
+  removePhoto: 'removePhoto',
   logout: 'logout',
   searchForParticipants: 'searchForParticipants',
   deleteLeaveGroup: 'deleteLeaveGroup',
@@ -75,12 +75,11 @@ export const headerOptions = lang => [
   {
     id: 4,
     title: 'Remove',
-    value: valuesOptions.remove,
+    value: valuesOptions.removePhoto,
     show: 2,
     icon: {
       name: 'svgs_line_trash_bin_alt',
     },
-    noFunctional: true,
   },
   {
     id: 5,

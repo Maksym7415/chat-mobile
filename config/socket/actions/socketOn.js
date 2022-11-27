@@ -4,6 +4,7 @@ import {conversationListActions} from '../../../redux/conversations/actions';
 import {getUserConversationsRequest} from '../../../redux/conversations/requests';
 import {PathsName} from '../../../navigation/navigationConfig';
 import {setAllMessagesAction} from '../../../redux/app/slice';
+import {setConversationListAction} from '../../../redux/conversations/slice';
 
 // User Id Chat
 export const socketOnUserIdChat = chat => {
@@ -165,7 +166,7 @@ export const socketOnTypingStateId = (chat, setUsersTyping) => {
 };
 
 export const socketOnDeleteMessage = () => {
-  const getRemoveMessages = (conversationId, messageId) => {
+  const getRemoveMessages = (conversationId, messageId, lastMessage) => {
     const allMessages = store.getState().appSlice.allMessages;
     const conversationsList =
       store.getState().conversationsSlice.conversationsList.data;
@@ -184,35 +185,45 @@ export const socketOnDeleteMessage = () => {
       }),
     );
     if (messageId === conversationFindStore?.Messages?.[0].id) {
-      let findLastMessage = null;
-      if (allMessages[conversationId]) {
-        const reverseAllMessages = [...allMessages[conversationId]].reverse();
-        for (
-          let i = 0;
-          !findLastMessage && i < reverseAllMessages.length;
-          i++
-        ) {
-          if (reverseAllMessages[i].User) {
-            findLastMessage = reverseAllMessages[i];
-          }
-        }
-      }
+      // let findLastMessage = null;
+      // if (allMessages[conversationId] && !lastMessage) {
+      //   const reverseAllMessages = [...allMessages[conversationId]].reverse();
+      //   for (
+      //     let i = 0;
+      //     !findLastMessage && i < reverseAllMessages.length;
+      //     i++
+      //   ) {
+      //     if (reverseAllMessages[i].User) {
+      //       findLastMessage = reverseAllMessages[i];
+      //     }
+      //   }
+      // }
 
+      // console.log(findLastMessage, 'findLastMessage');
+      // console.log(
+      //   [lastMessage || findLastMessage],
+      //   '[findLastMessage || lastMessage]',
+      // );
+      // console.log(lastMessage, 'lastMessage');
       store.dispatch(
         conversationListActions({
           mode: 'updateMessageConversation',
           conversationId: conversationId,
-          messages: [findLastMessage],
+          // messages: [lastMessage || findLastMessage],
+          messages: [lastMessage],
           conversationsList,
         }),
       );
     }
   };
 
-  return socket.on('deleteMessage', ({conversationId, messageId}) => {
-    console.log(conversationId, messageId, 'eeee');
-    getRemoveMessages(conversationId, messageId);
-  });
+  return socket.on(
+    'deleteMessage',
+    ({conversationId, messageId, lastMessage}) => {
+      console.log(conversationId, messageId, lastMessage, 'eeee');
+      getRemoveMessages(conversationId, messageId, lastMessage);
+    },
+  );
 };
 
 export const socketOnUserIdNewChat = (userId, navigation) => {
@@ -220,6 +231,10 @@ export const socketOnUserIdNewChat = (userId, navigation) => {
     store.dispatch(
       getUserConversationsRequest({
         cb: data => {
+          // ця перевірка потрібно для того щоб коли інший юзер створює чат зі мною щоб в мене не відкривалося зразу чат з цим юзером
+          if (message.User?.id !== userId) {
+            return;
+          }
           navigation.navigate(PathsName.chat, {
             id: conversationId,
             conversationData: data[conversationId],
@@ -227,5 +242,51 @@ export const socketOnUserIdNewChat = (userId, navigation) => {
         },
       }),
     );
+  });
+};
+
+export const socketOnDeleteConversation = () => {
+  socket.on('deleteChat', res1 => {
+    console.log(res1, 'res1');
+
+    // const ids = [];
+    // const conversationsList =
+    //   store.getState().conversationsSlice.conversationsList.data;
+
+    // let copyConversationsList = {...conversationsList};
+
+    // ids.map(id => {
+    //   delete copyConversationsList[id];
+    // });
+
+    // store.dispatch(setConversationListAction(copyConversationsList));
+  });
+};
+
+export const socketOnClearConversation = () => {
+  socket.on('clearChat', res1 => {
+    console.log(res1, 'clearChat res1');
+
+    // const ids = [];
+    // const conversationsList =
+    //   store.getState().conversationsSlice.conversationsList.data;
+    // const allMessages = store.getState().appSlice.allMessages;
+
+    // let copyConversationsList = {...conversationsList};
+    // let copyAllMessages = {...allMessages};
+
+    // ids.map(id => {
+    //   copyAllMessages[id] = [];
+    //   copyConversationsList = {
+    //     ...copyConversationsList,
+    //     [id]: {
+    //       ...copyConversationsList[id],
+    //       Messages: [],
+    //     },
+    //   };
+    // });
+
+    // store.dispatch(setAllMessagesAction({...copyAllMessages}));
+    // store.dispatch(setConversationListAction(copyConversationsList));
   });
 };
