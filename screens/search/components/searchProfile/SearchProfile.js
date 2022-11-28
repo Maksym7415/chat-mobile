@@ -1,5 +1,5 @@
 import React from 'react';
-import {ScrollView, View} from 'react-native';
+import {ScrollView} from 'react-native';
 import {useSelector} from 'react-redux';
 import {useTheme} from 'react-native-paper';
 import makeStyles from './styles';
@@ -17,15 +17,20 @@ const SearchProfile = () => {
     ({searchSlice}) => searchSlice,
   );
 
-  return (
-    <>
+  // RENDER CONDITIONAL
+  if (!searchSettingsQuestions?.response.length || isLoading) {
+    return (
       <RenderConditionsList
         list={searchSettingsQuestions?.response}
         isLoading={isLoading}
+        noResultsText="No get request"
       />
-      <ScrollView contentContainerStyle={styles.container}>
-        <View></View>
-      </ScrollView>
+    );
+  }
+
+  return (
+    <>
+      <ScrollView contentContainerStyle={styles.container}></ScrollView>
     </>
   );
 };

@@ -4,10 +4,10 @@ import {Text} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useForm} from 'react-hook-form';
 import * as config from './config';
+import AuthForm from '../../components/authForm';
 import {PathsName} from '../../navigation/navigationConfig';
 import languages from '../../config/translations';
 import {postSingUpRequest} from '../../redux/auth/requests';
-import AuthForm from '../../components/authForm';
 
 const SignUp = ({navigation}) => {
   // HOOKS
@@ -18,7 +18,6 @@ const SignUp = ({navigation}) => {
 
   // STATES
   const [errorBack, setErrorBack] = React.useState('');
-
   const {
     control,
     handleSubmit,

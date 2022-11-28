@@ -3,8 +3,8 @@ import React, {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {useDispatch, useSelector} from 'react-redux';
 import * as config from './config';
-import languages from '../../config/translations';
 import AuthForm from '../../components/authForm';
+import languages from '../../config/translations';
 import {postVerificationRequest} from '../../redux/auth/requests';
 
 const Verification = () => {
@@ -20,11 +20,9 @@ const Verification = () => {
 
   // STATES
   const [errorBack, setErrorBack] = React.useState('');
-
   const {
     control,
     handleSubmit,
-    getValues,
     setValue,
     formState: {errors},
   } = useForm({

@@ -2,7 +2,14 @@
 /* eslint-disable no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import {SafeAreaView, Text, View, Pressable, ScrollView} from 'react-native';
+import {
+  SafeAreaView,
+  Text,
+  View,
+  Pressable,
+  ScrollView,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {runOnJS} from 'react-native-reanimated';
 import {useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
@@ -104,7 +111,45 @@ const Profile = ({route}) => {
       />
       <ScrollView style={styles.scrollView}>
         <GestureDetector gesture={Gesture.Exclusive(singleTap)}>
-          <View style={{flex: 1}}>
+          <View style={{flex: 1, position: 'relative'}}>
+            {/* <TouchableWithoutFeedback
+              accessibilityRole="button"
+              onPress={() => console.log('onDismiss')}
+              style={{
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+                backgroundColor: 'red',
+                too: 0,
+                left: 0,
+              }}>
+              <View
+                style={
+                  {
+                    // width: 100,
+                    // height: 100,
+                    // // backgroundColor: 'transparent',
+                    // backgroundColor: 'red',
+                    // position: 'absolute',
+                    // too: 0,
+                    // left: 0,
+                  }
+                }
+              />
+            </TouchableWithoutFeedback> */}
+
+            {/* <Pressable
+              onPress={() => console.log('onDismiss')}
+              style={{
+                width: 100,
+                height: 100,
+                // backgroundColor: 'transparent',
+                backgroundColor: 'red',
+                position: 'absolute',
+                too: 0,
+                left: 0,
+              }}></Pressable> */}
+
             {setting.isOwnerProfile ? (
               <>
                 {!setting.avatar ? (

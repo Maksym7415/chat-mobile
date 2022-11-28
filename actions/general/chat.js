@@ -1,7 +1,7 @@
 import store from '../../redux';
 import {PathsName} from '../../navigation/navigationConfig';
 
-export const createNewChat = (navigation, item) => {
+export const actionCreateNewChat = (navigation, item) => {
   const conversationsList =
     store.getState().conversationsSlice.conversationsList.data;
 

@@ -7,6 +7,9 @@ import {
   Pressable,
   Dimensions,
   ImageBackground,
+  Modal,
+  TouchableWithoutFeedback,
+  StyleSheet,
 } from 'react-native';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
@@ -310,7 +313,7 @@ const Header = ({
             backgroundColor: showBiggerImg ? 'transparent' : theme.colors.main,
           }}>
           {showBiggerImg ? (
-            <>
+            <View style={{flex: 1}}>
               <Carousel
                 ref={carouselRef}
                 layout="default"
@@ -331,7 +334,7 @@ const Header = ({
                 inactiveDotScale={1}
                 containerStyle={styles.paginationContainerStyle}
               />
-            </>
+            </View>
           ) : (
             <View style={styles.wrapperAvatarAndInfo}>
               <Pressable

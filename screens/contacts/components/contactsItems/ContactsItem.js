@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useTheme} from 'react-native-paper';
 import {stylesConversationItem as makeStyles} from './styles';
 import UserAvatar from '../../../../components/avatar/userAvatar';
-import {createNewChat} from '../../../../actions/general/chat';
+import {actionCreateNewChat} from '../../../../actions/general/chat';
 
 const ConversationdataComponent = ({item, usersTyping}) => {
   //HOOKS
@@ -22,7 +22,7 @@ const ConversationdataComponent = ({item, usersTyping}) => {
       activeOpacity={0.5}
       style={styles.wrapperContact}
       onPress={() => {
-        createNewChat(navigation, item);
+        actionCreateNewChat(navigation, item);
       }}>
       <View style={styles.avatarView}>
         <UserAvatar

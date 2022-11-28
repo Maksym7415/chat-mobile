@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useLayoutEffect, useState} from 'react';
 import {SafeAreaView, Keyboard, Pressable} from 'react-native';
@@ -6,8 +7,8 @@ import makeStyles from './styles';
 import Header from './components/header';
 import SearchMain from './components/searchMain';
 import SearchProfile from './components/searchProfile';
-import {getSearchContactRequest} from '../../redux/search/requests';
 import {TYPES_FROM_TO_SEARCH_SCREEN} from '../../config/constants/general';
+import {getSearchContactRequest} from '../../redux/search/requests';
 
 const Search = ({route}) => {
   // HOOKS
@@ -18,6 +19,7 @@ const Search = ({route}) => {
 
   // STATES
   const [settings, setSettings] = useState({
+    noSettings: true,
     header: {
       placeholder: 'Search',
       getRequest: '',
@@ -33,16 +35,17 @@ const Search = ({route}) => {
   // USEEFFECTS
   useLayoutEffect(() => {
     // set setting options from screen
+    console.log('render - useLayoutEffect');
     switch (routeParams?.from) {
       case TYPES_FROM_TO_SEARCH_SCREEN.main:
-        return setSettings(prev => ({
+        return setSettings(() => ({
           header: {
             placeholder: 'Search',
             getRequest: getSearchContactRequest,
           },
         }));
       case TYPES_FROM_TO_SEARCH_SCREEN.profile:
-        return setSettings(prev => ({
+        return setSettings(() => ({
           header: {
             placeholder: 'Search settings and questions',
             getRequest: null,
@@ -61,6 +64,10 @@ const Search = ({route}) => {
     }
   }, []);
 
+  if (settings.noSettings) {
+    return <></>;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Header
@@ -70,7 +77,7 @@ const Search = ({route}) => {
         styles={settings.header.styles}
         svgFill={settings.header?.svgFill || '#868686'}
       />
-      <Pressable onPress={Keyboard.dismiss}>
+      <Pressable onPress={Keyboard.dismiss} style={{flex: 1}}>
         {(() => {
           switch (routeParams?.from) {
             case TYPES_FROM_TO_SEARCH_SCREEN.main:
